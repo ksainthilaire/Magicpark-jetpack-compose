@@ -1,0 +1,63 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'io.dvlt.themoviedbtest'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "io.dvlt.themoviedbtest"
+        minSdk 23
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField 'String', 'apiUrl', '"https://api.themoviedb.org/3"'
+            buildConfigField 'String', 'tmdbApiKeyV3', '"76909ebd17e275d556f8e0ed68bbc2b5"'
+            buildConfigField 'String', 'tmdbApiKeyV4', '"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NjkwOWViZDE3ZTI3NWQ1NTZmOGUwZWQ2OGJiYzJiNSIsInN1YiI6IjYzOTljOWExNzdjMDFmMDBhMjE0NGRkNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.P4cLbLgDuQ93kq5fPWj84ioH3pbpaMFx8P1bU9Sc7VU"'
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'String', 'tmdbApiKeyV3', '"76909ebd17e275d556f8e0ed68bbc2b5"'
+            buildConfigField 'String', 'tmdbApiKeyV4', '"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NjkwOWViZDE3ZTI3NWQ1NTZmOGUwZWQ2OGJiYzJiNSIsInN1YiI6IjYzOTljOWExNzdjMDFmMDBhMjE0NGRkNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.P4cLbLgDuQ93kq5fPWj84ioH3pbpaMFx8P1bU9Sc7VU"'
+        }
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.2"
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(":core")
+    implementation project(":data")
+    implementation project(":domain")
+
+    // Features
+    implementation project(":features:movies")
+    implementation project(":features:moviedetail")
+}
