@@ -17,8 +17,12 @@
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/features" />
-            <option value="$PROJECT_DIR$/features/moviedetail" />
-            <option value="$PROJECT_DIR$/features/movies" />
+            <option value="$PROJECT_DIR$/features/account" />
+            <option value="$PROJECT_DIR$/features/login" />
+            <option value="$PROJECT_DIR$/features/payment" />
+            <option value="$PROJECT_DIR$/features/settings" />
+            <option value="$PROJECT_DIR$/features/shop" />
+            <option value="$PROJECT_DIR$/features/wallet" />
             <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>

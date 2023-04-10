@@ -1,4 +1,4 @@
-package io.dvlt.utils
+package com.magicpark.utils
 
 import org.junit.Test
 

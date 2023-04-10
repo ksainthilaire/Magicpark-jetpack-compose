@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'io.dvlt.themoviedbtest'
+    namespace 'com.magicpark.app'
     compileSdk 33
 
     defaultConfig {
-        applicationId "io.dvlt.themoviedbtest"
+        applicationId "com.magicpark.app"
         minSdk 23
         targetSdk 33
         versionCode 1
@@ -33,9 +33,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField 'String', 'tmdbApiKeyV3', '"76909ebd17e275d556f8e0ed68bbc2b5"'
-            buildConfigField 'String', 'tmdbApiKeyV4', '"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NjkwOWViZDE3ZTI3NWQ1NTZmOGUwZWQ2OGJiYzJiNSIsInN1YiI6IjYzOTljOWExNzdjMDFmMDBhMjE0NGRkNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.P4cLbLgDuQ93kq5fPWj84ioH3pbpaMFx8P1bU9Sc7VU"'
         }
     }
 
@@ -56,8 +53,12 @@ dependencies {
     implementation project(":core")
     implementation project(":data")
     implementation project(":domain")
+    implementation project(':features:shop')
+    implementation project(':features:payment')
+    implementation project(':features:account')
+    implementation project(':features:settings')
+    implementation project(':features:wallet')
+    implementation project(':features:login')
 
     // Features
-    implementation project(":features:movies")
-    implementation project(":features:moviedetail")
 }

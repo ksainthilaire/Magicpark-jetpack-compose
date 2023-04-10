@@ -1,4 +1,4 @@
-# Devialet - MovieDB
+# Magicpark
 
 
 # Table of Contents

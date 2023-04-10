@@ -12,11 +12,15 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "TheMovieDbTest"
+rootProject.name = "app"
 include ':app'
 include ':core'
-include ':features:moviedetail'
-include ':features:movies'
+include ':features:shop'
+include ':features:payment'
+include ':features:account'
+include ':features:settings'
+include ':features:wallet'
+include ':features:login'
 include ':domain'
 include ':data'
 include ':app:navigation'

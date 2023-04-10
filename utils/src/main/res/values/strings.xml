@@ -1,3 +1,183 @@
 <resources>
-    <string name="app_name">Movies</string>
+    <string name="app_name">Magicpark</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Splash -->
+
+    <string name="splash_title">Bienvenue dans</string>
+    <string name="splash_subtitle">les aventures avec Simba</string>
+
+    <!-- Login -->
+    <string name="content_description_illustration">illustration magicpark</string>
+
+    <string name="login_title">Se connecter</string>
+    <string name="login_label_mail">E-mail</string>
+    <string name="login_label_password">Mot de passe</string>
+    <string name="login_label_socials">Connectez-vous avec les médias sociaux</string>
+
+    <string name="login_failed">Mot de passe et / ou e-mail incorrect</string>
+    <string name="login_forgot"><u>Mot de passe oublié ?</u></string>
+    <string name="login_button_facebook">Connectez-vous à l\'aide de Facebook</string>
+    <string name="login_button_google">Se connecter avec Google</string>
+    <string name="login_button_mail">Adresse e-mail</string>
+    <string name="login_button_login">Allons-y</string>
+    <string name="login_button_register"><u>Je m\'inscris</u></string>
+
+    <!-- Welcome -->
+
+    <string name="welcome_title">Mes aventures avec SAMBA</string>
+    <string name="welcome_button_play">À toi de joueur</string>
+    <string name="welcome_button_choose_my_game">Je choisis mon jeux</string>
+    <string name="welcome_button_help">Aide</string>
+
+    <!-- Register -->
+
+    <string name="register_title">S\'inscrire</string>
+    <string name="register_label_fullname">Nom et prénom</string>
+    <string name="register_label_whatsapp">N° WhatsApp</string>
+    <string name="register_label_country">Pays de résidence</string>
+    <string name="register_label_mail">E-mail</string>
+    <string name="register_label_password">Mot de passe</string>
+    <string name="register_label_identity">Identité*</string>
+    <string name="register_title_password">Mot de passe*</string>
+    <string name="register_cgu">J\'accepte les <u>CGU</u></string>
+    <string name="register_error">Une erreur est survenue, veuillez réessayer plus tard</string>
+    <string name="register_title_identity">Identité*</string>
+    <string name="register_label_password_confirmation">Confirmez votre mot de passe</string>
+    <string name="register_button_play">Jouer maintenant</string>
+    <string name="register_button_already_have_an_account">J\'ai déjà un compte, <u>se connecter</u></string>
+
+
+    <string name="register_error_password_rules">Le mot de passe dois contenir:\n- Au moins 12 caractères\n- Au moins un chiffre\n- Au moins une majuscule\n- Au moins une miniscule</string>
+    <string name="register_error_already_existing">Cette adresse e-mail est déjà utilisé</string>
+    <string name="register_error_wrong_fullname">dd</string>
+    <string name="register_error_wrong_number">Le numéro de téléphone est invalide</string>
+    <string name="register_error_wrong_email">L\'adresse e-mail est invalide</string>
+    <string name="register_error_no_matching_passwords">Les mots de passe saisis ne sont pas identiques</string>
+    <string name="register_error_terms_not_accepted">Vous n\'avez pas accepté les conditions d\'utilisation</string>
+    <string name="register_error_no_internet_connection">@string/register_error_unknown</string>
+    <string name="register_error_unknown">Une erreur est survenue, veuillez réessayer plus tard</string>
+
+
+    <!-- Shop -->
+
+    <string name="shop_title">Je vais jouer avec Samba</string>
+    <string name="shop_label_search">Rechercher</string>
+
+    <string name="shop_item_title">Détails</string>
+    <string name="shop_item_label_choose_a_color">Choose a color : </string>
+    <string name="shop_item_label_quantity">Select quantity :</string>
+    <string name="shop_item_button_buy">J\'ACHÈTE</string>
+
+
+    <!-- Cart -->
+
+    <string name="cart_title">Mon panier</string>
+    <string name="cart_label_order_summary">Récapulatif de la commande</string>
+    <string name="cart_label_delivery">Livraison</string>
+    <string name="cart_label_total">Total</string>
+    <string name="cart_empty">Votre panier est vide.</string>
+    <string name="cart_button_pay">ACHETEZ LE TICKET</string>
+
+    <string name="menu_label_home">Accueil</string>
+    <string name="menu_admin">Contrôleur</string>
+
+    <!-- Settings -->
+
+    <string name="settings_main_parameters">Paramètres</string>
+    <string name="settings_payments">Modifier mon profil</string>
+    <string name="settings_help">Aide</string>
+    <string name="settings_cgv">CGV</string>
+    <string name="settings_logout">Déconnexion</string>
+
+
+    <!-- Help -->
+    <string name="help_label_title">Aide</string>
+    <string name="help_label_contact">Contact le service client au</string>
+    <string name="help_number">+224 600 00 00 00</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+
+    <!-- Navigation menu -->
+    <string name="menu_home">Acceuil</string>
+    <string name="menu_search">Rechercher</string>
+    <string name="navigation_shop">Boutique</string>
+    <string name="menu_account">Mon compte</string>
+    <string name="navigation_cart">Mon panier</string>
+
+    <!-- Ticket -->
+    <string name="ticket_title">Votre Accès</string>
+    <string name="ticket_format">MAPAR%s</string>
+    <string name="ticket_button_download">Télécharger</string>
+
+    <!-- Wallet -->
+    <string name="wallet_title">Mes tickets</string>
+    <string name="wallet_empty">Vous n\'avez pas de tickets</string>
+
+    <!-- Payment -->
+    <string name="payment_title">Choisissez votre moyen de paiement : </string>
+
+    <string name="payment_successful">Paiement réussi</string>
+    <string name="payment_processed">Votre paiement a été traité.\nLes détails de la transaction sont inclus ci-dessous</string>
+    <string name="payment_transaction_number">Transaction Number : %s</string>
+    <string name="payment_total_amount">Montant total</string>
+    <string name="payment_payed_by">Payer avec</string>
+    <string name="payment_transaction_date">Date de paiement</string>
+
+
+    <!-- Forgot -->
+    <string name="forgot_title">Rechercher votre compte</string>
+    <string name="forgot_text">Indiquez-nous votre adresse e-mail ou votre nom d\'utilisateur et nous vous connecterons</string>
+    <string name="forgot_label_mail">E-mail</string>
+    <string name="forgot_button_continue">Continuer</string>
+    <string name="forgot_button_cancel">Annuler</string>
+    <string name="forgot_enter_code">Saisir le code</string>
+    <string name="forgot_mail_sent">Un email de réinitialisation de mot de passe a été envoyer</string>
+    <string name="forgot_mail_error">L\'adresse e-mail est introuvable !</string>
+    <string name="forgot_we_sent">Nous avons envoyé un code à <u>%s</u>. Saissisez le code ici pour continuer.</string>
+    <string name="forgot_label_code">Code</string>
+    <string name="forgot_did_not_receive">Vous ne l\'avez pas de reçu ? <u>Renvoyer le code</u></string>
+    <string name="forgot_button_resend">Renvoyer le code</string>
+    <string name="forgot_error">Nous n\'avons pas trouvé de compte correspondant à ces informations. Vérifiez que vous l\'avez saisi correctement ou créer un compte.</string>
+
+    <!-- API Customer -->
+    <string name="api_customer">https://magicpark-fehmpxb7va-uc.a.run.app</string>
+    <string name="server_client_id">466002208137-o6rs77cfkvtqiat9tbciot15ghlgd9vj.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">544808703745424</string>
+    <string name="facebook_client_token">b00f53d185f6f4f71d1ec28aa60ce6ed</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+
+    <!-- Common -->
+    <string name="common_missing_permission_camera">Vous devez autoriser l\'accès à la caméra pour le contrôleur de ticket</string>
+    <string name="common_button_cancel">Annuler</string>
+    <string name="common_button_delete">Supprimer</string>
+
+    <!-- Deletion -->
+    <string name="deletion_text">Cette action supprimera toutes les informations associées à votre compte, <u>y compris les produits que vous avez acheter</u>, vous ne pourrez plus les récupérer</string>
+
+    <!-- Update -->
+    <string name="update_required_title">Mise à jour requise</string>
+    <string name="update_required_text">Une nouvelle version de l\'application est disponible. Veuillez la télécharger maintenant pour continuer.</string>
+    <string name="update_required_maj">Mettre à jour</string>
+
+    <!-- Controller -->
+    <string name="controller_title">Contrôleur</string>
+    <string name="controller_created_at">Acheté le <u>%s</u></string>
+    <string name="controller_used">Ticket utilisé le <u>%s</u></string>
+
+    <!-- Settings -->
+    <string name="settings_update_success">Vos informations ont été mis à jour</string>
+    <string name="settings_update_error">Une erreur est survenue, veuillez réessayer ultérieurement</string>
+
+    <string name="cgv_url">https://magicpark-gn.com/Politique-et-confidentialit%C3%A9.html</string>
 </resources>
