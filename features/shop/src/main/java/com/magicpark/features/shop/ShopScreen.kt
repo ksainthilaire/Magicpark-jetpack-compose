@@ -18,50 +18,18 @@ fun MoviesScreen(onNavigateToMovie: (id: Int) -> Unit)  {
     val state by viewModel.state.observeAsState()
 
 
-    var tabs by remember {
-        mutableStateOf(
-            listOf(
-                TabDescriptor(
-                    title = "Films tendances",
-                    drawableId = R.drawable.ic_trending_up,
-                    onClick = viewModel::getTrending
-                ), TabDescriptor(
-                    title = "Films les mieux notés",
-                    drawableId = R.drawable.ic_star,
-                    onClick = viewModel::getTopRated
-                )
-            )
-        )
-    }
-
-    viewModel.getTrending()
 
 
     Column {
         Column(
             modifier = Modifier.padding(10.dp)
         ) {
-            Row(Modifier.width(IntrinsicSize.Max)) {
-                Tabs(tabs) { tab ->
-                    tab.onClick()
-                }
-            }
+
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
 
-        LazyColumn {
-
-            item {
-
-                Column {
-                    state?.movies?.forEach { movie ->
-                        MovieCard(movie, { onNavigateToMovie(it) })
-                    }
-                }
-            }
-        }
     }
 }
 

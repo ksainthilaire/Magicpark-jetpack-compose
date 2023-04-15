@@ -1,4 +1,4 @@
-package com.magicpark.features.moviedetail
+package com.magicpark.features.login
 
 import com.magicpark.domain.model.Movie
 

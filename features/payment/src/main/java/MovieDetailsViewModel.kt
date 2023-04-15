@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel : ViewModel() {
 
-    protected val _state: MutableLiveData<State> = MutableLiveData()
+    protected val _state: MutableLiveData<PaymentState> = MutableLiveData()
 
 
     private fun onError(t: Throwable) {
@@ -19,17 +19,8 @@ class MovieDetailsViewModel : ViewModel() {
     }
 
 
-    val state: LiveData<State>
+    val state: LiveData<PaymentState>
         get() = _state
-
-    fun getMovieDetail(id: Int) = viewModelScope.launch {
-        MovieUseCases
-            .getMovieDetails(id)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ movie ->
-                val state = State(isLoading = false, movie = movie)
-                _state.postValue(state)
-            }, ::onError)
-    }
+    
 
 }

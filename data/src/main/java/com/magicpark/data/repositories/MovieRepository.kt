@@ -1,6 +1,6 @@
 package com.magicpark.data.repositories
 
-import com.magicpark.data.api.MovieDbApi
+import com.magicpark.data.api.MagicparkApi
 import com.magicpark.data.http.mapHttpError
 import com.magicpark.data.http.request.NewSessionRequest
 import com.magicpark.data.local.MovieDao
@@ -18,13 +18,15 @@ import org.koin.java.KoinJavaComponent.inject
 
 class MovieRepository : IMovieRepository {
 
-    private val movieDbApi: MovieDbApi by inject(MovieDbApi::class.java)
+    private val magickparkApi: MagicparkApi by inject(MagicparkApi::class.java)
     private val movieDao: MovieDao by inject(MovieDao::class.java)
 
     private val movieDbSession: MovieDbSession by inject(MovieDbSession::class.java)
 
     override fun auth(apiKey: String): Completable {
-        return movieDbApi.newToken(apiKey)
+        return Completable.complete()
+        /*
+        return magickparkApi.newToken(apiKey)
             .subscribeOn(Schedulers.io())
             .map(::mapHttpError)
             .flatMapCompletable {
@@ -33,7 +35,7 @@ class MovieRepository : IMovieRepository {
 
                 movieDbSession.saveToken(it.requestToken)
 
-                return@flatMapCompletable movieDbApi.createSession(
+                return@flatMapCompletable magickparkApi.createSession(
                     token,
                     NewSessionRequest(requestToken = token)
                 )
@@ -41,7 +43,7 @@ class MovieRepository : IMovieRepository {
                     .flatMapCompletable {
                         Completable.complete()
                     }
-            }
+            }*/
     }
 
     override fun getMovieDetails(
@@ -52,7 +54,9 @@ class MovieRepository : IMovieRepository {
         val cachedData = getMovieFromDatabase(id)
             .subscribe(emitter::onNext, emitter::onError)
 
-        movieDbApi.getMovieDetails(id, movieDbSession.getToken(), language, appendToResponse)
+        /*
+
+        magickparkApi.getMovieDetails(id, movieDbSession.getToken(), language, appendToResponse)
             .subscribeOn(Schedulers.io())
             .subscribe ({ response ->
                 cachedData.dispose()
@@ -60,6 +64,8 @@ class MovieRepository : IMovieRepository {
                 getMovieFromDatabase(id)
                     .subscribe(emitter::onNext, emitter::onError)
             }, emitter::onError)
+            /
+         */
 
     }, BackpressureStrategy.BUFFER)
 
@@ -72,7 +78,8 @@ class MovieRepository : IMovieRepository {
         val cachedData = getMoviesFromDatabase(CategoryEnum.TRENDS)
             .subscribe(emitter::onNext, emitter::onError)
 
-        movieDbApi.getTrending(mediaCategory.value, timeWindow.value, movieDbSession.getToken())
+        /*
+        magickparkApi.getTrending(mediaCategory.value, timeWindow.value, movieDbSession.getToken())
             .subscribeOn(Schedulers.io())
             .map(::mapHttpError)
             .subscribe({ response ->
@@ -82,6 +89,8 @@ class MovieRepository : IMovieRepository {
                     .onErrorReturnItem(listOf())
                     .subscribe(emitter::onNext)
             }, emitter::onError)
+
+         */
 
     }, BackpressureStrategy.BUFFER)
 
@@ -94,8 +103,8 @@ class MovieRepository : IMovieRepository {
 
         val cachedData = getMoviesFromDatabase(CategoryEnum.TOP_RATED)
             .subscribe(emitter::onNext, emitter::onError)
-
-        movieDbApi.getMovieTopRated(movieDbSession.getToken())
+/*
+        magickparkApi.getMovieTopRated(movieDbSession.getToken())
             .subscribeOn(Schedulers.io())
             .map(::mapHttpError)
             .subscribe({ response ->
@@ -105,7 +114,7 @@ class MovieRepository : IMovieRepository {
                 getMoviesFromDatabase(CategoryEnum.TOP_RATED)
                     .onErrorReturnItem(listOf())
                     .subscribe(emitter::onNext)
-            }, emitter::onError)
+            }, emitter::onError)*/
     }, BackpressureStrategy.BUFFER)
 
 

@@ -4,7 +4,7 @@ import android.content.res.Resources
 import androidx.room.Room
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import com.magicpark.core.Config
-import com.magicpark.data.api.MovieDbApi
+import com.magicpark.data.api.MagicparkApi
 import com.magicpark.data.local.AppDatabase
 import com.magicpark.data.repositories.MovieRepository
 import com.magicpark.data.session.MovieDbSession
@@ -67,8 +67,8 @@ val dataModule = module {
             .build()
     }
 
-    single<MovieDbApi> {
-        get<Retrofit>().create(MovieDbApi::class.java)
+    single<MagicparkApi> {
+        get<Retrofit>().create(MagicparkApi::class.java)
     }
 
     single<MovieDbSession> {

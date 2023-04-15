@@ -31,13 +31,10 @@ import java.util.*
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun MovieDetailsScreen(movieId: Int, onBackPressed: () -> Unit) = Column {
+fun SupportScreen(movieId: Int, onBackPressed: () -> Unit) = Column {
     val viewModePl = remember { SupportViewModel() }
 
-    val state by viewModel.state.observeAsState()
-    viewModel.getMovieDetail(movieId)
-
-    val movie = state?.movie ?: Movie()
+    val movie =  Movie()
 
     val imageUrl = Uri.parse(Config.assetsUrl)
         .buildUpon().appendPath(movie.posterPath).build().toString()

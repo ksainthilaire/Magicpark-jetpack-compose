@@ -31,7 +31,7 @@ import java.util.*
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun MovieDetailsScreen(movieId: Int, onBackPressed: () -> Unit) = Column {
+fun SettingsScreen(movieId: Int, onBackPressed: () -> Unit) = Column {
     val viewModel = remember { SupportViewModel() }
 
     val state by viewModel.state.observeAsState()

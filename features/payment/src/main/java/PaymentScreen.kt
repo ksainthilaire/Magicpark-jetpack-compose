@@ -34,10 +34,7 @@ import java.util.*
 fun MovieDetailsScreen(movieId: Int, onBackPressed: () -> Unit) = Column {
     val viewModel = remember { MovieDetailsViewModel() }
 
-    val state by viewModel.state.observeAsState()
-    viewModel.getMovieDetail(movieId)
-
-    val movie = state?.movie ?: Movie()
+    val movie = Movie()
 
     val imageUrl = Uri.parse(Config.assetsUrl)
         .buildUpon().appendPath(movie.posterPath).build().toString()

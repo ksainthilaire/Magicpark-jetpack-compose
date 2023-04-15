@@ -1,6 +1,7 @@
-package com.magicpark.features.moviedetail
+package com.magicpark.features.wallet
 
 import com.magicpark.domain.model.Movie
+import com.magicpark.domain.model.UserTicket
 
 
 sealed class WalletState {

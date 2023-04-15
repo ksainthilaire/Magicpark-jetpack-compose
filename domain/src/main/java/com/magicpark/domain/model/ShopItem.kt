@@ -47,6 +47,3 @@ data class ShopItem(
     @Ignore
     var quantityCart: Int = 0
 ) : Parcelable
-
-fun ShopItem.getCategories() : List<Int>? =
-    this.categories?.let { Gson().fromJson(it) }

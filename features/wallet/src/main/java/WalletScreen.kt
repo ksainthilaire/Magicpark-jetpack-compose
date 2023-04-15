@@ -1,4 +1,4 @@
-package com.magicpark.features.moviedetail
+package com.magicpark.features.wallet
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -24,6 +24,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.magicpark.core.Config
 import com.magicpark.domain.model.Movie
+import com.magicpark.features.wallet.WalletViewModel
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.MovieStars
 import java.util.*
@@ -32,12 +33,11 @@ import java.util.*
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun MovieDetailsScreen(movieId: Int, onBackPressed: () -> Unit) = Column {
-    val viewModel = remember { MovieDetailsViewModel() }
+    val viewModel = remember { WalletViewModel() }
 
     val state by viewModel.state.observeAsState()
-    viewModel.getMovieDetail(movieId)
 
-    val movie = state?.movie ?: Movie()
+    val movie =  Movie()
 
     val imageUrl = Uri.parse(Config.assetsUrl)
         .buildUpon().appendPath(movie.posterPath).build().toString()

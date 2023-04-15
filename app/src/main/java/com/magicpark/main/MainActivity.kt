@@ -12,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.magicpark.features.moviedetail.MovieDetailsScreen
 import com.magicpark.features.shop.MoviesScreen
 
 
@@ -41,7 +40,6 @@ class MainActivity : ComponentActivity() {
                         arguments = listOf(navArgument("movieId") { type = NavType.IntType })
                     ) { backStackEntry ->
                         val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-                        MovieDetailsScreen(movieId, onBackPressed = { navController.popBackStack() })
                     }
                 }
             }
