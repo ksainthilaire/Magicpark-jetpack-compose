@@ -3,16 +3,22 @@ package com.magicpark.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.magicpark.features.login.LoginScreen
 import com.magicpark.features.shop.MoviesScreen
+import com.magicpark.ui.splash.SplashScreen
+import com.magicpark.ui.webview.WebViewScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -24,8 +30,11 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
+
             Surface(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Blue),
                 color = MaterialTheme.colorScheme.background
             ) {
 
@@ -33,15 +42,41 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "home") {
                     composable("home") {
-                        MoviesScreen(onNavigateToMovie = { id -> navController.navigate("movie/$id") })
+                        SplashScreen(onContinue = { navController.navigate("/login") } )
                     }
-                    composable(
-                        "movie/{movieId}",
-                        arguments = listOf(navArgument("movieId") { type = NavType.IntType })
-                    ) { backStackEntry ->
-                        val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+
+                    composable("/privacy-policy") {
+                        val url = getString(com.magicpark.utils.R.string.privacy_policy_url)
+                        WebViewScreen(url)
                     }
+
+
+                    // Shop
+                    composable("/shop") {}
+
+
+                    // Login:
+                    composable("/login") {
+                        LoginScreen()
+                    }
+                    composable("/register") {}
+                    composable("/forgot") {}
+
+
+                    // Payment:
+                    composable("/payment") {}
+                    composable("/after-payment") {}
+
+                    // Settings:
+
+
+                    // Wallet:
+                    composable("/wallet") {}
+                    composable("/ticket/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType })) {}
+
                 }
+
+
             }
         }
 

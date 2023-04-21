@@ -179,5 +179,5 @@
     <string name="settings_update_success">Vos informations ont été mis à jour</string>
     <string name="settings_update_error">Une erreur est survenue, veuillez réessayer ultérieurement</string>
 
-    <string name="cgv_url">https://magicpark-gn.com/Politique-et-confidentialit%C3%A9.html</string>
+    <string name="privacy_policy_url">https://magicpark-gn.com/Politique-et-confidentialit%C3%A9.html</string>
 </resources>
