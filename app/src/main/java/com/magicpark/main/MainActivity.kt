@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.features.login.LoginScreen
 import com.magicpark.features.shop.MoviesScreen
 import com.magicpark.ui.splash.SplashScreen
@@ -31,50 +32,49 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Blue),
-                color = MaterialTheme.colorScheme.background
-            ) {
+            MagicparkMaterialTheme {
 
-                val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = "home") {
-                    composable("home") {
-                        SplashScreen(onContinue = { navController.navigate("/login") } )
+                    val navController = rememberNavController()
+
+                    NavHost(navController = navController, startDestination = "home") {
+                        composable("home") {
+                            SplashScreen(onContinue = { navController.navigate("/login") })
+                        }
+
+                        composable("/privacy-policy") {
+                            val url = getString(com.magicpark.utils.R.string.privacy_policy_url)
+                            WebViewScreen(url)
+                        }
+
+
+                        // Shop
+                        composable("/shop") {}
+
+
+                        // Login:
+                        composable("/login") {
+                            LoginScreen(navController)
+                        }
+                        composable("/register") {}
+                        composable("/forgot") {}
+
+
+                        // Payment:
+                        composable("/payment") {}
+                        composable("/after-payment") {}
+
+                        // Settings:
+
+
+                        // Wallet:
+                        composable("/wallet") {}
+                        composable(
+                            "/ticket/{id}",
+                            arguments = listOf(navArgument("id") { type = NavType.IntType })
+                        ) {}
+
                     }
-
-                    composable("/privacy-policy") {
-                        val url = getString(com.magicpark.utils.R.string.privacy_policy_url)
-                        WebViewScreen(url)
-                    }
-
-
-                    // Shop
-                    composable("/shop") {}
-
-
-                    // Login:
-                    composable("/login") {
-                        LoginScreen()
-                    }
-                    composable("/register") {}
-                    composable("/forgot") {}
-
-
-                    // Payment:
-                    composable("/payment") {}
-                    composable("/after-payment") {}
-
-                    // Settings:
-
-
-                    // Wallet:
-                    composable("/wallet") {}
-                    composable("/ticket/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType })) {}
-
-                }
 
 
             }
