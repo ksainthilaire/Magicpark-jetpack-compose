@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,6 +92,7 @@ fun LoginScreen(navController: NavController? = null) {
 
             OutlinedTextField(
                 value = password,
+                visualTransformation = PasswordVisualTransformation(),
                 onValueChange = { value ->
                     password = value
                 },
@@ -153,7 +155,7 @@ fun LoginScreen(navController: NavController? = null) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .weight(1f)
-                            .offset(x = -12.dp)
+                            .offset(x = (-12).dp)
                             .clickable {
                                 TODO("Login with Facebook")
                             }
@@ -182,7 +184,7 @@ fun LoginScreen(navController: NavController? = null) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .weight(1f)
-                            .offset(x = -12.dp)
+                            .offset(x = (-12).dp)
                             .clickable {
                                 TODO("Simple login")
                             }
@@ -222,7 +224,7 @@ fun LoginScreen(navController: NavController? = null) {
                 .width(200.dp)
                 .height(200.dp)
                 .constrainAs(shapeTopLeft) {
-                    top.linkTo(parent.top, -50.dp)
+                    top.linkTo(parent.top, (-50).dp)
                     start.linkTo(parent.start)
                 },
             contentDescription = null
