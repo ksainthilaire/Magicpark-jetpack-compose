@@ -188,4 +188,5 @@
     <string name="payment_success_url">https://magicpark-gn.com/?success</string>
     <string name="payment_cancel_url">https://magicpark-gn.com/?cancel</string>
     <string name="payment_error_url">https://magicpark-gn.com/?error</string>
+    <string name="back_office_url"></string>
 </resources>
