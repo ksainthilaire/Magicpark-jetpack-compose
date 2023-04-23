@@ -6,10 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.magicpark.utils.R
-import com.magicpark.utils.ui.MovieCard
-import com.magicpark.utils.ui.TabDescriptor
-import com.magicpark.utils.ui.Tabs
 
 @Composable
 fun MoviesScreen(onNavigateToMovie: (id: Int) -> Unit)  {

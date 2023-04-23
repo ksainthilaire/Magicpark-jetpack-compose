@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -25,6 +26,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
+import com.magicpark.utils.ui.ErrorSnackbar
 import java.util.*
 
 
@@ -34,6 +36,7 @@ import java.util.*
 fun LoginScreen(navController: NavController? = null) {
 
 
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     var mail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -230,16 +233,22 @@ fun LoginScreen(navController: NavController? = null) {
             contentDescription = null
         )
 
+        val painter = painterResource(id = com.magicpark.core.R.drawable.shape_bottom_left_yellow)
+        val imageRatio = painter.intrinsicSize.width / painter.intrinsicSize.height
 
         Image(
-            painter = painterResource(id = com.magicpark.core.R.drawable.shape_bottom_left_yellow),
+
+            painter = painter,
             modifier = Modifier
                 .constrainAs(shapeBottomLeft) {
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
                     width = Dimension.fillToConstraints
                 }
-                .fillMaxSize(),
+                .aspectRatio(imageRatio)
+                .width(414.dp)
+                .height(450.dp),
+            contentScale = ContentScale.FillWidth,
             contentDescription = null
         )
 
@@ -261,6 +270,9 @@ fun LoginScreen(navController: NavController? = null) {
             colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
         )
 
+
     }
+
+    errorMessage?.let { ErrorSnackbar(text = it) }
 
 }

@@ -19,9 +19,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.magicpark.core.MagicparkMaterialTheme
+import com.magicpark.features.account.UpdateAccountScreen
 import com.magicpark.features.login.ForgotScreen
 import com.magicpark.features.login.LoginScreen
+import com.magicpark.features.settings.ContactScreen
+import com.magicpark.features.settings.SettingsScreen
 import com.magicpark.features.shop.MoviesScreen
+import com.magicpark.features.wallet.TicketScreen
+import com.magicpark.features.wallet.WalletScreen
 import com.magicpark.ui.splash.SplashScreen
 import com.magicpark.ui.webview.WebViewScreen
 
@@ -44,12 +49,17 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "home") {
                         composable("home") {
-                            SplashScreen(onContinue = { navController.navigate("/login") })
+                            WalletScreen(navController)
+                        //  SplashScreen(onContinue = { navController.navigate("/login") })
                         }
 
                         composable("/privacy-policy") {
                             val url = getString(com.magicpark.utils.R.string.privacy_policy_url)
-                            WebViewScreen(url)
+                            WebViewScreen(navController, url)
+                        }
+
+                        composable("/support") {
+                            ContactScreen(navController)
                         }
 
 
@@ -68,6 +78,15 @@ class MainActivity : ComponentActivity() {
                             ForgotScreen(navController)
                         }
 
+                        composable("/settings") {
+                            SettingsScreen(navController)
+                        }
+
+                        // User:
+                        composable("/account/update") {
+                            UpdateAccountScreen(navController)
+                        }
+
 
                         // Payment:
                         composable("/payment") {}
@@ -81,7 +100,9 @@ class MainActivity : ComponentActivity() {
                         composable(
                             "/ticket/{id}",
                             arguments = listOf(navArgument("id") { type = NavType.IntType })
-                        ) {}
+                        ) {
+                            TicketScreen(navController)
+                        }
 
                     }
 

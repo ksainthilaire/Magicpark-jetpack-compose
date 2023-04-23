@@ -7,7 +7,11 @@
 3. [Negative aspects of the project/ways for improvement]
 4. [Thanks]
 
+Settings =>
+Éditer mon profil =>
 
+Politique de confidentialités =>
+Back-office => / Contacter =>
 
 
 ## Application Architecture

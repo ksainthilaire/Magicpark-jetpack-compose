@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -24,13 +25,15 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
-
+import com.magicpark.utils.ui.ErrorSnackbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun RegisterScreen(navController: NavController? = null) {
 
+
+    var errorMessage by remember { mutableStateOf<String?>("Test") }
 
     var fullName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
@@ -47,6 +50,26 @@ fun RegisterScreen(navController: NavController? = null) {
     ) {
         val (view, home, shapeTopLeft, shapeMidRight, shapeBottomLeft) = createRefs()
 
+
+        val painter = painterResource(id = com.magicpark.core.R.drawable.shape_bottom_left_gold)
+        val imageRatio = painter.intrinsicSize.width / painter.intrinsicSize.height
+
+
+        Image(
+
+            painter = painter,
+            modifier = Modifier
+                .constrainAs(shapeBottomLeft) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    width = Dimension.fillToConstraints
+                }
+                .aspectRatio(imageRatio)
+                .width(414.dp)
+                .height(450.dp),
+            contentScale = ContentScale.FillWidth,
+            contentDescription = null
+        )
 
 
 
@@ -77,9 +100,6 @@ fun RegisterScreen(navController: NavController? = null) {
                 )
 
 
-            }
-
-            item {
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
@@ -126,7 +146,7 @@ fun RegisterScreen(navController: NavController? = null) {
 
 
                 OutlinedTextField(
-                    modifier = Modifier.padding(top=10.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     value = fullName,
                     onValueChange = { value ->
                         fullName = value
@@ -141,7 +161,7 @@ fun RegisterScreen(navController: NavController? = null) {
 
 
                 OutlinedTextField(
-                    modifier = Modifier.padding(top=10.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     value = number,
                     onValueChange = { value ->
                         number = value
@@ -155,7 +175,7 @@ fun RegisterScreen(navController: NavController? = null) {
                 )
 
                 OutlinedTextField(
-                    modifier = Modifier.padding(top=10.dp, bottom=10.dp),
+                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                     value = mail,
                     onValueChange = { value ->
                         mail = value
@@ -199,7 +219,7 @@ fun RegisterScreen(navController: NavController? = null) {
 
 
                 OutlinedTextField(
-                    modifier = Modifier.padding(top=10.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     visualTransformation = PasswordVisualTransformation(),
                     value = passwordConfirmation,
                     onValueChange = { value ->
@@ -220,7 +240,8 @@ fun RegisterScreen(navController: NavController? = null) {
 
 
 
-                Row(modifier = Modifier.padding(8.dp),
+                Row(
+                    modifier = Modifier.padding(8.dp),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -232,20 +253,27 @@ fun RegisterScreen(navController: NavController? = null) {
                         enabled = true,
                         colors = CheckboxDefaults.colors(
                             checkedColor = MagicparkTheme.colors.primary,
-                            uncheckedColor = MagicparkTheme.colors.primary)
+                            uncheckedColor = MagicparkTheme.colors.primary
+                        )
                     )
-                    Text(text = "J'accepte les",
-                    style = TextStyle(
-                        color = MagicparkTheme.colors.primary
-                    ))
-                    Text(text = "CGU",
-                        modifier = Modifier.padding(start=5.dp).clickable {
-                            navController?.navigate("/privacy-policy")
-                        },
+                    Text(
+                        text = "J'accepte les",
+                        style = TextStyle(
+                            color = MagicparkTheme.colors.primary
+                        )
+                    )
+                    Text(
+                        text = "CGU",
+                        modifier = Modifier
+                            .padding(start = 5.dp)
+                            .clickable {
+                                navController?.navigate("/privacy-policy")
+                            },
                         style = TextStyle(
                             textDecoration = TextDecoration.Underline,
                             color = MagicparkTheme.colors.primary,
-                        ))
+                        )
+                    )
                 }
 
                 Button(
@@ -255,20 +283,27 @@ fun RegisterScreen(navController: NavController? = null) {
                 }
 
 
+                Row(modifier = Modifier.padding(top = 10.dp)) {
+                    Text(
+                        "J'ai déjà un compte, ",
+                        fontSize = 12.sp,
+                        color = MagicparkTheme.colors.primary,
+                    )
 
-                Text(
-                    stringResource(id = com.magicpark.utils.R.string.register_button_already_have_an_account),
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    fontSize = 12.sp,
-                    color = MagicparkTheme.colors.primary,
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .clickable {
-                            navController?.popBackStack()
-                        }
-                )
+                    Text(
+                        "se connecter",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        fontSize = 12.sp,
+                        color = MagicparkTheme.colors.primary,
+                        modifier = Modifier
+                            .clickable {
+                                navController?.popBackStack()
+                            }
+                    )
+                }
 
             }
         }
@@ -298,20 +333,6 @@ fun RegisterScreen(navController: NavController? = null) {
 
 
 
-        Image(
-            painter = painterResource(id = R.drawable.shape_bottom_left_gold),
-            modifier = Modifier
-                .constrainAs(shapeBottomLeft) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }
-                .fillMaxSize(),
-            contentDescription = null
-        )
-
-
 
         Image(
             painter = painterResource(id = R.drawable.ic_home),
@@ -330,5 +351,7 @@ fun RegisterScreen(navController: NavController? = null) {
         )
 
     }
+
+    errorMessage?.let { ErrorSnackbar(text = it) }
 
 }

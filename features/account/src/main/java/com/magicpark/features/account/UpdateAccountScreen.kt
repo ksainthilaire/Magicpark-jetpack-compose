@@ -277,22 +277,23 @@ fun UpdateAccountScreen(navController: NavController? = null) {
 
 
         Image(
-            painter = painterResource(id = R.drawable.ic_right),
+            painter = painterResource(id = R.drawable.ic_back),
             modifier = Modifier
-                .rotate(180F)
-                .width(30.dp)
-                .height(30.dp)
+                .width(50.dp)
+                .height(50.dp)
                 .constrainAs(home) {
                     top.linkTo(parent.top, 20.dp)
                     start.linkTo(parent.start, 20.dp)
                 }
                 .clickable {
-                    TODO("Remove account")
+                    navController?.popBackStack()
                 },
             contentDescription = null,
             colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
         )
 
     }
+
+
 
 }

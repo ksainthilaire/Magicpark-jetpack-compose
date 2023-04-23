@@ -2,121 +2,115 @@ package com.magicpark.features.settings
 
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.magicpark.core.Config
+import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.Movie
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.MovieStars
 import java.util.*
 
 
-@OptIn(ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
+@Preview
 @Composable
-fun ContactScreen(movieId: Int, onBackPressed: () -> Unit) = Column {
-    val viewModel = remember { SupportViewModel() }
-
-    val state by viewModel.state.observeAsState()
-    viewModel.getMovieDetail(movieId)
-
-    val movie = state?.movie ?: Movie()
-
-    val imageUrl = Uri.parse(Config.assetsUrl)
-        .buildUpon().appendPath(movie.posterPath).build().toString()
-
-    LazyColumn {
+fun ContactScreen(navController: NavController? = null) {
 
 
+
+    Image(
+        painter = painterResource(id = com.magicpark.core.R.drawable.ic_back),
+        modifier = Modifier
+            .width(100.dp)
+            .height(50.dp)
+            .padding(
+                top = MagicparkTheme.defaultPadding,
+                end = MagicparkTheme.defaultPadding
+            )
+            .clickable {
+                navController?.popBackStack()
+            },
+        contentDescription = null,
+        colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
+    )
+
+    var text by remember { mutableStateOf("") }
+
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         item {
-
             Column(
-                modifier = Modifier
-                    .padding(start = 15.dp, top = 15.dp)
-            ) {
-                Image(
-                    painterResource(R.drawable.ic_arrow_back),
-                    "arrow back",
-                    Modifier
-                        .width(30.dp)
-                        .height(30.dp)
-                        .clickable { onBackPressed() }
-                )
-            }
-
-
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                GlideImage(
-                    model = imageUrl,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(400.dp)
-                        .clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)),
-                    contentDescription = ""
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-
-                movie.title?.let {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = it,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MovieStars(movie = movie)
-                    Text(
-                        text = movie.voteAverage.toString(),
-                        modifier = Modifier.alignByBaseline()
-                    )
-                }
-
-                movie.voteCount?.let { Text(text = "$it votes") }
-                movie.releaseDate?.let { Text(text = "Date de sortie: $it") }
-
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-
+                Modifier.padding(start=20.dp, end=20.dp)
+            ){
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "À propos du film",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "Pouvez-vous décrire le problème que vous rencontrer?",
+                    modifier = Modifier.padding(top = 80.dp),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold
+                    )
+
                 )
-
-                movie.overview?.let { Text(textAlign = TextAlign.Justify, text = it) }
+                Text(
+                    modifier = Modifier.padding(top = 10.dp),
+                    text = "Nous ferons part de votre commentaire au support Magicpark afin d'améliorer notre service et éviter que ce problème se reproduise."
+                )
             }
-        }
 
+            OutlinedTextField(
+                modifier = Modifier.padding(top=20.dp)
+                    .height(400.dp)
+                    .width(300.dp),
+                value = text,
+                onValueChange = { value ->
+                    text = value
+                },
+                shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = Color.White,
+                    unfocusedBorderColor = Color.Transparent
+                ),
+                placeholder = { Text("Renseignez-nous ici le problème rencontré") }
+            )
+
+
+            Button(
+                modifier = Modifier.padding(top=50.dp),
+                onClick = {
+                    TODO("Modifier")
+                },
+            ) {
+                Text("Transmettre au support")
+            }
+
+        }
     }
 }

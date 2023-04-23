@@ -161,6 +161,8 @@
     <string name="common_missing_permission_camera">Vous devez autoriser l\'accès à la caméra pour le contrôleur de ticket</string>
     <string name="common_button_cancel">Annuler</string>
     <string name="common_button_delete">Supprimer</string>
+    <string name="common_button_re_try">Réessayer</string>
+    <string name="common_button_close">Fermer</string>
 
     <!-- Deletion -->
     <string name="deletion_text">Cette action supprimera toutes les informations associées à votre compte, <u>y compris les produits que vous avez acheter</u>, vous ne pourrez plus les récupérer</string>
