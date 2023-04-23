@@ -128,6 +128,8 @@
     <string name="payment_title">Choisissez votre moyen de paiement : </string>
 
     <string name="payment_successful">Paiement réussi</string>
+    <string name="payment_cancel">Paiement annulé</string>
+    <string name="payment_cancel_details">Votre paiement a été annulé.\nLes détails de la transaction sont inclus ci-dessous</string>
     <string name="payment_processed">Votre paiement a été traité.\nLes détails de la transaction sont inclus ci-dessous</string>
     <string name="payment_transaction_number">Transaction Number : %s</string>
     <string name="payment_total_amount">Montant total</string>
@@ -162,6 +164,7 @@
     <string name="common_button_cancel">Annuler</string>
     <string name="common_button_delete">Supprimer</string>
     <string name="common_button_re_try">Réessayer</string>
+    <string name="common_button_continue">Continuer</string>
     <string name="common_button_close">Fermer</string>
 
     <!-- Deletion -->
@@ -182,4 +185,7 @@
     <string name="settings_update_error">Une erreur est survenue, veuillez réessayer ultérieurement</string>
 
     <string name="privacy_policy_url">https://magicpark-gn.com/Politique-et-confidentialit%C3%A9.html</string>
+    <string name="payment_success_url">https://magicpark-gn.com/?success</string>
+    <string name="payment_cancel_url">https://magicpark-gn.com/?cancel</string>
+    <string name="payment_error_url">https://magicpark-gn.com/?error</string>
 </resources>

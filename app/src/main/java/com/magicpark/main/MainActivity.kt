@@ -22,6 +22,7 @@ import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.features.account.UpdateAccountScreen
 import com.magicpark.features.login.ForgotScreen
 import com.magicpark.features.login.LoginScreen
+import com.magicpark.features.payment.PaymentStatus
 import com.magicpark.features.settings.ContactScreen
 import com.magicpark.features.settings.SettingsScreen
 import com.magicpark.features.shop.MoviesScreen
@@ -90,7 +91,12 @@ class MainActivity : ComponentActivity() {
 
                         // Payment:
                         composable("/payment") {}
-                        composable("/after-payment") {}
+                    composable("/payment/{status}",
+                        arguments = listOf(navArgument("status") { type = NavType.StringType })
+                    ) {
+                        val status = it.arguments?.getString("status") ?: "error"
+                        PaymentStatus(navController, status)
+                    }
 
                         // Settings:
 
