@@ -1,4 +1,12 @@
 package com.magicpark.features.shop
 
-class ShopItemScreen {
+import androidx.compose.runtime.Composable
+import com.magicpark.ui.menu.BottomNavigation
+
+
+@Composable
+fun ShopItemScreen() {
+    BottomNavigation {
+
+    }
 }

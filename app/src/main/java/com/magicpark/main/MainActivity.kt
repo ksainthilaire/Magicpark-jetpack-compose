@@ -26,6 +26,7 @@ import com.magicpark.features.payment.PaymentStatus
 import com.magicpark.features.settings.ContactScreen
 import com.magicpark.features.settings.SettingsScreen
 import com.magicpark.features.shop.MoviesScreen
+import com.magicpark.features.shop.ShopItemScreen
 import com.magicpark.features.wallet.TicketScreen
 import com.magicpark.features.wallet.WalletScreen
 import com.magicpark.ui.splash.SplashScreen
@@ -50,8 +51,11 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "home") {
                         composable("home") {
-                            WalletScreen(navController)
-                        //  SplashScreen(onContinue = { navController.navigate("/login") })
+
+                            ShopItemScreen()
+
+                        // WalletScreen(navController)
+                            // SplashScreen(onContinue = { navController.navigate("/login") })
                         }
 
                         composable("/privacy-policy") {
