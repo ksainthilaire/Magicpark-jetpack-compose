@@ -1,5 +1,6 @@
 package com.magicpark.ui.menu
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -60,33 +63,44 @@ private val bottomNavigationItemsList: List<BottomNavigation> = listOf(
     )
 )
 
+
+private fun showFloatingActionButton(route: String): Boolean = when (route) {
+    "/home" -> {
+        false
+    }
+    else -> true
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun BottomNavigation(
     navController: NavController? = null,
-    content: (@Composable (PaddingValues) -> Unit)? = null
+    content: (@Composable (PaddingValues) -> Unit)
 ) {
 
+
     val backStackEntry = navController?.currentBackStackEntryAsState()
+    val route = backStackEntry?.value?.destination?.route ?: "/home"
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController?.navigate("/cart") }) {
-                Column(
-                    modifier = Modifier.padding(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(com.magicpark.core.R.drawable.ic_cart),
-                        modifier = Modifier.size(40.dp),
-                        contentDescription = stringResource(R.string.cart_title),
-                    )
-                    Text(
-                        text = stringResource(R.string.cart_title),
-                        fontWeight = FontWeight.SemiBold,
-                    )
+            AnimatedVisibility(visible = showFloatingActionButton(route)) {
+                FloatingActionButton(onClick = { navController?.navigate("/cart") }) {
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(com.magicpark.core.R.drawable.ic_cart),
+                            modifier = Modifier.size(40.dp),
+                            contentDescription = stringResource(R.string.cart_title),
+                        )
+                        Text(
+                            text = stringResource(R.string.cart_title),
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
                 }
             }
         },
@@ -124,6 +138,6 @@ fun BottomNavigation(
                 }
 
             }
-        }, content = { Text("test ${it.toString()}") }
+        }, content = content
     )
 }

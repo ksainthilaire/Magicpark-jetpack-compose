@@ -26,6 +26,10 @@ object MagicparkTheme {
         get() = MaterialTheme.shapes
 
 
+
+    val magicparkBackgroundRed = Color(0xFFAD061C)
+
+
     val facebookButtonColor = Color(0xFF3b5998)
 
 
