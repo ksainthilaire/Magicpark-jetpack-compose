@@ -5,19 +5,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.features.account.UpdateAccountScreen
 import com.magicpark.features.login.ForgotScreen
@@ -25,11 +17,8 @@ import com.magicpark.features.login.LoginScreen
 import com.magicpark.features.payment.PaymentStatus
 import com.magicpark.features.settings.ContactScreen
 import com.magicpark.features.settings.SettingsScreen
-import com.magicpark.features.shop.MoviesScreen
-import com.magicpark.features.shop.ShopItemScreen
+import com.magicpark.features.shop.ShopScreen
 import com.magicpark.features.wallet.TicketScreen
-import com.magicpark.features.wallet.WalletScreen
-import com.magicpark.ui.splash.SplashScreen
 import com.magicpark.ui.webview.WebViewScreen
 
 
@@ -52,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "home") {
                         composable("home") {
 
-                            ShopItemScreen()
+                            ShopScreen(navController)
 
                         // WalletScreen(navController)
                             // SplashScreen(onContinue = { navController.navigate("/login") })
