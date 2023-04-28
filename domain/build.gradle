@@ -2,10 +2,11 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
-    namespace "io.dvlt.domain"
+    namespace "com.magicpark.domain"
     compileSdk 33
 
     defaultConfig {

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'io.dvlt.data'
+    namespace 'com.magicpark.data'
     compileSdk 33
 
     defaultConfig {
