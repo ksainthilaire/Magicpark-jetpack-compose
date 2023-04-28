@@ -70,7 +70,7 @@ fun Counter() {
             imageVector = Icons.Default.Add,
             contentDescription = "Minus",
         ){
-
+            counter.value -= 1
         }
 
         Text(
@@ -86,7 +86,7 @@ fun Counter() {
             imageVector = Icons.Default.Add,
             contentDescription = "Add"
         ){
-
+            counter.value += 1
         }
 
     }

@@ -69,5 +69,6 @@ android {
 dependencies {
     implementation project(":domain")
     implementation project(":core")
+    implementation project(":features:payment")
     implementation project(":utils")
 }
