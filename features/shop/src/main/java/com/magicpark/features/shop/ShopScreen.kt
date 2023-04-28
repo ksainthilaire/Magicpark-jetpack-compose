@@ -1,5 +1,6 @@
 package com.magicpark.features.shop
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,11 +13,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,78 +35,71 @@ import com.magicpark.ui.menu.BottomNavigation
 import com.magicpark.utils.R
 
 
-private fun generateShopItems(): List<ShopItem> {
-    return listOf(
-        ShopItem(
-            id = 0,
-            name = "Visite entrée à la journée",
-            description = "Un ticket pour une visite et une entrée à la journée",
-            imageUrl = "",
-            backgroundColor = "",
-            price = 5.4f,
-            quantity = 1,
-            isPack = true,
-            packQuantity = 1,
-            packShopItemId = 1,
-            quantityCart = 1
-        ),
-        ShopItem(
-            id = 1,
-            name = "Visite entrée au week-end",
-            description = "Un ticket pour une visite et une entrée au week-end",
-            imageUrl = "",
-            backgroundColor = "",
-            price = 5.4f,
-            quantity = 1,
-            isPack = true,
-            packQuantity = 1,
-            packShopItemId = 1,
-            quantityCart = 1
-        ),
-        ShopItem(
-            id = 2,
-            name = "Visite entrée au week-end",
-            description = "Un ticket pour une visite et une entrée au week-end",
-            imageUrl = "",
-            backgroundColor = "",
-            categories = "fraise",
-            price = 5.4f,
-            quantity = 1,
-            isPack = true,
-            packQuantity = 1,
-            packShopItemId = 1,
-            quantityCart = 1
-        ),
-        ShopItem(
-            id = 3,
-            name = "Visite entrée au mois",
-            description = "Un ticket pour une visite et une entrée au week-end",
-            imageUrl = "",
-            backgroundColor = "",
-            price = 5.4f,
-            categories = "banane",
-            quantity = 1,
-            isPack = true,
-            packQuantity = 1,
-            packShopItemId = 1,
-            quantityCart = 1
-        ),
-        ShopItem(
-            id = 3,
-            name = "Visite entrée à l'année",
-            description = "Un ticket pour une visite et une entrée à l'année",
-            imageUrl = "",
-            backgroundColor = "",
-            categories = "test",
-            price = 5.4f,
-            quantity = 1,
-            isPack = true,
-            packQuantity = 1,
-            packShopItemId = 1,
-            quantityCart = 1
-        )
+
+private val test_shopItems: List<ShopItem> = listOf(
+    ShopItem(
+        id = 0,
+        name = "Visite entrée à la journée",
+        description = "Un ticket pour une visite et une entrée à la journée",
+        imageUrl = "https://i0.wp.com/artistes-productions.com/wp-content/uploads/2020/03/pexels-photo-2014775.jpeg?resize=800%2C533&ssl=1",
+        backgroundColor = "",
+        price = 5.4f,
+        quantity = 1,
+        isPack = true,
+        packQuantity = 1,
+        packShopItemId = 1,
+        quantityCart = 1
+    ), ShopItem(
+        id = 1,
+        name = "Visite entrée au week-end",
+        description = "Un ticket pour une visite et une entrée au week-end",
+        imageUrl = "https://ca-times.brightspotcdn.com/dims4/default/7249d3d/2147483647/strip/false/crop/4000x2666+0+0/resize/1486x990!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe2%2Fdb%2F137a883b4ef48700d355f407fe2a%2Fla-et-ticketmaster-taylor-swift.jpg",
+        backgroundColor = "",
+        price = 5.4f,
+        quantity = 1,
+        isPack = true,
+        packQuantity = 1,
+        packShopItemId = 1,
+        quantityCart = 1
+    ), ShopItem(
+        id = 2,
+        name = "Visite entrée au week-end",
+        description = "Un ticket pour une visite et une entrée au week-end",
+        imageUrl = "https://img.freepik.com/premium-photo/background-paris_219717-5461.jpg",
+        backgroundColor = "",
+        price = 5.4f,
+        quantity = 1,
+        isPack = true,
+        packQuantity = 1,
+        packShopItemId = 1,
+        quantityCart = 1
+    ), ShopItem(
+        id = 3,
+        name = "Visite entrée au mois",
+        description = "Un ticket pour une visite et une entrée au week-end",
+        imageUrl = "https://decouvrirlemonde.fr/wp-content/uploads/2019/03/monuments-rome-Colise%CC%81e-italie-histoire-empire-romain.jpg",
+        backgroundColor = "",
+        price = 5.4f,
+        quantity = 1,
+        isPack = true,
+        packQuantity = 1,
+        packShopItemId = 1,
+        quantityCart = 1
+    ), ShopItem(
+        id = 3,
+        name = "Visite entrée à l'année",
+        description = "Un ticket pour une visite et une entrée à l'année",
+        imageUrl = "https://www.lenouvelliste.ch/media/image/94/nf_normal_16_9/chillon-2019.jpg",
+        backgroundColor = "",
+        price = 5.4f,
+        quantity = 1,
+        isPack = true,
+        packQuantity = 1,
+        packShopItemId = 1,
+        quantityCart = 1
     )
-}
+)
+
 
 private fun getShopItemsCategories(shopItems: List<ShopItem>): List<String> {
     return shopItems.map { it.categories }
@@ -113,20 +111,20 @@ private fun getShopItemsCategories(shopItems: List<ShopItem>): List<String> {
 @Composable
 fun ShopItemCard(shopItem: ShopItem) {
 
-    Column {
+    Column(Modifier.clip(shape = RoundedCornerShape(20.dp)).background(Color.White).padding(10.dp).size(200.dp)){
 
-        Icon(
-            modifier = Modifier.size(16.dp),
-            imageVector = Icons.Default.Delete,
-            contentDescription = "",
-            tint = MagicparkTheme.colors.primary
+        Image(
+            painterResource(com.magicpark.core.R.drawable.ic_like),
+
+            modifier = Modifier.size(32.dp),
+           contentDescription = ""
         )
 
 
         GlideImage(
             model = shopItem.imageUrl ?: "",
             contentScale = ContentScale.Fit,
-            modifier = Modifier.clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)),
+            modifier = Modifier.padding(top=20.dp).align(Alignment.CenterHorizontally).clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)).size(100.dp),
             contentDescription = ""
         )
 
@@ -135,10 +133,12 @@ fun ShopItemCard(shopItem: ShopItem) {
                 text = shopItem?.name ?: "",
                 style = TextStyle(
                     fontWeight = FontWeight.Bold
-                )
+                ),
+                color = MagicparkTheme.colors.primary
             )
             Text(
-                text = "%s GNF".format(shopItem?.price)
+                text = "%s GNF".format(shopItem?.price),
+                color = MagicparkTheme.colors.primary
             )
         }
 
@@ -152,7 +152,7 @@ fun ShopItemCard(shopItem: ShopItem) {
 @Preview
 fun ShopScreen(navController: NavController? = null) {
 
-    val shopItemsList = generateShopItems()
+    val shopItemsList = test_shopItems
     val shopItems by remember { mutableStateOf(shopItemsList) }
 
     var searchText by remember { mutableStateOf("") }
@@ -160,7 +160,7 @@ fun ShopScreen(navController: NavController? = null) {
     var categories = getShopItemsCategories(shopItems)
 
     BottomNavigation(navController) {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .background(Color.Gray)
                 .fillMaxSize()
@@ -168,7 +168,6 @@ fun ShopScreen(navController: NavController? = null) {
         ) {
 
 
-            item {
 
 
                 OutlinedTextField(
@@ -205,7 +204,10 @@ fun ShopScreen(navController: NavController? = null) {
 
 
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 128.dp)
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(shopItems) {
                         ShopItemCard(shopItem = it)
@@ -217,6 +219,5 @@ fun ShopScreen(navController: NavController? = null) {
             }
 
         }
-    }
 }
 
