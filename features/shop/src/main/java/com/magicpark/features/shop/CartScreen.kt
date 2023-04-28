@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.magicpark.ShopItem
 import com.magicpark.utils.ui.Counter
 
@@ -30,11 +31,89 @@ interface CartListener {
 }
 
 
+private val test_shopItem = ShopItem(
+    id = 0,
+    name = "First object",
+    description = "Description",
+    price = 500f,
+    imageUrl = "https://img.cuisineaz.com/660x660/2017/02/02/i119528-banane-sauce-chocolat.jpeg"
+)
+
+private val test_shopItems :  List<ShopItem> =
+    listOf(
+        ShopItem(
+            id = 0,
+            name = "Visite entrée à la journée",
+            description = "Un ticket pour une visite et une entrée à la journée",
+            imageUrl = "https://i0.wp.com/artistes-productions.com/wp-content/uploads/2020/03/pexels-photo-2014775.jpeg?resize=800%2C533&ssl=1",
+            backgroundColor = "",
+            price = 5.4f,
+            quantity = 1,
+            isPack = true,
+            packQuantity = 1,
+            packShopItemId = 1,
+            quantityCart = 1
+        ),
+        ShopItem(
+            id = 1,
+            name = "Visite entrée au week-end",
+            description = "Un ticket pour une visite et une entrée au week-end",
+            imageUrl = "https://ca-times.brightspotcdn.com/dims4/default/7249d3d/2147483647/strip/false/crop/4000x2666+0+0/resize/1486x990!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe2%2Fdb%2F137a883b4ef48700d355f407fe2a%2Fla-et-ticketmaster-taylor-swift.jpg",
+            backgroundColor = "",
+            price = 5.4f,
+            quantity = 1,
+            isPack = true,
+            packQuantity = 1,
+            packShopItemId = 1,
+            quantityCart = 1
+        ),
+        ShopItem(
+            id = 2,
+            name = "Visite entrée au week-end",
+            description = "Un ticket pour une visite et une entrée au week-end",
+            imageUrl = "https://img.freepik.com/premium-photo/background-paris_219717-5461.jpg",
+            backgroundColor = "",
+            price = 5.4f,
+            quantity = 1,
+            isPack = true,
+            packQuantity = 1,
+            packShopItemId = 1,
+            quantityCart = 1
+        ),
+        ShopItem(
+            id = 3,
+            name = "Visite entrée au mois",
+            description = "Un ticket pour une visite et une entrée au week-end",
+            imageUrl = "https://decouvrirlemonde.fr/wp-content/uploads/2019/03/monuments-rome-Colise%CC%81e-italie-histoire-empire-romain.jpg",
+            backgroundColor = "",
+            price = 5.4f,
+            quantity = 1,
+            isPack = true,
+            packQuantity = 1,
+            packShopItemId = 1,
+            quantityCart = 1
+        ),
+        ShopItem(
+            id = 3,
+            name = "Visite entrée à l'année",
+            description = "Un ticket pour une visite et une entrée à l'année",
+            imageUrl = "https://www.lenouvelliste.ch/media/image/94/nf_normal_16_9/chillon-2019.jpg",
+            backgroundColor = "",
+            price = 5.4f,
+            quantity = 1,
+            isPack = true,
+            packQuantity = 1,
+            packShopItemId = 1,
+            quantityCart = 1
+        )
+    )
+
+
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 @Preview
 fun CartItem(
-    shopItem: ShopItem? = null,
+    shopItem: ShopItem? = test_shopItem,
     listener: CartListener? = null
 ) {
     Column(
@@ -44,32 +123,35 @@ fun CartItem(
             .padding(30.dp)
     ) {
 
-        Row {
+        Row(Modifier.padding(bottom = 15.dp)){
 
             GlideImage(
                 model = shopItem?.imageUrl ?: "",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(140.dp)
                     .clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)),
                 contentDescription = ""
             )
 
-            Column {
+            Column(Modifier.padding(start = 20.dp)) {
 
                 Row {
                     Text(
                         text = shopItem?.name ?: "",
+                        modifier = Modifier.weight(1f),
                         style = TextStyle(
                             fontWeight = FontWeight.Bold
                         ),
-                        fontSize = 30.sp
+                        fontSize = 16.sp
                     )
+
                     Icon(
-                        modifier = Modifier.size(40.dp),
+                        modifier = Modifier
+                            .size(16.dp),
                         imageVector = Icons.Default.Delete,
                         contentDescription = "",
-                        tint = Color.Green
+                        tint = MagicparkTheme.colors.primary
                     )
 
                 }
@@ -83,22 +165,37 @@ fun CartItem(
                 )
 
 
-                Row {
+                Row(Modifier.padding(top = 16.dp)) {
 
-                    Column {
-                        Text(text = stringResource(id = com.magicpark.utils.R.string.cart_quantity))
-                        Counter()
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            modifier = Modifier.padding(bottom = 10.dp),
+                            text = stringResource(id = com.magicpark.utils.R.string.cart_quantity)
+                        )
+
+                        Row{
+                            Column(Modifier.weight(1f)) {
+                                Counter()
+                            }
+                            Column(Modifier.weight(0.5f),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center) {
+                                Text(
+                                    text = "%s GNF".format(shopItem?.price.toString()),
+                                    modifier = Modifier.align(Alignment.End),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
+                        }
                     }
 
-                    Text(
-                        text = shopItem?.price.toString() ?: "",
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
+
                 }
             }
         }
+        Divider(color = Color.LightGray, thickness = 1.dp)
     }
 }
 
@@ -109,18 +206,28 @@ fun CartScreen() {
     var promoCode by remember { mutableStateOf("") }
     val items = remember { mutableStateOf(listOf<ShopItem>()) }
 
-    LazyColumn(Modifier.fillMaxSize()) {
+    LazyColumn(
+        Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
 
         item {
 
             Column {
+
+                test_shopItems.forEach {
+                    CartItem(it)
+                }
 
             }
 
             Row {
 
                 OutlinedTextField(
-                    modifier = Modifier.padding(top = 10.dp),
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .weight(1f),
                     value = promoCode,
                     onValueChange = { value ->
                         promoCode = value
@@ -128,29 +235,44 @@ fun CartScreen() {
                     shape = RoundedCornerShape(12.dp),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         containerColor = Color.White,
-                        unfocusedBorderColor = Color.Transparent
+                        unfocusedBorderColor = MagicparkTheme.colors.primary
                     ),
                     placeholder = { Text(stringResource(id = com.magicpark.utils.R.string.cart_promo_code)) }
                 )
 
-                Column {
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 10.dp)
+                ) {
                     Row {
                         Text(
-                            stringResource(id = com.magicpark.utils.R.string.cart_label_total)
+                            stringResource(id = com.magicpark.utils.R.string.cart_label_total),
+                            Modifier.weight(1f),
+                            style = TextStyle(
+                                fontWeight = FontWeight.Bold
+                            )
                         )
-                        Text("365 USD")
+                        Text("365 USD", Modifier.weight(1f))
                     }
                     Text(
-                        stringResource(id = com.magicpark.utils.R.string.cart_prevent)
+                        stringResource(id = com.magicpark.utils.R.string.cart_prevent),
+                        style = TextStyle(
+                            color = Color.Gray
+                        )
                     )
 
+
+
                     Button(
+                        modifier = Modifier.padding(top = 10.dp),
                         onClick = {
                             TODO("Payer maintenant")
                         },
                     ) {
-                        Text(text = stringResource(com.magicpark.utils.R.string.cart_button_pay))
+                        Text(text = stringResource(com.magicpark.utils.R.string.cart_buy))
                     }
+
                 }
 
             }
