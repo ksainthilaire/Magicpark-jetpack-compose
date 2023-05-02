@@ -1,5 +1,7 @@
 package com.magicpark.features.shop
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,6 +28,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -33,7 +37,7 @@ import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.magicpark.ShopItem
 import com.magicpark.ui.menu.BottomNavigation
 import com.magicpark.utils.R
-
+import com.magicpark.utils.ui.MagicparkContainer
 
 
 private val test_shopItems: List<ShopItem> = listOf(
@@ -71,6 +75,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         quantity = 1,
         isPack = true,
         packQuantity = 1,
+        categories = "Visite à la journée",
         packShopItemId = 1,
         quantityCart = 1
     ), ShopItem(
@@ -81,6 +86,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         backgroundColor = "",
         price = 5.4f,
         quantity = 1,
+        categories = "Visite au mois",
         isPack = true,
         packQuantity = 1,
         packShopItemId = 1,
@@ -92,6 +98,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         imageUrl = "https://www.lenouvelliste.ch/media/image/94/nf_normal_16_9/chillon-2019.jpg",
         backgroundColor = "",
         price = 5.4f,
+        categories = "Visite à l'année",
         quantity = 1,
         isPack = true,
         packQuantity = 1,
@@ -111,20 +118,31 @@ private fun getShopItemsCategories(shopItems: List<ShopItem>): List<String> {
 @Composable
 fun ShopItemCard(shopItem: ShopItem) {
 
-    Column(Modifier.clip(shape = RoundedCornerShape(20.dp)).background(Color.White).padding(10.dp).size(200.dp)){
+    Column(
+        Modifier
+
+            .clip(shape = RoundedCornerShape(20.dp))
+            .background(Color.White)
+            .padding(10.dp)
+            .wrapContentSize()
+    ) {
 
         Image(
             painterResource(com.magicpark.core.R.drawable.ic_like),
 
             modifier = Modifier.size(32.dp),
-           contentDescription = ""
+            contentDescription = ""
         )
 
 
         GlideImage(
             model = shopItem.imageUrl ?: "",
             contentScale = ContentScale.Fit,
-            modifier = Modifier.padding(top=20.dp).align(Alignment.CenterHorizontally).clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)).size(100.dp),
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .align(Alignment.CenterHorizontally)
+                .clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
+                .size(100.dp),
             contentDescription = ""
         )
 
@@ -147,7 +165,7 @@ fun ShopItemCard(shopItem: ShopItem) {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 @Preview
 fun ShopScreen(navController: NavController? = null) {
@@ -159,65 +177,91 @@ fun ShopScreen(navController: NavController? = null) {
 
     var categories = getShopItemsCategories(shopItems)
 
+    println("categories ".plus(categories.joinToString { "," }))
+
     BottomNavigation(navController) {
-        Column(
-            modifier = Modifier
-                .background(Color.Gray)
-                .fillMaxSize()
-                .padding(20.dp)
-        ) {
+
+        MagicparkContainer {
 
 
-
-
-                OutlinedTextField(
+            Box(
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(
+                    painter = painterResource(id = com.magicpark.core.R.drawable.background_shop_header),
                     modifier = Modifier
-                        .padding(top = 10.dp)
-                        .fillMaxWidth(),
-                    value = searchText,
-                    onValueChange = { value ->
-                        searchText = value
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        containerColor = Color.White,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    placeholder = { Text(stringResource(id = R.string.shop_label_search)) }
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    contentDescription = "description"
                 )
+                Image(
+                    painter = painterResource(id = com.magicpark.core.R.drawable.illustration_elephant),
+                    modifier = Modifier
+                        .width(76.dp)
+                        .height(93.dp)
+                        .align(Alignment.CenterStart),
+                    contentDescription = "description"
+                )
+                Text(
+                    text = stringResource(R.string.shop_title),
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Color.White
+                )
+            }
 
-                LazyRow(Modifier.padding(top = 20.dp)) {
 
-                    categories.forEach {
-                        item {
-                            Button(
-                                onClick = {
-                                    TODO("Modifier")
-                                },
-                            ) {
-                                Text(it)
-                            }
-                            Spacer(Modifier.size(10.dp))
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth(),
+                value = searchText,
+                onValueChange = { value ->
+                    searchText = value
+                },
+                shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = Color.White,
+                    unfocusedBorderColor = Color.Transparent
+                ),
+                placeholder = { Text(stringResource(id = R.string.shop_label_search)) }
+            )
+
+            LazyRow(Modifier.padding(top = 20.dp)) {
+
+                categories.forEach {
+                    item {
+                        Button(
+                            onClick = {
+                                TODO("Modifier")
+                            },
+                        ) {
+                            Text(it)
                         }
+                        Spacer(Modifier.size(10.dp))
                     }
                 }
+            }
 
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(shopItems) {
-                        ShopItemCard(shopItem = it)
-                    }
 
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(shopItems) {
+                    ShopItemCard(shopItem = it)
                 }
-
 
             }
 
+
         }
+
+
+    }
 }
+
 

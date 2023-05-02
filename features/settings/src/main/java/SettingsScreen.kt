@@ -127,16 +127,21 @@ fun SettingsScreen(navController: NavController? = null) {
 
                 Box {
 
-                    Image(
-                        painter = painterResource(R.drawable.iv_anonymous),
-                        contentDescription = "avatar",
-                        contentScale = ContentScale.Fit,
-
+                    Box(
                         modifier = Modifier
-                            .size(128.dp)
+                            .size(64.dp)
                             .clip(CircleShape)
                             .border(2.dp, MagicparkTheme.colors.primary, CircleShape)
-                    )
+                    ) {
+
+
+                        Image(
+                            painter = painterResource(R.drawable.illustration_elephant),
+                            modifier = Modifier.fillMaxSize(),
+                            contentDescription = "avatar",
+                            contentScale = ContentScale.FillBounds
+    )
+                    }
 
 
                     Image(

@@ -26,6 +26,8 @@ object MagicparkTheme {
         get() = MaterialTheme.shapes
 
 
+    val buttonGreen = Color(0xFF053807)
+
 
     val magicparkBackgroundRed = Color(0xFFAD061C)
 

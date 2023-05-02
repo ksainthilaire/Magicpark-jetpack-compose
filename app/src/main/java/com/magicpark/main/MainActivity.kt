@@ -20,6 +20,7 @@ import com.magicpark.features.settings.SettingsScreen
 import com.magicpark.features.shop.CartScreen
 import com.magicpark.features.shop.ShopScreen
 import com.magicpark.features.wallet.TicketScreen
+import com.magicpark.features.wallet.WalletScreen
 import com.magicpark.ui.webview.WebViewScreen
 
 
@@ -39,11 +40,11 @@ class MainActivity : ComponentActivity() {
 
                     val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = "home") {
+                NavHost(navController = navController, startDestination = "/shop") {
                         composable("home") {
-
-                            //CartScreen()
-                           ShopScreen(navController)
+                        WalletScreen(navController)
+                        //   CartScreen()
+                           //ShopScreen(navController)
 
                         // WalletScreen(navController)
                             // SplashScreen(onContinue = { navController.navigate("/login") })
@@ -60,7 +61,11 @@ class MainActivity : ComponentActivity() {
 
 
                         // Shop
-                        composable("/shop") {}
+                        composable("/shop") {
+                            ShopScreen(navController)
+                        }
+
+
 
 
                         // Login:
@@ -97,7 +102,9 @@ class MainActivity : ComponentActivity() {
 
 
                         // Wallet:
-                        composable("/wallet") {}
+                        composable("/wallet") {
+                            WalletScreen(navController)
+                        }
                         composable(
                             "/ticket/{id}",
                             arguments = listOf(navArgument("id") { type = NavType.IntType })
