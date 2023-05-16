@@ -19,8 +19,13 @@ class MagicparkDbSession(context: Context) {
     }
 
 
+
+
+
     companion object {
         const val KEY_SHARED_PREFERENCES = "KEY-MAGICPARK"
         const val KEY_API_TOKEN = "KEY-API-TOKEN"
+
+        const val KEY_CART = "KEY-CART"
     }
 }

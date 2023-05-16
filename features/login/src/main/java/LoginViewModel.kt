@@ -33,6 +33,8 @@ class LoginViewModel : ViewModel() {
 
     fun login(mail: String, password: String) {
         Log.d(TAG, "Login with mail = ${mail}, password = ${password}")
+
+
     }
 
     fun forgot(mail: String) {

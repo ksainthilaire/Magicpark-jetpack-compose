@@ -2,6 +2,9 @@ package com.magicpark.features.settings
 
 
 
-class State(
-    val isLoading: Boolean = true
-)
+
+sealed class SupportState  {
+    /* Login */
+    object HelpRequestSent : SupportState()
+    class HelpRequestError(val message: String? = null) : SupportState()
+}

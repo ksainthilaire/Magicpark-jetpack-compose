@@ -5,13 +5,13 @@ package com.magicpark.features.login
 sealed class LoginState  {
     /* Login */
     object LoginSuccessful : LoginState()
-    object LoginError : LoginState()
+    class LoginError(val message: String? = null) : LoginState()
 
     /* Register */
-    object RegisterFailed : LoginState()
+    class RegisterFailed(val message: String? = null): LoginState()
     object RegisterSuccess : LoginState()
 
     /* Forgot */
-    object ForgotSuccessful : LoginState()
+    class ForgotSuccessful(val message: String? = null) : LoginState()
     object ForgotError : LoginState()
 }
