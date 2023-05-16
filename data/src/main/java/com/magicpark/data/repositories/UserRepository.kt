@@ -4,6 +4,7 @@ import com.magicpark.data.api.MagicparkApi
 import com.magicpark.data.model.request.authentification.LoginRequest
 import com.magicpark.data.model.request.authentification.UpdateUserRequest
 import com.magicpark.data.model.request.order.CreateOrderRequest
+import com.magicpark.data.session.MagicparkDbSession
 import com.magicpark.domain.enums.PaymentMethodEnum
 import com.magicpark.domain.model.*
 import com.magicpark.domain.repositories.IOrderRepository
@@ -11,7 +12,7 @@ import com.magicpark.domain.repositories.IUserRepository
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class UserRepository(private val magicparkApi: MagicparkApi) : IUserRepository {
+class UserRepository(private val magicparkApi: MagicparkApi, private val magicparkDbSession: MagicparkDbSession) : IUserRepository {
 
     override fun updateUser(
         mail: String?,
@@ -27,18 +28,18 @@ class UserRepository(private val magicparkApi: MagicparkApi) : IUserRepository {
             avatarUrl = avatarUrl,
             country = country
         )
-        return magicparkApi.updateUser("", request)
+        return magicparkApi.updateUser(magicparkDbSession.getToken(), request)
             .subscribeOn(Schedulers.io())
 
     }
 
     override fun deleteUser(): Completable {
-        return magicparkApi.deleteUser("")
+        return magicparkApi.deleteUser(magicparkDbSession.getToken())
             .subscribeOn(Schedulers.io())
     }
 
     override fun getUser(): Observable<User> {
-        return magicparkApi.getUser("")
+        return magicparkApi.getUser(magicparkDbSession.getToken())
             .subscribeOn(Schedulers.io())
             .map {
                 it.user
@@ -51,8 +52,15 @@ class UserRepository(private val magicparkApi: MagicparkApi) : IUserRepository {
         )
         return magicparkApi.login(request)
             .subscribeOn(Schedulers.io()).map {
-            it.user
+            it.user?.let(::saveToken)
         }
+    }
+
+    private fun saveToken(user: User): User {
+        user.token?.let { token ->
+            magicparkDbSession.saveToken(token)
+        }
+        return user
     }
 
 }

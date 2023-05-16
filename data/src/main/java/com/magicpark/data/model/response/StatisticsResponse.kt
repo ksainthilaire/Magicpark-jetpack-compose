@@ -15,4 +15,4 @@ data class StatisticsResponse(
     var money: String? = null,
     var names: List<String>? = null,
     var values: List<String>? = null
-)
+) : com.magicpark.data.model.base.ErrorResponse()

@@ -15,8 +15,6 @@ interface ShopDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveShopItems(items: List<ShopItem>): List<Long>
 
-    @Query("SELECT * FROM shop WHERE category LIKE :category")
-    fun getShopItemsByCategory(category: ShopCategory): Observable<List<ShopItem>>
 
     @Query("SELECT * FROM shop WHERE id LIKE :id LIMIT 1")
     fun getShopItem(id: Int): Observable<ShopItem>

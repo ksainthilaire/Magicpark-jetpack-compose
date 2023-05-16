@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.magicpark.data.model.enums.SupportStatusEnum
-import java.sql.Timestamp
+import java.util.Date
 import java.util.*
 
 @Entity(tableName = "support")
@@ -38,5 +38,5 @@ data class Support(
 
     @ColumnInfo(name="deleted_at")
     @SerializedName("deleted_at")
-    var deletedAt: Timestamp? = null
+    var deletedAt: Date? = null
 )

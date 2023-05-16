@@ -1,6 +1,7 @@
 package com.magicpark.domain.converters
 
 import androidx.room.TypeConverter
+import java.util.Date
 import java.util.*
 
 

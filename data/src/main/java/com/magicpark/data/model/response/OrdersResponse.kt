@@ -12,4 +12,4 @@ data class OrdersResponse(
 
     @SerializedName("page")
     val page: Int? = null
-)
+) : com.magicpark.data.model.base.ErrorResponse()

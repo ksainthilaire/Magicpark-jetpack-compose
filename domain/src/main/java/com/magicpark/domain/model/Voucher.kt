@@ -2,7 +2,7 @@ package com.magicpark.domain.model
 
 import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
-import java.sql.Timestamp
+import java.util.Date
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 
@@ -20,9 +20,9 @@ data class Voucher(
 
     @ColumnInfo(name = "created_at")
     @SerializedName("created_at")
-    var createdAt: Timestamp? = null,
+    var createdAt: Date? = null,
 
     @ColumnInfo(name = "deleted_at")
     @SerializedName("deleted_at")
-    var deletedAt: Timestamp? = null
+    var deletedAt: Date? = null
 )

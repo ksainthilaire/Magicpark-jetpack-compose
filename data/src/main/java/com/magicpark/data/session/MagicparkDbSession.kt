@@ -2,9 +2,8 @@ package com.magicpark.data.session
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.magicpark.core.Config
 
-class MovieDbSession(context: Context) {
+class MagicparkDbSession(context: Context) {
 
     private var prefs: SharedPreferences =
         context.getSharedPreferences(KEY_SHARED_PREFERENCES, Context.MODE_PRIVATE)

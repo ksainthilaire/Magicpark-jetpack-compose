@@ -1,4 +1,4 @@
-package com.magicpark.data.http.base
+package com.magicpark.data.model.base
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,6 +1,7 @@
 package com.magicpark.core.di
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import androidx.room.Room
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -10,6 +11,7 @@ import com.magicpark.data.local.AppDatabase
 import com.magicpark.data.local.ShopDao
 import com.magicpark.data.local.UserTicketDao
 import com.magicpark.data.repositories.*
+import com.magicpark.data.session.MagicparkDbSession
 import com.magicpark.domain.usecases.*
 import dagger.Module
 import dagger.Provides
@@ -17,7 +19,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -26,11 +27,22 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+class AppModule(private val application: Application) {
+
+
+    @Provides
+    @Singleton
+    fun providesApplication(): Application = application
+
+    @Provides
+    @Singleton
+    fun providesApplicationContext(): Context = application
+
+
     @Singleton
     @Provides
-    fun provideResources(androidApplication: Application): Resources {
-        return androidApplication.resources
+    fun provideResources(): Resources {
+        return application.resources
     }
 
     @Provides
@@ -84,17 +96,23 @@ object DataModule {
     }
 
 
-
     @Provides
     @Singleton
-    fun providesOrderRepository(magicparkApi: MagicparkApi): OrderRepository {
-        return OrderRepository(magicparkApi)
+    fun providesOrderRepository(
+        magicparkApi: MagicparkApi,
+        magicparkDbSession: MagicparkDbSession
+    ): OrderRepository {
+        return OrderRepository(magicparkApi, magicparkDbSession)
     }
 
     @Provides
     @Singleton
-    fun providesShopRepository(shopDao: ShopDao, magicparkApi: MagicparkApi): ShopRepository {
-        return ShopRepository(shopDao, magicparkApi)
+    fun providesShopRepository(
+        shopDao: ShopDao,
+        magicparkApi: MagicparkApi,
+        magicparkDbSession: MagicparkDbSession
+    ): ShopRepository {
+        return ShopRepository(shopDao, magicparkApi, magicparkDbSession)
     }
 
     @Provides
@@ -108,8 +126,11 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun providesSupportTicket(magicparkApi: MagicparkApi): SupportRepository {
-        return SupportRepository(magicparkApi)
+    fun providesSupportTicket(
+        magicparkApi: MagicparkApi,
+        magicparkDbSession: MagicparkDbSession
+    ): SupportRepository {
+        return SupportRepository(magicparkApi, magicparkDbSession)
     }
 
     @Provides
@@ -142,15 +163,9 @@ object DataModule {
     @Provides
     @Singleton
     fun providesUserUseCase(repository: UserRepository) = UserUseCases(repository)
-}
 
-
-val dataModule = module {
-
-    /*
-    single<MovieDbSession> {
-        MovieDbSession(androidContext())
-    }
-
-     */
+    @Provides
+    @Singleton
+    fun providesMagicparkDbSession(context: Context): MagicparkDbSession =
+        MagicparkDbSession(context)
 }

@@ -3,8 +3,6 @@ package com.magicpark.domain.model
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
 import com.magicpark.domain.converters.DateConverter
-import java.sql.Timestamp
-
 import java.util.Date
 
 @Entity(tableName = "wallet")
@@ -49,7 +47,5 @@ data class UserTicket(
 
     @ColumnInfo(name="deleted_at")
     @SerializedName("deleted_at")
-    var deletedAt: Timestamp? = null
-) {
-    constructor() : this(null, null, null, null, null, null, null, null, null, null, null)
-}
+    var deletedAt: Date? = null
+)

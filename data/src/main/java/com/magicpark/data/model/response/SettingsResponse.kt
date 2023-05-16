@@ -9,4 +9,4 @@ data class SettingsResponse(
     val appUrl: String? = null,
     @SerializedName("app_shop_version")
     val appShopVersion: String? = null
-)
+) : com.magicpark.data.model.base.ErrorResponse()

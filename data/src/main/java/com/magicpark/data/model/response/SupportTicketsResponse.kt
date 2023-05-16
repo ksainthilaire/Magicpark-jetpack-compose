@@ -11,4 +11,4 @@ data class SupportTicketsResponse(
 
     @SerializedName("page")
     val page: Int? = null
-)
+) : com.magicpark.data.model.base.ErrorResponse()

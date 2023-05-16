@@ -9,4 +9,4 @@ data class ShopItemsResponse(
 
     @SerializedName("shop_categories")
     val shopCategories: List<ShopCategory>? = null
-)
+) : com.magicpark.data.model.base.ErrorResponse()

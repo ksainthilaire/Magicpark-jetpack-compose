@@ -5,4 +5,4 @@ import com.magicpark.domain.model.ShopItem
 data class ShopItemResponse(
     @SerializedName("shop_item")
     val shopItems: ShopItem? = null
-)
+) : com.magicpark.data.model.base.ErrorResponse()
