@@ -1,6 +1,7 @@
 package com.magicpark.data.model.response
-
 import com.magicpark.domain.model.UserTicket
 
 
-typealias WalletResponse = List<UserTicket>
+data class WalletResponse(
+    val tickets: List<UserTicket>? = null
+)

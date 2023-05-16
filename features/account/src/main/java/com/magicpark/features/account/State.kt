@@ -1,6 +1,6 @@
 package com.magicpark.features.account
 
-import com.magicpark.domain.model.Movie
+
 
 sealed class AccountState  {
     object DeletionFailed : AccountState()

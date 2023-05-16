@@ -1,32 +1,54 @@
-package com.magicpark.domain.model.magicpark
+package com.magicpark.domain.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.magicpark.domain.enums.UserRankEnum
+import java.util.Date
 
-@Entity(tableName = "user")
+@Entity(tableName = "users")
 data class User(
-    @PrimaryKey
-    @SerializedName("id")
-    val id: Int,
+    @PrimaryKey var id: Long? = null,
 
-    @SerializedName("fullName")
-    val fullName: String?,
-
-    @SerializedName("country")
-    val country: String? = null,
-
-    @SerializedName("mail")
-    val mail: String? = null,
-
-    @SerializedName("token")
-    val token: String? = null,
+    @ColumnInfo(name = "fullname")
+    @SerializedName("fullname")
+    var fullName: String? = null,
 
 
+    @ColumnInfo(name = "mail")
+    var mail: String? = null,
+
+
+    @ColumnInfo(name = "country")
+    var country: String? = null,
+
+    @ColumnInfo(name = "avatar_url")
+    var avatarUrl: String? = null,
+
+    @ColumnInfo(name = "role")
+    var role: UserRankEnum = UserRankEnum.CUSTOMER,
+
+    @ColumnInfo(name = "token")
+    var token: String? = null,
+
+
+    @ColumnInfo(name = "ip")
+    var ip: String? = null,
+
+    @ColumnInfo(name = "phone_number")
     @SerializedName("phone_number")
-    val phoneNumber: String? = null,
+    var phoneNumber: String? = null,
 
-    @SerializedName("role")
-    var role: UserRank = UserRank.CUSTOMER,
+    @ColumnInfo(name = "created_at")
+    @SerializedName("created_at")
+    var createdAt: Date? = Date(),
 
-    )
+    @ColumnInfo(name = "updated_at")
+    @SerializedName("updated_at")
+    var updatedAt: Date? = null,
+
+    @ColumnInfo(name = "deleted_at")
+    @SerializedName("deleted_at")
+    var deletedAt: Date? = null,
+)

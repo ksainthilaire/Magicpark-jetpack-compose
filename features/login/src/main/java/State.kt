@@ -1,6 +1,6 @@
 package com.magicpark.features.login
 
-import com.magicpark.domain.model.Movie
+
 
 sealed class LoginState  {
     /* Login */

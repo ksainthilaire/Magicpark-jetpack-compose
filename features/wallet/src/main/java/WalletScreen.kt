@@ -1,7 +1,6 @@
 package com.magicpark.features.wallet
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,26 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.magicpark.core.MagicparkTheme
-import com.magicpark.domain.model.magicpark.ShopItem
+import com.magicpark.domain.model.ShopItem
 import com.magicpark.ui.menu.BottomNavigation
-import com.magicpark.utils.R
 import com.magicpark.utils.ui.MagicparkContainer
 
 import java.util.*
@@ -53,7 +45,6 @@ private val test_shopItems: List<ShopItem> = listOf(
         isPack = true,
         packQuantity = 1,
         packShopItemId = 1,
-        quantityCart = 1
     ), ShopItem(
         id = 1,
         name = "Visite entrée au week-end",
@@ -64,9 +55,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         quantity = 1,
         isPack = true,
         packQuantity = 1,
-        packShopItemId = 1,
-        quantityCart = 1
-    ), ShopItem(
+        packShopItemId = 1), ShopItem(
         id = 2,
         name = "Visite entrée au week-end",
         description = "Un ticket pour une visite et une entrée au week-end",
@@ -76,9 +65,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         quantity = 1,
         isPack = true,
         packQuantity = 1,
-        packShopItemId = 1,
-        quantityCart = 1
-    ), ShopItem(
+        packShopItemId = 1), ShopItem(
         id = 3,
         name = "Visite entrée au mois",
         description = "Un ticket pour une visite et une entrée au week-end",
@@ -88,9 +75,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         quantity = 1,
         isPack = true,
         packQuantity = 1,
-        packShopItemId = 1,
-        quantityCart = 1
-    ), ShopItem(
+        packShopItemId = 1), ShopItem(
         id = 3,
         name = "Visite entrée à l'année",
         description = "Un ticket pour une visite et une entrée à l'année",
@@ -101,7 +86,6 @@ private val test_shopItems: List<ShopItem> = listOf(
         isPack = true,
         packQuantity = 1,
         packShopItemId = 1,
-        quantityCart = 1
     )
 )
 

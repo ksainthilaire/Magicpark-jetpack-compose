@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +32,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
+import com.magicpark.utils.ui.Alert
 
 
 @Composable
@@ -144,20 +146,6 @@ fun SettingsScreen(navController: NavController? = null) {
                     }
 
 
-                    Image(
-                        painter = painterResource(R.drawable.ic_upload_picture),
-                        contentDescription = "upload avatar",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .padding(start=50.dp)
-                            .align(Alignment.BottomEnd)
-                            .size(32.dp)
-                            .clickable {
-                                galleryLauncher.launch("image/*")
-                            }
-                            .clip(CircleShape)
-
-                    )
 
 
                 }
@@ -167,12 +155,26 @@ fun SettingsScreen(navController: NavController? = null) {
 
             }
 
+            Spacer(Modifier.height(10.dp))
+
+            Alert(
+                stringResource(
+                    com.magicpark.utils.R.string.settings_upload_picture),
+                Color.Red,
+                Color.White
+            )
+
 
             Title("Mon compte")
             MenuItem(R.drawable.ic_edit_user, "Modifier mon profil") {
                 navController?.navigate("/account/update")
             }
             MenuItem(R.drawable.ic_support, "Nous contacter") {
+                navController?.navigate("/support")
+            }
+
+
+            MenuItem(R.drawable.ic_trash, "Supprimer mon compte") {
                 navController?.navigate("/support")
             }
 

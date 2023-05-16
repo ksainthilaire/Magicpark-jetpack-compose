@@ -1,40 +1,55 @@
 package com.magicpark.domain.model
 
-import android.graphics.Color
-import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
-import java.util.*
+import com.magicpark.domain.converters.DateConverter
+import java.sql.Timestamp
 
+import java.util.Date
 
-@Parcelize
-@Entity(tableName = "user_ticket")
+@Entity(tableName = "wallet")
 data class UserTicket(
-    @PrimaryKey
-    @SerializedName("id")
-    val id: Int,
+    @PrimaryKey var id: Long? = null,
 
-    @SerializedName("name")
-    val name: String?,
-
-    @SerializedName("image")
-    var imageUrl: String?,
-
-    @SerializedName("backgroundColor")
-    var backgroundColor: String?,
+    @SerializedName("payload")
+    var payload: String? = null,
 
 
-    @SerializedName("description")
-    val description: String?,
+    @ColumnInfo(name="name")
+    val name: String? = null,
 
+    @ColumnInfo(name="image_url")
+    @SerializedName("image_url")
+    var imageUrl: String? = null,
+
+    @ColumnInfo(name="background_color")
+    @SerializedName("background_color")
+    var backgroundColor: String? = null,
+
+    @ColumnInfo(name="shop_item")
+    @SerializedName("shop_item")
+    val shopItem: Long? = null,
+
+    @ColumnInfo(name="user_id")
+    @SerializedName("user_id")
+    val userId: Long? = null,
+
+    @ColumnInfo(name="created_at")
+    @SerializedName("created_at")
     val createdAt: Date? = null,
 
-    val expiredAt: Date? = null,
+    @ColumnInfo(name="expired_at")
+    @SerializedName("expired_at")
+    var expiredAt: Date? = null,
 
+    @ColumnInfo(name="token")
     @SerializedName("token")
-    var token: String?,
-) : Parcelable
+    val token: String? = null,
 
-fun UserTicket.getBackgroundColor(): Int = Color.parseColor(this.backgroundColor ?: "#F95738")
+
+    @ColumnInfo(name="deleted_at")
+    @SerializedName("deleted_at")
+    var deletedAt: Timestamp? = null
+) {
+    constructor() : this(null, null, null, null, null, null, null, null, null, null, null)
+}

@@ -1,7 +1,7 @@
 package com.magicpark.features.shop
 
-import com.magicpark.domain.model.Movie
-import com.magicpark.domain.model.magicpark.ShopItem
+import com.magicpark.domain.model.ShopItem
+
 
 sealed class ShopState {
 

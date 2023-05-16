@@ -1,6 +1,12 @@
 package com.magicpark.data.model.response
 
-import com.magicpark.domain.model.magicpark.ApplicationConfiguration
+import com.google.gson.annotations.SerializedName
 
-
-typealias SettingsResponse = ApplicationConfiguration
+data class SettingsResponse(
+    @SerializedName("app_version_name")
+    val appVersionName: String? = null,
+    @SerializedName("app_url")
+    val appUrl: String? = null,
+    @SerializedName("app_shop_version")
+    val appShopVersion: String? = null
+)

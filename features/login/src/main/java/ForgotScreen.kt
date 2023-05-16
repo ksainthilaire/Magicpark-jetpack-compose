@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
 import java.util.*
@@ -23,6 +24,8 @@ import java.util.*
 @Preview
 @Composable
 fun ForgotScreen(navController: NavController? = null) {
+
+    val viewModel: LoginViewModel = viewModel()
 
 
     var mail by remember { mutableStateOf("") }
@@ -84,7 +87,7 @@ fun ForgotScreen(navController: NavController? = null) {
 
         Button(
             onClick = {
-                TODO("Forgot")
+                viewModel.forgot(mail)
             },
         ) {
             Text(text = stringResource(com.magicpark.utils.R.string.forgot_button_continue))

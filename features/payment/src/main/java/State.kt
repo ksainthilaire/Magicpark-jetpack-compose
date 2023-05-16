@@ -1,7 +1,5 @@
 package com.magicpark.features.payment
 
-import com.magicpark.domain.model.Movie
-
 
 sealed class PaymentState {
 

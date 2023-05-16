@@ -7,5 +7,5 @@ data class ApplicationConfiguration(
     @SerializedName("app_version_name")
     val appVersionName: String? = null,
     @SerializedName("app_url")
-    val appUrl: String? = null
+    val appUrl: String? = null,
 )

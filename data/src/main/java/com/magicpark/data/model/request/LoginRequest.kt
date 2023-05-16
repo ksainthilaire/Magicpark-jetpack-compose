@@ -1,5 +1,5 @@
-package com.magicpark.data.model.request
+package com.magicpark.data.model.request.authentification
 
 data class LoginRequest(
-    val token: String? = null
-) : Request()
+    var token: String? = null
+)

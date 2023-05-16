@@ -2,7 +2,7 @@ package com.magicpark.data.http.response
 
 import com.google.gson.annotations.SerializedName
 import com.magicpark.data.http.base.ErrorResponse
-import com.magicpark.domain.model.Movie
+
 
 
 class TrendingMoviesResponse(

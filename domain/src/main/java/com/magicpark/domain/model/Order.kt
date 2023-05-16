@@ -1,26 +1,54 @@
-package com.magicpark.domain.model.magicpark
+package com.magicpark.domain.model
 
-import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import java.sql.Date
-import kotlinx.parcelize.Parcelize
+import com.magicpark.domain.enums.OrderStatusEnum
+import com.magicpark.domain.enums.PaymentMethodEnum
+import java.util.Date
 
-@Parcelize
+@Entity(tableName = "orders")
 data class Order(
-    @PrimaryKey(autoGenerate = true)
-    @SerializedName("id")
-    var id: Int? = null,
-
-    @SerializedName("number")
+    @PrimaryKey var id: Long? = null,
+    @ColumnInfo(name = "number")
     var number: String? = null,
 
+    @ColumnInfo(name = "total_amount")
     @SerializedName("total_amount")
-    var totalAmount: Int? = null,
+    var totalAmount: Float? = null,
 
+    @ColumnInfo(name = "payment_method")
     @SerializedName("payment_method")
-    var paymentMethod: String? = null,
+    var paymentMethod: PaymentMethodEnum? = null,
 
-    @SerializedName("payed_at")
-    var payedAt: Date? = null
-) : Parcelable
+    @ColumnInfo(name = "user_id")
+    @SerializedName("user_id")
+    var userId: Long? = null,
+
+    @ColumnInfo(name = "cart")
+    var cart: String? = null,
+
+    @ColumnInfo(name = "status")
+    var status: OrderStatusEnum? = OrderStatusEnum.PENDING,
+
+    @ColumnInfo(name = "deleted_at")
+    @SerializedName("deleted_at")
+    var deletedAt: Date? = null,
+
+    @ColumnInfo(name = "validated_at")
+    @SerializedName("validated_at")
+    var validatedAt: Date? = null,
+
+    @ColumnInfo(name = "token")
+    @SerializedName("token")
+    var token: String? = null,
+
+    @ColumnInfo(name = "client_secret")
+    var clientSecret: String? = null,
+
+
+    @ColumnInfo(name = "created_at")
+    @SerializedName("created_at")
+    var createdAt: Date? = null
+)

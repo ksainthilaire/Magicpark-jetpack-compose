@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.utils.ui.ErrorSnackbar
@@ -35,6 +36,8 @@ import java.util.*
 @Composable
 fun LoginScreen(navController: NavController? = null) {
 
+
+    val viewModel: LoginViewModel = viewModel()
 
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var mail by remember { mutableStateOf("") }
@@ -143,7 +146,7 @@ fun LoginScreen(navController: NavController? = null) {
                         contentColor = MagicparkTheme.facebookButtonColor
                     ),
                     modifier = Modifier.clickable {
-                        TODO("Login with facebook")
+                        viewModel.loginWithFacebook()
                     }
                 ) {
                     Icon(
@@ -167,7 +170,9 @@ fun LoginScreen(navController: NavController? = null) {
 
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                              viewModel.loginWithGoogle()
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
                         contentColor = Color.Black
@@ -197,7 +202,9 @@ fun LoginScreen(navController: NavController? = null) {
             }
 
             Button(
-                onClick = {},
+                onClick = {
+                    viewModel.login(mail, password)
+                },
             ) {
                 Text(text = stringResource(com.magicpark.utils.R.string.login_button_login))
             }

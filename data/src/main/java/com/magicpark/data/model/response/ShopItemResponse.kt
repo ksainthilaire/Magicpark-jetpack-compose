@@ -1,10 +1,8 @@
 package com.magicpark.data.model.response
+import com.google.gson.annotations.SerializedName
+import com.magicpark.domain.model.ShopItem
 
-import com.magicpark.domain.model.magicpark.ShopItem
-
-data class ShopCategory(
-    val id: Int,
-    val name: String
+data class ShopItemResponse(
+    @SerializedName("shop_item")
+    val shopItems: ShopItem? = null
 )
-
-typealias ShopItemResponse = List<ShopItem>

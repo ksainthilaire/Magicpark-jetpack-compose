@@ -60,7 +60,10 @@ private fun showFloatingActionButton(route: String): Boolean = when (route) {
     "/home" -> {
         false
     }
-    else -> true
+    "/shop" -> {
+        true
+    }
+    else -> false
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,8 +74,9 @@ fun BottomNavigation(
 ) {
 
 
-    val backStackEntry = navController?.currentBackStackEntryAsState()
-    val route = backStackEntry?.value?.destination?.route ?: "/home"
+    val route = navController?.currentDestination?.route ?: "/home"
+
+    println("current route is ${route}")
 
     Scaffold(
         floatingActionButton = {
@@ -105,7 +109,7 @@ fun BottomNavigation(
 
                 bottomNavigationItemsList.forEach {
 
-                    val selected = it.path == backStackEntry?.value?.destination?.route
+                    val selected = it.path == route
 
                     NavigationBarItem(
                         selected = selected,

@@ -1,40 +1,32 @@
 package com.magicpark.features.shop
 
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.magicpark.core.MagicparkTheme
-import com.magicpark.domain.model.magicpark.ShopItem
+import com.magicpark.domain.model.ShopItem
 import com.magicpark.ui.menu.BottomNavigation
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.MagicparkContainer
@@ -51,9 +43,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         quantity = 1,
         isPack = true,
         packQuantity = 1,
-        packShopItemId = 1,
-        quantityCart = 1
-    ), ShopItem(
+        packShopItemId = 1), ShopItem(
         id = 1,
         name = "Visite entrée au week-end",
         description = "Un ticket pour une visite et une entrée au week-end",
@@ -63,9 +53,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         quantity = 1,
         isPack = true,
         packQuantity = 1,
-        packShopItemId = 1,
-        quantityCart = 1
-    ), ShopItem(
+        packShopItemId = 1), ShopItem(
         id = 2,
         name = "Visite entrée au week-end",
         description = "Un ticket pour une visite et une entrée au week-end",
@@ -76,9 +64,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         isPack = true,
         packQuantity = 1,
         categories = "Visite à la journée",
-        packShopItemId = 1,
-        quantityCart = 1
-    ), ShopItem(
+        packShopItemId = 1), ShopItem(
         id = 3,
         name = "Visite entrée au mois",
         description = "Un ticket pour une visite et une entrée au week-end",
@@ -89,9 +75,7 @@ private val test_shopItems: List<ShopItem> = listOf(
         categories = "Visite au mois",
         isPack = true,
         packQuantity = 1,
-        packShopItemId = 1,
-        quantityCart = 1
-    ), ShopItem(
+        packShopItemId = 1), ShopItem(
         id = 3,
         name = "Visite entrée à l'année",
         description = "Un ticket pour une visite et une entrée à l'année",
@@ -99,11 +83,10 @@ private val test_shopItems: List<ShopItem> = listOf(
         backgroundColor = "",
         price = 5.4f,
         categories = "Visite à l'année",
-        quantity = 1,
         isPack = true,
         packQuantity = 1,
         packShopItemId = 1,
-        quantityCart = 1
+        quantity = 1
     )
 )
 

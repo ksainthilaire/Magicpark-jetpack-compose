@@ -22,8 +22,10 @@ import com.magicpark.features.shop.ShopScreen
 import com.magicpark.features.wallet.TicketScreen
 import com.magicpark.features.wallet.WalletScreen
 import com.magicpark.ui.webview.WebViewScreen
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
@@ -38,81 +40,71 @@ class MainActivity : ComponentActivity() {
             MagicparkMaterialTheme {
 
 
-                    val navController = rememberNavController()
+                val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = "/shop") {
-                        composable("home") {
+                NavHost(navController = navController, startDestination = "/login") {
+
+                    composable("home") {
                         WalletScreen(navController)
-                        //   CartScreen()
-                           //ShopScreen(navController)
+                    }
 
-                        // WalletScreen(navController)
-                            // SplashScreen(onContinue = { navController.navigate("/login") })
-                        }
+                    composable("/privacy-policy") {
+                        val url = getString(com.magicpark.utils.R.string.privacy_policy_url)
+                        WebViewScreen(navController, url)
+                    }
 
-                        composable("/privacy-policy") {
-                            val url = getString(com.magicpark.utils.R.string.privacy_policy_url)
-                            WebViewScreen(navController, url)
-                        }
-
-                        composable("/support") {
-                            ContactScreen(navController)
-                        }
+                    composable("/support") {
+                        ContactScreen(navController)
+                    }
 
 
-                        // Shop
-                        composable("/shop") {
-                            ShopScreen(navController)
-                        }
+                    composable("/shop") {
+                        ShopScreen(navController)
+                    }
 
 
+                    composable("/cart") {
+                        CartScreen(navController)
+                    }
 
+                    composable("/login") {
+                        LoginScreen(navController)
+                    }
+                    composable("/register") {
+                        RegisterScreen(navController)
+                    }
+                    composable("/forgot") {
+                        ForgotScreen(navController)
+                    }
 
-                        // Login:
-                        composable("/login") {
-                            LoginScreen(navController)
-                        }
-                        composable("/register") {
-                            RegisterScreen(navController)
-                        }
-                        composable("/forgot") {
-                            ForgotScreen(navController)
-                        }
+                    composable("/settings") {
+                        SettingsScreen(navController)
+                    }
 
-                        composable("/settings") {
-                            SettingsScreen(navController)
-                        }
+                    composable("/account/update") {
+                        UpdateAccountScreen(navController)
+                    }
 
-                        // User:
-                        composable("/account/update") {
-                            UpdateAccountScreen(navController)
-                        }
-
-
-                        // Payment:
-                        composable("/payment") {}
-                    composable("/payment/{status}",
+                    composable("/payment") {}
+                    composable(
+                        "/payment/{status}",
                         arguments = listOf(navArgument("status") { type = NavType.StringType })
                     ) {
                         val status = it.arguments?.getString("status") ?: "error"
                         PaymentStatus(navController, status)
                     }
 
-                        // Settings:
-
-
-                        // Wallet:
-                        composable("/wallet") {
-                            WalletScreen(navController)
-                        }
-                        composable(
-                            "/ticket/{id}",
-                            arguments = listOf(navArgument("id") { type = NavType.IntType })
-                        ) {
-                            TicketScreen(navController)
-                        }
-
+                    composable("/wallet") {
+                        WalletScreen(navController)
                     }
+                    composable(
+                        "/ticket/{id}",
+                        arguments = listOf(navArgument("id") { type = NavType.IntType })
+                    ) {
+                        TicketScreen(navController)
+                    }
+
+                }
 
 
             }

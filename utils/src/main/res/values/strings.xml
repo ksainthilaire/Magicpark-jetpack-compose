@@ -97,6 +97,9 @@
     <string name="settings_cgv">CGV</string>
     <string name="settings_logout">Déconnexion</string>
 
+    <string name="settings_upload_picture">Vous pouvez mettre à jour la photo de profil associé à votre compte en cliquant dans le cercle rouge ci-dessus.</string>
+
+
 
     <!-- Help -->
     <string name="help_label_title">Aide</string>
