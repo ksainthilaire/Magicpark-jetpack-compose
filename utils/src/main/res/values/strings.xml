@@ -45,7 +45,7 @@
     <string name="register_cgu">J\'accepte les <u>CGU</u></string>
     <string name="register_error">Une erreur est survenue, veuillez réessayer plus tard</string>
     <string name="register_title_identity">Identité*</string>
-    <string name="register_label_password_confirmation">Confirmez votre mot de passe</string>
+    <string name="register_label_password_confirmation">Confirmation</string>
     <string name="register_button_play">Jouer maintenant</string>
     <string name="register_button_already_have_an_account">J\'ai déjà un compte, <u>se connecter</u></string>
 

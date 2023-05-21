@@ -118,7 +118,10 @@ fun LoginScreen(
                         passwordVisibility = !passwordVisibility
                     }) {
                         Icon(
-                            Icons.Filled.Warning,
+                            painter =
+                            if (passwordVisibility)
+                                painterResource(com.magicpark.utils.R.drawable.password_ok)
+                            else  painterResource(com.magicpark.utils.R.drawable.password_nok),
                             contentDescription = "Show password"
                         )
                     }

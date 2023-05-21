@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -268,7 +270,10 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                             passwordVisibility = !passwordVisibility
                         }) {
                             Icon(
-                                Icons.Filled.Warning,
+                                painter =
+                                if (passwordVisibility)
+                                    painterResource(com.magicpark.utils.R.drawable.password_ok)
+                                else painterResource(com.magicpark.utils.R.drawable.password_nok),
                                 contentDescription = "Show password"
                             )
                         }
@@ -295,8 +300,11 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                             passwordConfirmationVisibility = !passwordConfirmationVisibility
                         }) {
                             Icon(
-                                Icons.Filled.Warning,
-                                contentDescription = "Show password"
+                                painter =
+                                if (passwordConfirmationVisibility)
+                                    painterResource(com.magicpark.utils.R.drawable.password_ok)
+                                else  painterResource(com.magicpark.utils.R.drawable.password_nok),
+                                contentDescription = "Show password confirmation"
                             )
                         }
                     },
