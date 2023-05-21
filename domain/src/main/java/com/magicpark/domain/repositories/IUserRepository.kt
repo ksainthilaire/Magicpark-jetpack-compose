@@ -1,10 +1,13 @@
 package com.magicpark.domain.repositories
 
+import androidx.appcompat.app.AppCompatActivity
 import com.magicpark.domain.model.User
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 
 interface IUserRepository {
+
+    fun logout()
 
     fun updateUser(
         mail: String? = null,
@@ -12,11 +15,16 @@ interface IUserRepository {
         phoneNumber: String? = null,
         avatarUrl: String? = null,
         country: String? = null
-    ) : Completable
+    ): Completable
 
     fun deleteUser(): Completable
 
     fun getUser(): Observable<User>
+    fun forgot(mail: String): Completable
 
-    fun login(token: String): Observable<User>
+
+    fun loginWithFacebook(activity: AppCompatActivity): Observable<User>
+    fun loginWithGoogle(activity: AppCompatActivity): Observable<User>
+    fun loginWithMail(activity: AppCompatActivity, mail: String, password: String): Observable<User>
+    fun registerWithMail(activity: AppCompatActivity, fullName: String, phoneNumber: String, mail: String, password: String): Observable<User>
 }

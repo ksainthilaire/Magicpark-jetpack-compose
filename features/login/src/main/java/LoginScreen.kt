@@ -3,20 +3,25 @@ package com.magicpark.features.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,24 +29,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.utils.ui.ErrorSnackbar
+import kotlinx.coroutines.delay
 import java.util.*
 
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun LoginScreen(navController: NavController? = null) {
+fun LoginScreen(
+    navController: NavController? = null,
+    viewModel: LoginViewModel
+) {
 
 
-    val viewModel: LoginViewModel = viewModel()
+    val state by viewModel.state.observeAsState()
 
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    viewModel.setLocalContext(appCompactActivity = LocalContext.current)
+
     var mail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisibility by remember { mutableStateOf(false) }
 
 
     ConstraintLayout(
@@ -86,6 +98,7 @@ fun LoginScreen(navController: NavController? = null) {
 
             OutlinedTextField(
                 value = mail,
+                singleLine = true,
                 onValueChange = { value ->
                     mail = value
                 },
@@ -98,7 +111,18 @@ fun LoginScreen(navController: NavController? = null) {
 
             OutlinedTextField(
                 value = password,
-                visualTransformation = PasswordVisualTransformation(),
+                singleLine = true,
+                visualTransformation = if (!passwordVisibility) PasswordVisualTransformation() else VisualTransformation.None,
+                trailingIcon = {
+                    IconButton(onClick = {
+                        passwordVisibility = !passwordVisibility
+                    }) {
+                        Icon(
+                            Icons.Filled.Warning,
+                            contentDescription = "Show password"
+                        )
+                    }
+                },
                 onValueChange = { value ->
                     password = value
                 },
@@ -163,7 +187,7 @@ fun LoginScreen(navController: NavController? = null) {
                             .weight(1f)
                             .offset(x = (-12).dp)
                             .clickable {
-                                TODO("Login with Facebook")
+                                viewModel.loginWithFacebook()
                             }
                     )
                 }
@@ -194,7 +218,7 @@ fun LoginScreen(navController: NavController? = null) {
                             .weight(1f)
                             .offset(x = (-12).dp)
                             .clickable {
-                                TODO("Simple login")
+                                viewModel.loginWithGoogle()
                             }
                     )
 
@@ -280,6 +304,16 @@ fun LoginScreen(navController: NavController? = null) {
 
     }
 
-    errorMessage?.let { ErrorSnackbar(text = it) }
+    if (state is LoginState.LoginError) {
+
+        ErrorSnackbar((state as LoginState.LoginError).message ?: "") {
+            viewModel.clear()
+        }
+
+        LaunchedEffect(key1 = state) {
+            delay(2000L)
+            viewModel.clear()
+        }
+    }
 
 }

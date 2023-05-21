@@ -7,8 +7,9 @@ import com.magicpark.domain.repositories.IUserRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.koin.java.KoinJavaComponent.inject
+import javax.inject.Inject
 
-class TicketUseCases(val repository: ITicketRepository){
+class TicketUseCases(  @Inject val repository: ITicketRepository){
 
     fun getWallet(): Observable<List<UserTicket>> {
         return repository.getWallet()

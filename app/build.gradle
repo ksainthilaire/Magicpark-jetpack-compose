@@ -60,5 +60,8 @@ dependencies {
     implementation project(':features:wallet')
     implementation project(':features:login')
 
+
+    kapt 'com.google.dagger:dagger-compiler:2.46.1'
+    kapt 'com.google.dagger:dagger-android-processor:2.46.1'
     // Features
 }

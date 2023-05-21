@@ -25,6 +25,8 @@
     <string name="login_button_login">Allons-y</string>
     <string name="login_button_register"><u>Je m\'inscris</u></string>
 
+
+
     <!-- Welcome -->
 
     <string name="welcome_title">Mes aventures avec SAMBA</string>
@@ -158,6 +160,7 @@
     <string name="fb_login_protocol_scheme">fb1234</string>
 
     <!-- Common -->
+    <string name="common_empty_fields">Veuillez remplir tous les champs</string>
     <string name="common_missing_permission_camera">Vous devez autoriser l\'accès à la caméra pour le contrôleur de ticket</string>
     <string name="common_button_cancel">Annuler</string>
     <string name="common_button_delete">Supprimer</string>

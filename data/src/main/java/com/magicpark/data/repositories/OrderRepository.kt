@@ -8,10 +8,17 @@ import com.magicpark.domain.model.*
 import com.magicpark.domain.repositories.IOrderRepository
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.koin.java.KoinJavaComponent
+import javax.inject.Inject
 
-class OrderRepository(private val magicparkApi: MagicparkApi,
-                      private val magicparkDbSession: MagicparkDbSession
-) : IOrderRepository {
+class OrderRepository : IOrderRepository {
+
+
+
+    private val magicparkDbSession: MagicparkDbSession by KoinJavaComponent.inject(
+        MagicparkDbSession::class.java
+    )
+    private val magicparkApi: MagicparkApi by KoinJavaComponent.inject(MagicparkApi::class.java)
 
     override fun createOrder(
         shopItems: List<ShopItem>,
@@ -37,7 +44,7 @@ class OrderRepository(private val magicparkApi: MagicparkApi,
         return magicparkApi.getOrder(magicparkDbSession.getToken(), orderId.toString())
             .subscribeOn(Schedulers.io())
             .map {
-            it.order
-        }
+                it.order
+            }
     }
 }

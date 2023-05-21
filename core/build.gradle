@@ -48,6 +48,13 @@ android {
 
 dependencies {
 
+    api platform(deps.firebaseBom)
+    api deps.firebaseAuthKtx
+    api deps.hiltNavigation
+    api 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
+    api deps.hiltNavigationCompose
+    api deps.facebookLogin
+    api deps.playServicesAuth
     api deps.koin
     api deps.gson
     api deps.glide
@@ -79,8 +86,13 @@ dependencies {
     kapt deps.roomCompiler
     kapt deps.daggerHilt
 
+    api("com.google.dagger:dagger-compiler:2.46.1")
+
 
     testImplementation  deps.roomTesting
+
+    // Country Code Picker
+    api 'com.hbb20:ccp:2.6.1'
 
     api 'com.google.accompanist:accompanist-navigation-animation:0.31.0-alpha'
     api 'androidx.core:core-ktx:1.7.0'

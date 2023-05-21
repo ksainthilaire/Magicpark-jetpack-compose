@@ -41,29 +41,25 @@ fun SuccessSnackbar(text: String, duration: Long = 2000L) {
 }
 
 @Composable
-fun ErrorSnackbar(text: String, duration: Long = 2000L) {
-
-    var isVisible by remember { mutableStateOf(true) }
-
-    if (isVisible) {
-        Snackbar(
-            containerColor = MagicparkTheme.colors.primary,
-            action = {
-                Button(onClick = {}) {
-                    Text(stringResource(id = R.string.common_button_re_try))
-                }
-            },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(
-                text = text,
-                style = TextStyle(color = Color.White)
-            )
-        }
+fun ErrorSnackbar(
+    text: String,
+    onDismiss: () -> Unit,
+) {
+    Snackbar(
+        containerColor = MagicparkTheme.colors.primary,
+        action = {
+            Button(onClick = {
+                onDismiss()
+            }) {
+                Text(stringResource(id = R.string.common_button_re_try))
+            }
+        },
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Text(
+            text = text,
+            style = TextStyle(color = Color.White)
+        )
     }
 
-    LaunchedEffect(key1 = isVisible) {
-        delay(duration)
-        isVisible = false
-    }
 }

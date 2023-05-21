@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "466002208137",
+    "project_id": "magicpark-618bb",
+    "storage_bucket": "magicpark-618bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466002208137:android:41368753c7415a33cd6d58",
+        "android_client_info": {
+          "package_name": "com.magicpark.data"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466002208137-o6rs77cfkvtqiat9tbciot15ghlgd9vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl_7c-Uq2kJu0-xIfZSqAZsGpV-ip8UHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466002208137-149a6m5t94iapm8rbmo27qvre3lqvbl0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466002208137:android:aabbf688f5cb46a6cd6d58",
+        "android_client_info": {
+          "package_name": "com.magicpark_gn.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466002208137-2sa55sbiobqcrfq4f4qa8emuj9vk36k4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.magicpark_gn.app",
+            "certificate_hash": "a1f87de29b2dbb379333a1c54aa5550791244843"
+          }
+        },
+        {
+          "client_id": "466002208137-3dm3o00iqmlj1p3a88hgj5p962ua2h9m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.magicpark_gn.app",
+            "certificate_hash": "7fc6d6f1c509c6c41c708450d6066026e0e1484a"
+          }
+        },
+        {
+          "client_id": "466002208137-dv72ap7cgbrmetjo4v7187o7tuf87j4f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.magicpark_gn.app",
+            "certificate_hash": "399022353c836a7d75d11a12848520f64f3845ae"
+          }
+        },
+        {
+          "client_id": "466002208137-o6rs77cfkvtqiat9tbciot15ghlgd9vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl_7c-Uq2kJu0-xIfZSqAZsGpV-ip8UHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466002208137-149a6m5t94iapm8rbmo27qvre3lqvbl0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

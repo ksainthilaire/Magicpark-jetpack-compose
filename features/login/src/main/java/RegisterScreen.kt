@@ -4,44 +4,64 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
+import com.hbb20.CountryCodePicker
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
+import com.magicpark.features.login.LoginState
+import com.magicpark.features.login.LoginViewModel
 import com.magicpark.utils.ui.ErrorSnackbar
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun RegisterScreen(navController: NavController? = null) {
+fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewModel) {
 
+    val state by viewModel.state.observeAsState()
 
-    var errorMessage by remember { mutableStateOf<String?>("Test") }
+    viewModel.setLocalContext(appCompactActivity = LocalContext.current)
+
+    var countryCodePicker: CountryCodePicker? = null
 
     var fullName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordConfirmation by remember { mutableStateOf("") }
-    var number by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+
+    var cgvChecked by remember { mutableStateOf(false) }
 
 
+    var passwordVisibility: Boolean by remember { mutableStateOf(false) }
+    var passwordConfirmationVisibility: Boolean by remember { mutableStateOf(false) }
 
     ConstraintLayout(
         modifier = Modifier
@@ -148,6 +168,7 @@ fun RegisterScreen(navController: NavController? = null) {
                 OutlinedTextField(
                     modifier = Modifier.padding(top = 10.dp),
                     value = fullName,
+                    singleLine = true,
                     onValueChange = { value ->
                         fullName = value
                     },
@@ -162,9 +183,11 @@ fun RegisterScreen(navController: NavController? = null) {
 
                 OutlinedTextField(
                     modifier = Modifier.padding(top = 10.dp),
-                    value = number,
+                    value = phoneNumber,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     onValueChange = { value ->
-                        number = value
+                        phoneNumber = value
                     },
                     shape = RoundedCornerShape(12.dp),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -175,10 +198,43 @@ fun RegisterScreen(navController: NavController? = null) {
                 )
 
                 OutlinedTextField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    value = "",
+                    singleLine = true,
+                    onValueChange = {},
+                    shape = RoundedCornerShape(12.dp),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        containerColor = Color.White,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    placeholder = {
+
+                        AndroidView(
+                            factory = { context ->
+
+                                countryCodePicker = CountryCodePicker(context).also {
+
+
+                                    it.setShowPhoneCode(false)
+                                    it.showNameCode(false)
+                                    it.showFullName(false)
+                                    it.setCountryForPhoneCode(224)
+                                }
+                                countryCodePicker!!
+
+                            },
+                            modifier = Modifier
+                                .background(Color.White)
+                                .clip(RoundedCornerShape(12.dp))
+                        )
+                    })
+
+                OutlinedTextField(
                     modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                    singleLine = true,
                     value = mail,
                     onValueChange = { value ->
-                        mail = value
+                        mail = value.replace(" ", "")
                     },
                     shape = RoundedCornerShape(12.dp),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -205,7 +261,18 @@ fun RegisterScreen(navController: NavController? = null) {
 
                 OutlinedTextField(
                     value = password,
-                    visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true,
+                    visualTransformation = if (!passwordVisibility) PasswordVisualTransformation() else VisualTransformation.None,
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            passwordVisibility = !passwordVisibility
+                        }) {
+                            Icon(
+                                Icons.Filled.Warning,
+                                contentDescription = "Show password"
+                            )
+                        }
+                    },
                     onValueChange = { value ->
                         password = value
                     },
@@ -220,8 +287,19 @@ fun RegisterScreen(navController: NavController? = null) {
 
                 OutlinedTextField(
                     modifier = Modifier.padding(top = 10.dp),
-                    visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true,
+                    visualTransformation = if (!passwordConfirmationVisibility) PasswordVisualTransformation() else VisualTransformation.None,
                     value = passwordConfirmation,
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            passwordConfirmationVisibility = !passwordConfirmationVisibility
+                        }) {
+                            Icon(
+                                Icons.Filled.Warning,
+                                contentDescription = "Show password"
+                            )
+                        }
+                    },
                     onValueChange = { value ->
                         passwordConfirmation = value
                     },
@@ -245,11 +323,10 @@ fun RegisterScreen(navController: NavController? = null) {
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val isChecked = remember { mutableStateOf(false) }
 
                     Checkbox(
-                        checked = isChecked.value,
-                        onCheckedChange = { isChecked.value = it },
+                        checked = cgvChecked,
+                        onCheckedChange = { cgvChecked = it },
                         enabled = true,
                         colors = CheckboxDefaults.colors(
                             checkedColor = MagicparkTheme.colors.primary,
@@ -277,7 +354,17 @@ fun RegisterScreen(navController: NavController? = null) {
                 }
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        viewModel.register(
+                            mail,
+                            password,
+                            passwordConfirmation,
+                            fullName,
+                            phoneNumber,
+                            countryCodePicker?.selectedCountryCode ?: "GN",
+                            cgvChecked
+                        )
+                    },
                 ) {
                     Text(text = stringResource(com.magicpark.utils.R.string.register_button_play))
                 }
@@ -352,6 +439,17 @@ fun RegisterScreen(navController: NavController? = null) {
 
     }
 
-    errorMessage?.let { ErrorSnackbar(text = it) }
+
+    if (state is LoginState.RegisterError) {
+
+        ErrorSnackbar((state as LoginState.RegisterError).message ?: "") {
+            viewModel.clear()
+        }
+
+        LaunchedEffect(key1 = state) {
+            delay(2000L)
+            viewModel.clear()
+        }
+    }
 
 }

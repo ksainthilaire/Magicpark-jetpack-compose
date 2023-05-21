@@ -1,19 +1,26 @@
 package com.magicpark.app
 
 import RegisterScreen
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+
 import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.features.account.UpdateAccountScreen
 import com.magicpark.features.login.ForgotScreen
 import com.magicpark.features.login.LoginScreen
+import com.magicpark.features.login.LoginViewModel
 import com.magicpark.features.payment.PaymentStatus
 import com.magicpark.features.settings.ContactScreen
 import com.magicpark.features.settings.SettingsScreen
@@ -23,17 +30,16 @@ import com.magicpark.features.wallet.TicketScreen
 import com.magicpark.features.wallet.WalletScreen
 import com.magicpark.ui.webview.WebViewScreen
 import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent
 
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-
+class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         setContent {
 
@@ -68,13 +74,17 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("/login") {
-                        LoginScreen(navController)
+
+                        val viewModel: LoginViewModel by  viewModel()
+                        LoginScreen(navController, viewModel)
                     }
                     composable("/register") {
-                        RegisterScreen(navController)
+                        val viewModel: LoginViewModel by viewModel()
+                        RegisterScreen(navController, viewModel)
                     }
                     composable("/forgot") {
-                        ForgotScreen(navController)
+                        val viewModel: LoginViewModel by viewModel()
+                        ForgotScreen(navController, viewModel)
                     }
 
                     composable("/settings") {
@@ -106,10 +116,11 @@ class MainActivity : ComponentActivity() {
 
                 }
 
-
             }
         }
 
     }
+
+
 
 }

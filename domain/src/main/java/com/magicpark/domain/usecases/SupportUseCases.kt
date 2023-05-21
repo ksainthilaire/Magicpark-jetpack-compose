@@ -4,7 +4,8 @@ import com.magicpark.domain.repositories.ISupportRepository
 import com.magicpark.domain.repositories.IUserRepository
 import io.reactivex.rxjava3.core.Completable
 import org.koin.java.KoinJavaComponent.inject
+import javax.inject.Inject
 
-class SupportUseCases(val repository: ISupportRepository){
+class SupportUseCases(  @Inject val repository: ISupportRepository){
     fun help(message: String): Completable = repository.help(message)
 }

@@ -218,7 +218,7 @@ fun TicketScreen(navController: NavController? = null) {
     }
 
 
-    errorMessage?.let { ErrorSnackbar(text = it) }
+   // errorMessage?.let { ErrorSnackbar(text = it) }
 
 
 }

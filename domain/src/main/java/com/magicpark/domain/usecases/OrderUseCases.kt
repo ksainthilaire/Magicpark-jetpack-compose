@@ -7,8 +7,9 @@ import com.magicpark.domain.repositories.IOrderRepository
 import com.magicpark.domain.repositories.IUserRepository
 import io.reactivex.rxjava3.core.Observable
 import org.koin.java.KoinJavaComponent.inject
+import javax.inject.Inject
 
-class OrderUseCases(private val orderRepository: IOrderRepository) {
+class OrderUseCases(  @Inject var orderRepository: IOrderRepository) {
 
 
     fun createOrder(
