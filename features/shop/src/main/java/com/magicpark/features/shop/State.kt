@@ -9,4 +9,7 @@ sealed class ShopState  {
     class onLoaded(
         val shopItem: List<ShopItem>,
         val categories: List<String>) : ShopState()
+
+
+
 }

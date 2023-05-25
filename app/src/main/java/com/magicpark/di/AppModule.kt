@@ -16,6 +16,9 @@ import com.magicpark.data.session.MagicparkDbSession
 import com.magicpark.domain.repositories.*
 import com.magicpark.domain.usecases.*
 import com.magicpark.features.login.LoginViewModel
+import com.magicpark.features.settings.SettingsViewModel
+import com.magicpark.features.shop.ShopViewModel
+import com.magicpark.features.wallet.WalletViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,6 +42,9 @@ val AppModule = module {
     }
 
     viewModel { LoginViewModel() }
+    viewModel { ShopViewModel() }
+    viewModel { WalletViewModel() }
+    viewModel { SettingsViewModel() }
 
 
     single {

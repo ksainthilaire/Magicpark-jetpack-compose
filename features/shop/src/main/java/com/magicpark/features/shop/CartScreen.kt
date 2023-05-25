@@ -10,12 +10,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
+import coil.size.Size
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -53,63 +60,6 @@ private val test_shopItem = ShopItem(
     imageUrl = "https://img.cuisineaz.com/660x660/2017/02/02/i119528-banane-sauce-chocolat.jpeg"
 )
 
-private val test_shopItems: List<ShopItem> = listOf(
-    ShopItem(
-        id = 0,
-        name = "Visite entrée à la journée",
-        description = "Un ticket pour une visite et une entrée à la journée",
-        imageUrl = "https://i0.wp.com/artistes-productions.com/wp-content/uploads/2020/03/pexels-photo-2014775.jpeg?resize=800%2C533&ssl=1",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1), ShopItem(
-        id = 1,
-        name = "Visite entrée au week-end",
-        description = "Un ticket pour une visite et une entrée au week-end",
-        imageUrl = "https://ca-times.brightspotcdn.com/dims4/default/7249d3d/2147483647/strip/false/crop/4000x2666+0+0/resize/1486x990!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe2%2Fdb%2F137a883b4ef48700d355f407fe2a%2Fla-et-ticketmaster-taylor-swift.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1), ShopItem(
-        id = 2,
-        name = "Visite entrée au week-end",
-        description = "Un ticket pour une visite et une entrée au week-end",
-        imageUrl = "https://img.freepik.com/premium-photo/background-paris_219717-5461.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1), ShopItem(
-        id = 3,
-        name = "Visite entrée au mois",
-        description = "Un ticket pour une visite et une entrée au week-end",
-        imageUrl = "https://decouvrirlemonde.fr/wp-content/uploads/2019/03/monuments-rome-Colise%CC%81e-italie-histoire-empire-romain.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1), ShopItem(
-        id = 3,
-        name = "Visite entrée à l'année",
-        description = "Un ticket pour une visite et une entrée à l'année",
-        imageUrl = "https://www.lenouvelliste.ch/media/image/94/nf_normal_16_9/chillon-2019.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1
-    )
-)
-
-
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 @Preview
 fun CartItem(
@@ -126,14 +76,25 @@ fun CartItem(
 
         Row(Modifier.padding(bottom = 15.dp)) {
 
-            GlideImage(
-                model = shopItem?.imageUrl ?: "",
-                contentScale = ContentScale.Fit,
+
+
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .decoderFactory(SvgDecoder.Factory())
+                    .data(shopItem?.imageUrl)
+                    .size(Size.ORIGINAL)
+                    .build(), ImageLoader(LocalContext.current)
+            )
+
+            Image(
+                painter = painter,
                 modifier = Modifier
                     .size(140.dp)
                     .clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)),
                 contentDescription = ""
             )
+
+
 
             Column(Modifier.padding(start = 20.dp)) {
 
@@ -204,7 +165,16 @@ fun CartItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun CartScreen(navController: NavController? = null) {
+fun CartScreen(navController: NavController? = null, viewModel: ShopViewModel) {
+
+
+    val shopItems by viewModel.cart.observeAsState()
+    val total by viewModel.price.observeAsState()
+
+    LaunchedEffect(key1 = shopItems) {
+        viewModel.getCart()
+        viewModel.getTotal()
+    }
 
 
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.swipe))
@@ -251,12 +221,15 @@ fun CartScreen(navController: NavController? = null) {
 
 
 
-                    Column(Modifier.padding(top=50.dp).constrainAs(items) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                    }) {
+                    Column(
+                        Modifier
+                            .padding(top = 50.dp)
+                            .constrainAs(items) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                            }) {
 
-                        test_shopItems.forEach {
+                        shopItems?.forEach {
                             CartItem(it)
                         }
 
@@ -302,7 +275,7 @@ fun CartScreen(navController: NavController? = null) {
                                         fontWeight = FontWeight.Bold
                                     )
                                 )
-                                Text("365 USD", Modifier.weight(1f))
+                                Text("${total} GNF", Modifier.weight(1f))
                             }
                             Text(
                                 stringResource(id = R.string.cart_prevent), style = TextStyle(
@@ -358,7 +331,7 @@ fun CartScreen(navController: NavController? = null) {
                                 end = MagicparkTheme.defaultPadding
                             )
                             .clickable {
-                                     navController?.popBackStack()
+                                navController?.popBackStack()
                             },
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)

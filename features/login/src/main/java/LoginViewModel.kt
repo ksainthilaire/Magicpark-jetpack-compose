@@ -52,7 +52,7 @@ class LoginViewModel : ViewModel() {
 
     private fun onRegisterError(throwable: Throwable) {
 
-        Log.d(TAG, "Registration failed")
+        Log.d(TAG, "Registration failed ${throwable.message}")
 
         val message = when (throwable) {
             is java.lang.IllegalArgumentException -> resources.getString(com.magicpark.utils.R.string.common_empty_fields)
@@ -63,7 +63,7 @@ class LoginViewModel : ViewModel() {
     }
 
     private fun onLoginError(throwable: Throwable) {
-        Log.d(TAG, "Login failed")
+        Log.d(TAG, "Login failed ${throwable.message}")
 
         val message = when (throwable) {
 
@@ -84,6 +84,7 @@ class LoginViewModel : ViewModel() {
     private fun onForgotSucceeded() {
         Log.d(TAG, resources.getString(com.magicpark.utils.R.string.forgot_mail_sent))
         _state.postValue(LoginState.ForgotSuccessful)
+        _state.postValue(LoginState.Empty)
     }
 
     fun login(mail: String, password: String) = viewModelScope.launch {

@@ -2,7 +2,7 @@ package com.magicpark.core
 
 object Config {
 
-    const val API_URL = ""
+    const val API_URL = "http://10.0.2.2:8098"
 
     /*
         Here are the payment urls the customer is directed

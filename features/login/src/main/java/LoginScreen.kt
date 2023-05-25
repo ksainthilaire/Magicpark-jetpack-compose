@@ -56,6 +56,13 @@ fun LoginScreen(
     var passwordVisibility by remember { mutableStateOf(false) }
 
 
+
+    LaunchedEffect(key1 = state) {
+        if (state is LoginState.LoginSuccessful) {
+            navController?.navigate("/shop")
+        }
+    }
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -119,7 +126,7 @@ fun LoginScreen(
                     }) {
                         Icon(
                             painter =
-                            if (passwordVisibility)
+                            if (!passwordVisibility)
                                 painterResource(com.magicpark.utils.R.drawable.password_ok)
                             else  painterResource(com.magicpark.utils.R.drawable.password_nok),
                             contentDescription = "Show password"

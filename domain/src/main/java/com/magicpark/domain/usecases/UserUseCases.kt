@@ -40,4 +40,6 @@ class UserUseCases @Inject constructor(var repository: IUserRepository) {
 
     fun forgot(mail: String) : Completable = repository.forgot(mail)
 
+    fun logout() : Completable = repository.logout()
+
 }

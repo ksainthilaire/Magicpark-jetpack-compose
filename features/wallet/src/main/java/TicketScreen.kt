@@ -1,5 +1,6 @@
 package com.magicpark.features.wallet
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,10 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,16 +26,28 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.google.gson.Gson
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
 import com.magicpark.utils.ui.ErrorSnackbar
+import io.github.g0dkar.qrcode.QRCode
 
 @Composable
 @Preview
-fun TicketScreen(navController: NavController? = null) {
+fun TicketScreen(navController: NavController? = null, viewModel: WalletViewModel, id: Long) {
 
+
+    val state by viewModel.state.observeAsState()
+    val inUse by viewModel.inUse.observeAsState()
+    val toUse by viewModel.inUse.observeAsState()
+
+
+    val ticket = inUse?.find { it.id == id }
 
     var errorMessage by remember { mutableStateOf<String?>("La génération du QR Code a échoué") }
+
+    val bitmap = QRCode(Gson().toJson(ticket))
+        .render().nativeImage() as Bitmap
 
     ConstraintLayout(
         modifier = Modifier
@@ -112,9 +127,10 @@ fun TicketScreen(navController: NavController? = null) {
                         contentDescription = null
                     )
 
+
                     // QR Code
                     Image(
-                        painter = painterResource(id = R.drawable.background_ticket_close),
+                        bitmap = bitmap.asImageBitmap(),
                         modifier = Modifier
                             .width(100.dp)
                             .height(100.dp),
@@ -126,7 +142,7 @@ fun TicketScreen(navController: NavController? = null) {
 
 
                 Text(
-                    text = stringResource(com.magicpark.utils.R.string.ticket_format),
+                    text = "MAPAR2023", //stringResource(com.magicpark.utils.R.string.ticket_format),
                     modifier = Modifier.padding(top = 50.dp),
                     style = TextStyle(
                         fontSize = 30.sp,
@@ -153,7 +169,7 @@ fun TicketScreen(navController: NavController? = null) {
 
                         // QR Code
                         Image(
-                            painter = painterResource(id = R.drawable.background_ticket_close),
+                            bitmap = bitmap.asImageBitmap(),
                             modifier = Modifier
                                 .width(80.dp)
                                 .height(80.dp),

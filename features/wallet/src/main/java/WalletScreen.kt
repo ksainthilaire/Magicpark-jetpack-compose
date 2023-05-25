@@ -10,7 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,80 +23,24 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.magicpark.domain.model.ShopItem
+import com.magicpark.domain.model.UserTicket
 import com.magicpark.ui.menu.BottomNavigation
 import com.magicpark.utils.ui.MagicparkContainer
+import com.magicpark.utils.ui.OnLifecycleEvent
 
 import java.util.*
-
-
-
-private val test_shopItems: List<ShopItem> = listOf(
-    ShopItem(
-        id = 0,
-        name = "Visite entrée à la journée",
-        description = "Un ticket pour une visite et une entrée à la journée",
-        imageUrl = "https://i0.wp.com/artistes-productions.com/wp-content/uploads/2020/03/pexels-photo-2014775.jpeg?resize=800%2C533&ssl=1",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1,
-    ), ShopItem(
-        id = 1,
-        name = "Visite entrée au week-end",
-        description = "Un ticket pour une visite et une entrée au week-end",
-        imageUrl = "https://ca-times.brightspotcdn.com/dims4/default/7249d3d/2147483647/strip/false/crop/4000x2666+0+0/resize/1486x990!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe2%2Fdb%2F137a883b4ef48700d355f407fe2a%2Fla-et-ticketmaster-taylor-swift.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1), ShopItem(
-        id = 2,
-        name = "Visite entrée au week-end",
-        description = "Un ticket pour une visite et une entrée au week-end",
-        imageUrl = "https://img.freepik.com/premium-photo/background-paris_219717-5461.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1), ShopItem(
-        id = 3,
-        name = "Visite entrée au mois",
-        description = "Un ticket pour une visite et une entrée au week-end",
-        imageUrl = "https://decouvrirlemonde.fr/wp-content/uploads/2019/03/monuments-rome-Colise%CC%81e-italie-histoire-empire-romain.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1), ShopItem(
-        id = 3,
-        name = "Visite entrée à l'année",
-        description = "Un ticket pour une visite et une entrée à l'année",
-        imageUrl = "https://www.lenouvelliste.ch/media/image/94/nf_normal_16_9/chillon-2019.jpg",
-        backgroundColor = "",
-        price = 5.4f,
-        quantity = 1,
-        isPack = true,
-        packQuantity = 1,
-        packShopItemId = 1,
-    )
-)
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 @Preview
-fun Ticket(shopItem: ShopItem? = test_shopItems[0]) = Column {
+fun Ticket(shopItem: UserTicket, callback: (id: Long) -> Unit) = Column {
 
     Column(Modifier.padding(20.dp)) {
-
 
 
         Column(
@@ -134,7 +79,7 @@ fun Ticket(shopItem: ShopItem? = test_shopItems[0]) = Column {
                     }
 
                     Text(
-                        text = shopItem?.description ?: "",
+                        text = "",// shopItem?.description ?: "",
                         Modifier.padding(top = 10.dp),
                         style = TextStyle(
                             color = Color.Gray
@@ -144,7 +89,7 @@ fun Ticket(shopItem: ShopItem? = test_shopItems[0]) = Column {
                     Button(
                         modifier = Modifier.padding(top = 10.dp),
                         onClick = {
-                            TODO("Forgot")
+                            callback(shopItem.id ?: 0L)
                         },
                     ) {
                         Text(text = "Valider le ticket")
@@ -168,7 +113,7 @@ fun Ticket(shopItem: ShopItem? = test_shopItems[0]) = Column {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = shopItem?.quantity?.toString() ?: "1",
+                            text = "1",//shopItem?.quantity?.toString() ?: "1",
                             style = TextStyle(
                                 color = Color.Black
                             )
@@ -190,7 +135,7 @@ fun Ticket(shopItem: ShopItem? = test_shopItems[0]) = Column {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = shopItem?.quantity?.toString() ?: "1",
+                            text = "1", //shopItem?.quantity?.toString() ?: "1",
                             style = TextStyle(
                                 color = Color.Black
                             )
@@ -212,7 +157,8 @@ fun Ticket(shopItem: ShopItem? = test_shopItems[0]) = Column {
                         Modifier
                             .fillMaxWidth()
                             .background(Color.Black)
-                            .height(1.dp))
+                            .height(1.dp)
+                    )
 
                     Text(
                         text = "Expire le 10-04-2023",
@@ -230,13 +176,27 @@ fun Ticket(shopItem: ShopItem? = test_shopItems[0]) = Column {
 }
 
 
-
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 @Preview
-fun WalletScreen(navController: NavController? = null) {
+fun WalletScreen(navController: NavController? = null, viewModel: WalletViewModel) {
 
 
+    var selectedTabIndex by remember { mutableStateOf(0) }
+
+    val state by viewModel.state.observeAsState()
+    val inUse by viewModel.inUse.observeAsState()
+    val toUse by viewModel.inUse.observeAsState()
+
+    OnLifecycleEvent { _, event ->
+
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.loadWalletList()
+            }
+            else -> {}
+        }
+    }
 
     BottomNavigation(navController) {
         MagicparkContainer {
@@ -249,15 +209,27 @@ fun WalletScreen(navController: NavController? = null) {
                             .fillMaxWidth()
                             .wrapContentHeight()
                     ) {
-                        TabRow(selectedTabIndex = 0, modifier = Modifier.clip(RoundedCornerShape(topStart=20.dp, topEnd=20.dp))) {
-                            Tab(true, {}) {
+                        TabRow(
+                            selectedTabIndex = selectedTabIndex,
+                            modifier = Modifier.clip(
+                                RoundedCornerShape(
+                                    topStart = 20.dp,
+                                    topEnd = 20.dp
+                                )
+                            )
+                        ) {
+                            Tab(selectedTabIndex == 0, {
+                                selectedTabIndex = 0
+                            }) {
                                 Text(
                                     "À VALIDER",
                                     Modifier.padding(10.dp),
                                     style = TextStyle(fontSize = 24.sp)
                                 )
                             }
-                            Tab(false, {}) {
+                            Tab(selectedTabIndex == 1, {
+                                selectedTabIndex = 1
+                            }) {
                                 Text(
                                     "EXPIRÉES",
                                     Modifier.padding(10.dp),
@@ -267,19 +239,23 @@ fun WalletScreen(navController: NavController? = null) {
                         }
                     }
 
-                    test_shopItems.forEach {
-                        Ticket(it)
+                    if (selectedTabIndex == 0) toUse?.forEach {
+                        Ticket(it) {
+                            navController?.navigate("/ticket/${it}")
+                        }
                     }
+                    else toUse?.forEach {
+                        Ticket(it) {
+                            navController?.navigate("/ticket/${it}")
+                        }
+                    }
+
                 }
 
             }
 
 
-
         }
-
-
-
 
 
     }

@@ -26,22 +26,22 @@ import com.magicpark.core.MagicparkTheme
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ContactScreen(navController: NavController? = null) {
-
+fun ContactScreen(navController: NavController? = null,
+    viewModel: SettingsViewModel) {
 
 
     Image(
         painter = painterResource(id = com.magicpark.core.R.drawable.ic_back),
         modifier = Modifier
+            .clickable {
+                navController?.popBackStack()
+            }
             .width(100.dp)
             .height(50.dp)
             .padding(
                 top = MagicparkTheme.defaultPadding,
                 end = MagicparkTheme.defaultPadding
-            )
-            .clickable {
-                navController?.popBackStack()
-            },
+            ),
         contentDescription = null,
         colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
     )
@@ -92,7 +92,7 @@ fun ContactScreen(navController: NavController? = null) {
             Button(
                 modifier = Modifier.padding(top=50.dp),
                 onClick = {
-                    TODO("Modifier")
+                    viewModel.help(text)
                 },
             ) {
                 Text("Transmettre au support")

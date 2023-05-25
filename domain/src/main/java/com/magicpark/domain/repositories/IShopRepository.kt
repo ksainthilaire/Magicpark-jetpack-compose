@@ -7,5 +7,11 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IShopRepository {
     fun getShopCategories(): Observable<ShopCategory>
-    fun getShopItems(): Observable<List<ShopItem>>
+    fun getShopItems(): Observable<Shop>
+
+    fun addProduct(shopItem: ShopItem): Completable
+    fun removeProduct(shopItem: ShopItem): Completable
+    fun getProducts(): Observable<Cart>
+    fun clearCart(): Completable
+    fun getTotal(): Observable<Float>
 }

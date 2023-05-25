@@ -248,8 +248,12 @@ class UserRepository : IUserRepository {
     }
 
 
-    override fun logout() {
-        Firebase.auth.signOut()
+    override fun logout(): Completable {
+        return Completable.create {
+            Firebase.auth.signOut()
+            magicparkDbSession.clearToken()
+            it.onComplete()
+        }
     }
 
 

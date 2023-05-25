@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -27,13 +28,17 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
+import com.magicpark.features.settings.SettingsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun UpdateAccountScreen(navController: NavController? = null) {
+fun UpdateAccountScreen(navController: NavController? = null,
+    viewModel: SettingsViewModel) {
 
+
+    val user by viewModel.user.observeAsState()
 
     var fullName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
@@ -42,6 +47,10 @@ fun UpdateAccountScreen(navController: NavController? = null) {
     var number by remember { mutableStateOf("") }
 
 
+
+    LaunchedEffect(key1 = user) {
+        viewModel.loadUser()
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -116,6 +125,7 @@ fun UpdateAccountScreen(navController: NavController? = null) {
                 OutlinedTextField(
                     modifier = Modifier.padding(top=10.dp),
                     value = fullName,
+                    singleLine = true,
                     onValueChange = { value ->
                         fullName = value
                     },
@@ -124,13 +134,14 @@ fun UpdateAccountScreen(navController: NavController? = null) {
                         containerColor = Color.White,
                         unfocusedBorderColor = Color.Transparent
                     ),
-                    placeholder = { Text(stringResource(id = com.magicpark.utils.R.string.register_label_fullname)) }
+                    placeholder = { Text(user?.fullName  ?: "") }
                 )
 
 
                 OutlinedTextField(
                     modifier = Modifier.padding(top=10.dp),
                     value = number,
+                    singleLine = true,
                     onValueChange = { value ->
                         number = value
                     },
@@ -139,12 +150,13 @@ fun UpdateAccountScreen(navController: NavController? = null) {
                         containerColor = Color.White,
                         unfocusedBorderColor = Color.Transparent
                     ),
-                    placeholder = { Text(stringResource(id = com.magicpark.utils.R.string.register_label_whatsapp)) }
+                    placeholder = { Text(user?.phoneNumber  ?: "") }
                 )
 
                 OutlinedTextField(
                     modifier = Modifier.padding(top=10.dp, bottom=10.dp),
                     value = mail,
+                    singleLine = true,
                     onValueChange = { value ->
                         mail = value
                     },
@@ -153,7 +165,7 @@ fun UpdateAccountScreen(navController: NavController? = null) {
                         containerColor = Color.White,
                         unfocusedBorderColor = Color.Transparent
                     ),
-                    placeholder = { Text(stringResource(id = com.magicpark.utils.R.string.register_label_mail)) }
+                    placeholder = { Text(user?.mail ?: "") }
                 )
 
 
@@ -173,6 +185,7 @@ fun UpdateAccountScreen(navController: NavController? = null) {
 
                 OutlinedTextField(
                     value = password,
+                    singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     onValueChange = { value ->
                         password = value
@@ -189,6 +202,7 @@ fun UpdateAccountScreen(navController: NavController? = null) {
                 OutlinedTextField(
                     modifier = Modifier.padding(top=10.dp),
                     visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true,
                     value = passwordConfirmation,
                     onValueChange = { value ->
                         passwordConfirmation = value
@@ -211,7 +225,7 @@ fun UpdateAccountScreen(navController: NavController? = null) {
 
                 Button(
                     onClick = {
-                        TODO("Modifier")
+                              viewModel?.updateUser(fullName, mail, password, passwordConfirmation, number)
                     },
                 ) {
                     Text("Modifier")

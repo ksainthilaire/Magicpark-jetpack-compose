@@ -1,6 +1,12 @@
 # Magicpark
 
 
+
+TODO:
+  - Affichage des produits en promotions
+  - Panier/boutique
+  - Suppression de compte
+
 # Table of Contents
 1. [Application Architecture]
 2. [Third-party libraries]

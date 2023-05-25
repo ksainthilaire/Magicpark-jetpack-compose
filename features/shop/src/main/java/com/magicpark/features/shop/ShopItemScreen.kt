@@ -1,6 +1,5 @@
 package com.magicpark.features.shop
 
-import android.graphics.Paint.Align
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,46 +11,54 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
+import coil.size.Size
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import com.magicpark.core.MagicparkTheme
-import com.magicpark.ui.menu.BottomNavigation
 import com.magicpark.utils.R
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
-@Preview
 @Composable
-fun ShopItemScreen(navController: NavController? = null) {
+fun ShopItemScreen(
+    navController: NavController? = null,
+    viewModel: ShopViewModel,
+    id: Long
+) {
 
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(com.magicpark.core.R.raw.abstract_background))
 
+    val items by viewModel.shop.observeAsState()
 
 
+    val shopItem = items?.first?.find { id == it.id }
 
     Column(
         Modifier
             .fillMaxSize()
-            .background(MagicparkTheme.magicparkBackgroundRed)) {
+            .background(MagicparkTheme.magicparkBackgroundRed)
+    ) {
 
 
         Image(
@@ -64,7 +71,7 @@ fun ShopItemScreen(navController: NavController? = null) {
                     end = MagicparkTheme.defaultPadding
                 )
                 .clickable {
-                           navController?.popBackStack()
+                    navController?.popBackStack()
                 },
             contentDescription = null,
             colorFilter = ColorFilter.tint(Color.White)
@@ -89,13 +96,22 @@ fun ShopItemScreen(navController: NavController? = null) {
                 composition = composition, iterations = LottieConstants.IterateForever
             )
 
-            GlideImage(
+
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .decoderFactory(SvgDecoder.Factory())
+                    .data(shopItem?.imageUrl)
+                    .size(Size.ORIGINAL)
+                    .build(), ImageLoader(LocalContext.current)
+            )
+
+            Image(
+                painter = painter,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .width(200.dp)
                     .height(200.dp),
-                model = "https://abbeygardens.ca/wp-content/uploads/2021/08/tickets.png",
-                contentDescription = "article",
+                contentDescription = ""
             )
         }
 
@@ -110,24 +126,36 @@ fun ShopItemScreen(navController: NavController? = null) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+
+
+
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Ticket avec une entrée")
+                Text(shopItem?.name ?: "")
                 Text(
-                    text = "500 000 GNF",
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        textDecoration = TextDecoration.Underline,
-                        fontSize = 32.sp
-                    )
+                    text = "%s GNF".format(shopItem?.price),
+                    style = if (shopItem?.promotionalPrice != null) TextStyle(
+                        fontSize = 32.sp, textDecoration = TextDecoration.LineThrough) else
+                        TextStyle(   textDecoration = TextDecoration.Underline,
+                            fontSize = 32.sp),
+                    color = MagicparkTheme.colors.primary
                 )
+
+                if (shopItem?.promotionalPrice != null) {
+                    Text(
+                        text = "%s GNF".format(shopItem.promotionalPrice),
+                        style = TextStyle(   textDecoration = TextDecoration.Underline,
+                            fontSize = 32.sp),
+                        color = MagicparkTheme.colors.primary
+                    )
+                }
             }
 
             Text(
-                text = "Ce ticket vous permet de visiter le parc pendant une journée entière!",
+                text = shopItem?.description ?: "",
                 Modifier
                     .padding(top = 20.dp)
                     .align(Alignment.Start)
@@ -137,7 +165,10 @@ fun ShopItemScreen(navController: NavController? = null) {
             Button(
                 modifier = Modifier.padding(top = 50.dp),
                 onClick = {
-                    TODO("Achetez le ticket")
+                    if (shopItem != null) {
+                        viewModel.addProduct(shopItem)
+                        navController?.popBackStack()
+                    }
                 },
             ) {
                 Text(text = stringResource(R.string.cart_button_pay))

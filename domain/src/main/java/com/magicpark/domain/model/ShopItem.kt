@@ -1,12 +1,15 @@
 package com.magicpark.domain.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
 @Entity(tableName = "shop")
+@Parcelize
 data class ShopItem(
     @PrimaryKey var id: Long? = null,
     @ColumnInfo(name="name")
@@ -37,7 +40,7 @@ data class ShopItem(
 
 
     @ColumnInfo(name="quantity")
-    var quantity: Int? = null,
+    var quantity: Int? = 0,
 
     @ColumnInfo(name="is_pack")
     @SerializedName("is_pack")
@@ -54,4 +57,12 @@ data class ShopItem(
     @ColumnInfo(name="deleted_at")
     @SerializedName("deleted_at")
     var deletedAt: Date? = null
-)
+) : Parcelable
+
+
+
+typealias Shop = Pair<List<ShopItem>, List<ShopCategory>>
+
+fun Shop.create() : Shop {
+    return Pair(listOf(), listOf())
+}

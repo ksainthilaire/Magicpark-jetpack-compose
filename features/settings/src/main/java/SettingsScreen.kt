@@ -3,8 +3,9 @@ package com.magicpark.features.settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,12 +30,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
 import com.magicpark.utils.ui.Alert
+import com.magicpark.utils.ui.OnLifecycleEvent
 
 
 @Composable
@@ -83,7 +86,29 @@ fun MenuItem(
 
 @Preview
 @Composable
-fun SettingsScreen(navController: NavController? = null) {
+fun SettingsScreen(navController: NavController? = null, viewModel: SettingsViewModel, activity: AppCompatActivity) {
+
+    val state by viewModel.state.observeAsState()
+    val user by viewModel.user.observeAsState()
+
+
+    if (state is SettingsState.LogoutSucceeded) {
+        navController?.navigate("/login")
+    }
+
+    OnLifecycleEvent { _, event ->
+
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.loadUser()
+            }
+            else -> {}
+        }
+    }
+
+
+
+    val isAdministrator = user?.role?.equals("") ?: false
 
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uriList ->
@@ -94,7 +119,7 @@ fun SettingsScreen(navController: NavController? = null) {
     Image(
         painter = painterResource(id = R.drawable.ic_back),
         modifier = Modifier
-            .clickable {  }
+            .clickable { }
             .width(100.dp)
             .height(50.dp)
             .padding(
@@ -137,29 +162,28 @@ fun SettingsScreen(navController: NavController? = null) {
                     ) {
 
 
+
                         Image(
                             painter = painterResource(R.drawable.illustration_elephant),
                             modifier = Modifier.fillMaxSize(),
                             contentDescription = "avatar",
                             contentScale = ContentScale.FillBounds
-    )
+                        )
                     }
-
-
 
 
                 }
 
-                Text(modifier = Modifier.padding(top = 10.dp), text = "SAINT HILAIRE")
-                Text(text = "Keny")
+                Text(modifier = Modifier.padding(top = 10.dp), text = user?.fullName.toString())
 
             }
 
             Spacer(Modifier.height(10.dp))
 
-            Alert(
+            user?.avatarUrl?.let {} ?: Alert(
                 stringResource(
-                    com.magicpark.utils.R.string.settings_upload_picture),
+                    com.magicpark.utils.R.string.settings_upload_picture
+                ),
                 Color.Red,
                 Color.White
             )
@@ -175,7 +199,18 @@ fun SettingsScreen(navController: NavController? = null) {
 
 
             MenuItem(R.drawable.ic_trash, "Supprimer mon compte") {
-                navController?.navigate("/support")
+
+
+                val builder = AlertDialog.Builder(activity)
+                val inflater = activity.layoutInflater;
+                builder.setView(inflater.inflate(com.magicpark.features.settings.R.layout.dialog_delete, null))
+                    .setPositiveButton(com.magicpark.utils.R.string.common_button_delete) { _, _ ->
+                      //  viewModel.delete()
+                    }
+                    .setNegativeButton(com.magicpark.utils.R.string.common_button_cancel) { dialog, _ ->
+                        dialog.cancel()
+                    }
+                builder.create().show()
             }
 
 
@@ -184,10 +219,14 @@ fun SettingsScreen(navController: NavController? = null) {
                 navController?.navigate("/privacy-policy")
             }
 
-            Title("Administration")
-            MenuItem(R.drawable.ic_admin_qr, "Contrôler un ticket")
-            MenuItem(R.drawable.ic_bo, "Back-office")
 
+
+
+            if (isAdministrator) {
+                Title("Administration")
+                MenuItem(R.drawable.ic_admin_qr, "Contrôler un ticket")
+                MenuItem(R.drawable.ic_bo, "Back-office")
+            }
 
             Button(
                 onClick = {},
@@ -212,7 +251,8 @@ fun SettingsScreen(navController: NavController? = null) {
                         .weight(1f)
                         .offset(x = (-12).dp)
                         .clickable {
-                            TODO("Logout")
+
+                            navController?.navigate("/login")
                         }
                 )
             }

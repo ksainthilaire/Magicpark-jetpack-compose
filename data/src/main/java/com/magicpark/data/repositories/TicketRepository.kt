@@ -22,7 +22,7 @@ class TicketRepository : ITicketRepository {
     private val userTicketDao: UserTicketDao by KoinJavaComponent.inject(UserTicketDao::class.java)
 
     override fun getWallet(): Observable<List<UserTicket>> {
-        return magicparkApi.getWallet("")
+        return magicparkApi.getWallet(magicparkDbSession.getToken())
             .subscribeOn(Schedulers.io())
             .map {
                 it.tickets?.let {
@@ -33,7 +33,7 @@ class TicketRepository : ITicketRepository {
     }
 
     override fun controlTicket(payload: String): Completable {
-        return magicparkApi.controlTicket("", payload)
+        return magicparkApi.controlTicket(magicparkDbSession.getToken(), payload)
             .subscribeOn(Schedulers.io())
     }
 

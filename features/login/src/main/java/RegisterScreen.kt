@@ -65,6 +65,12 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     var passwordConfirmationVisibility: Boolean by remember { mutableStateOf(false) }
 
+    LaunchedEffect(key1 = state) {
+        if (state is LoginState.RegisterSuccess) {
+            navController?.navigate("/shop")
+        }
+    }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -271,7 +277,7 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                         }) {
                             Icon(
                                 painter =
-                                if (passwordVisibility)
+                                if (!passwordVisibility)
                                     painterResource(com.magicpark.utils.R.drawable.password_ok)
                                 else painterResource(com.magicpark.utils.R.drawable.password_nok),
                                 contentDescription = "Show password"
@@ -301,7 +307,7 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                         }) {
                             Icon(
                                 painter =
-                                if (passwordConfirmationVisibility)
+                                if (!passwordConfirmationVisibility)
                                     painterResource(com.magicpark.utils.R.drawable.password_ok)
                                 else  painterResource(com.magicpark.utils.R.drawable.password_nok),
                                 contentDescription = "Show password confirmation"

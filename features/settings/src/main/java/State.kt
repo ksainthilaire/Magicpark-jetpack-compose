@@ -3,8 +3,10 @@ package com.magicpark.features.settings
 
 
 
-sealed class SupportState  {
+sealed class SettingsState  {
     /* Login */
-    object HelpRequestSent : SupportState()
-    class HelpRequestError(val message: String? = null) : SupportState()
+    object HelpRequestSent : SettingsState()
+    class HelpRequestError(val message: String? = null) : SettingsState()
+
+    object LogoutSucceeded : SettingsState()
 }

@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IUserRepository {
 
-    fun logout()
+    fun logout() : Completable
 
     fun updateUser(
         mail: String? = null,
@@ -21,6 +21,7 @@ interface IUserRepository {
 
     fun getUser(): Observable<User>
     fun forgot(mail: String): Completable
+
 
 
     fun loginWithFacebook(activity: AppCompatActivity): Observable<User>

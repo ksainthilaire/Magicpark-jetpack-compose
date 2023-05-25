@@ -70,4 +70,5 @@ dependencies {
     implementation project(":domain")
     implementation project(":core")
     implementation project(":utils")
+    implementation project(path: ':features:settings')
 }
