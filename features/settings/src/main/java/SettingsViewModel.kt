@@ -1,18 +1,12 @@
 package com.magicpark.features.settings
 
-
-import android.content.res.Resources
-import android.util.Log
-import androidx.compose.ui.text.font.FontVariation
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.magicpark.domain.model.Settings
 import com.magicpark.domain.model.User
-import com.magicpark.domain.usecases.SettingsUseCases
 import com.magicpark.domain.usecases.SupportUseCases
 import com.magicpark.domain.usecases.UserUseCases
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 
@@ -23,73 +17,48 @@ class SettingsViewModel : ViewModel() {
     private val userUseCases: UserUseCases by KoinJavaComponent.inject(UserUseCases::class.java)
 
 
-    private val _state: MutableLiveData<SettingsState> = MutableLiveData()
-    val _user: MutableLiveData<User> = MutableLiveData()
+    private val _user: MutableStateFlow<User> = MutableStateFlow(User())
+    val user: StateFlow<User> = _user
 
-    val user: LiveData<User>
-        get() = _user
+    private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(SettingsState.Loading)
+    val state: StateFlow<SettingsState> =_state
 
-    val state: LiveData<SettingsState>
-        get() = _state
-
-    init {
-        loadUser()
+    private fun loadUser() = viewModelScope.launch {
+        val user = userUseCases.getUser()
+        _user.value = user
     }
 
-    private fun onSettingsError(throwable: Throwable) {
-        Log.d(TAG, "Settings error")
+    fun sendHelpRequest(text: String) = viewModelScope.launch {
+        val isSuccessful = supportUseCases
+            .help(text)
+
+        _state.value = SettingsState.HelpRequestSent
     }
 
-    private fun onUserError(throwable: Throwable) {
-        Log.d(TAG, "User error")
+    suspend fun logout() = viewModelScope.launch {
+        userUseCases
+            .logout()
+
+        _state.value = SettingsState.LogoutSucceeded
     }
 
-    private fun onUserLoaded(user: User) {
-        _user.postValue(user)
-    }
-
-    private fun onUserUpdated() {
-        Log.d(TAG, "User updated")
-    }
-
-    fun loadUser() {
-        userUseCases.getUser()
-            .subscribe(::onUserLoaded, ::onUserError)
-    }
-
-    private fun onHelpSucceeded() {
-        _state.postValue(SettingsState.HelpRequestSent)
-    }
-
-    private fun onHelpError(throwable: Throwable) {
-        _state.postValue(SettingsState.HelpRequestError(throwable.message))
-    }
-
-    fun help(message: String) {
-        supportUseCases.help(message)
-            .subscribe(::onHelpSucceeded, ::onHelpError)
-    }
-
-    private fun onLogoutSucceeded() {
-        _state.postValue(SettingsState.LogoutSucceeded)
-    }
-
-    private fun onLogoutError(throwable: Throwable) {
-        Log.d(TAG, "Logout error ${throwable.message}")
-    }
-
-    fun logout() {
-        userUseCases.logout()
-            .subscribe(::onLogoutSucceeded, ::onLogoutError)
-    }
 
     fun updateUser(
-        fullName: String, mail: String, password: String,
-        passwordConfirmation: String, number: String
-    ) {
+        fullName: String,
+        mail: String,
+        password: String,
+        passwordConfirmation: String,
+        number: String,
+    ) = viewModelScope.launch {
 
-        userUseCases.updateUser(mail, fullName, number, null, null)
-            .subscribe(::onUserUpdated, ::onUserError)
+        userUseCases
+            .updateUser(
+                mail,
+                fullName,
+                number,
+                null,
+                null
+            )
     }
 
     companion object {

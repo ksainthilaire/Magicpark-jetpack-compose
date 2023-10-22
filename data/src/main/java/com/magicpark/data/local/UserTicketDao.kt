@@ -4,10 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.magicpark.domain.model.User
 import com.magicpark.domain.model.UserTicket
-import io.reactivex.rxjava3.core.Observable
-
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserTicketDao {
@@ -16,11 +14,11 @@ interface UserTicketDao {
     fun saveUserTickets(items: List<UserTicket>): List<Long>
 
     @Query("SELECT * FROM wallet WHERE user_id LIKE :id LIMIT 1")
-    fun getUserTicketById(id: Int): Observable<UserTicket>
+    fun getUserTicketById(id: Int): Flow<UserTicket>
 
     @Query("SELECT * FROM wallet")
-    fun getUserTickets(): Observable<List<UserTicket>>
+    fun getUserTickets(): Flow<List<UserTicket>>
 
     @Query("SELECT * FROM wallet WHERE id LIKE :id LIMIT 1")
-    fun getUserTicket(id: Int): Observable<List<UserTicket>>
+    fun getUserTicket(id: Int): Flow<List<UserTicket>>
 }

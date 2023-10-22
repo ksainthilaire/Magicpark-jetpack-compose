@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.magicpark.domain.enums.OrderStatusEnum
-import com.magicpark.domain.enums.PaymentMethodEnum
+import com.magicpark.domain.enums.OrderStatus
+import com.magicpark.domain.enums.PaymentMethod
 import java.util.Date
 
 @Entity(tableName = "orders")
@@ -20,7 +20,7 @@ data class Order(
 
     @ColumnInfo(name = "payment_method")
     @SerializedName("payment_method")
-    var paymentMethod: PaymentMethodEnum? = null,
+    var paymentMethod: PaymentMethod? = null,
 
     @ColumnInfo(name = "user_id")
     @SerializedName("user_id")
@@ -30,7 +30,7 @@ data class Order(
     var cart: String? = null,
 
     @ColumnInfo(name = "status")
-    var status: OrderStatusEnum? = OrderStatusEnum.PENDING,
+    var status: OrderStatus? = OrderStatus.PENDING,
 
     @ColumnInfo(name = "deleted_at")
     @SerializedName("deleted_at")

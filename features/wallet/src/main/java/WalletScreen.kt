@@ -11,7 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +37,6 @@ import java.util.*
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-@Preview
 fun Ticket(shopItem: UserTicket, callback: (id: Long) -> Unit) = Column {
 
     Column(Modifier.padding(20.dp)) {
@@ -178,15 +177,13 @@ fun Ticket(shopItem: UserTicket, callback: (id: Long) -> Unit) = Column {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-@Preview
 fun WalletScreen(navController: NavController? = null, viewModel: WalletViewModel) {
 
 
     var selectedTabIndex by remember { mutableStateOf(0) }
 
-    val state by viewModel.state.observeAsState()
-    val inUse by viewModel.inUse.observeAsState()
-    val toUse by viewModel.inUse.observeAsState()
+    val state by viewModel.state.collectAsState()
+
 
     OnLifecycleEvent { _, event ->
 
@@ -239,12 +236,15 @@ fun WalletScreen(navController: NavController? = null, viewModel: WalletViewMode
                         }
                     }
 
-                    if (selectedTabIndex == 0) toUse?.forEach {
+                    val wallet = state as? WalletState.Tickets ?: return@item
+
+                    if (selectedTabIndex == 0) wallet
+                        .toUse?.forEach {
                         Ticket(it) {
                             navController?.navigate("/ticket/${it}")
                         }
                     }
-                    else toUse?.forEach {
+                    else wallet.inUse?.forEach {
                         Ticket(it) {
                             navController?.navigate("/ticket/${it}")
                         }

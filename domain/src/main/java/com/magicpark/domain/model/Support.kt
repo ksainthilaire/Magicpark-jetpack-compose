@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.magicpark.data.model.enums.SupportStatusEnum
+import com.magicpark.data.model.enums.SupportStatus
 import java.util.Date
 import java.util.*
 
@@ -30,7 +30,7 @@ data class Support(
 
     @ColumnInfo(name = "status")
     @SerializedName("status")
-    var status: SupportStatusEnum? = SupportStatusEnum.TODO,
+    var status: SupportStatus? = SupportStatus.TODO,
 
     @ColumnInfo(name = "created_at")
     @SerializedName("created_at")

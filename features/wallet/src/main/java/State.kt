@@ -1,11 +1,16 @@
 package com.magicpark.features.wallet
 
 
+import com.magicpark.domain.model.User
 import com.magicpark.domain.model.UserTicket
 
 
-sealed class WalletState {
+sealed interface WalletState {
 
-
-    data class LoadTickets(val tickets: List<UserTicket>) : WalletState()
+    object Loading : WalletState
+    
+    data class Tickets(
+        val inUse: List<UserTicket>,
+        val toUse: List<UserTicket>,
+    ) : WalletState
 }

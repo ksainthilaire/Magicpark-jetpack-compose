@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.magicpark.domain.enums.UserRankEnum
+import com.magicpark.domain.enums.UserRank
 import java.util.Date
 
 @Entity(tableName = "users")
@@ -27,7 +27,7 @@ data class User(
     var avatarUrl: String? = null,
 
     @ColumnInfo(name = "role")
-    var role: UserRankEnum = UserRankEnum.CUSTOMER,
+    var role: UserRank = UserRank.CUSTOMER,
 
     @ColumnInfo(name = "token")
     var token: String? = null,

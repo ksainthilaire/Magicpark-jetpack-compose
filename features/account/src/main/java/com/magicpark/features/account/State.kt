@@ -2,8 +2,28 @@ package com.magicpark.features.account
 
 
 
-sealed class AccountState  {
-    object DeletionFailed : AccountState()
-    class DeletionSuccess : AccountState()
-    object SuccessfulDeletion : AccountState()
+/**
+ *
+ */
+sealed interface AccountState  {
+
+    /**
+     *
+     */
+    object Idle : AccountState
+
+    /**
+     *
+     */
+    object DeletionFailed : AccountState
+
+    /**
+     *
+     */
+    class DeletionSuccess : AccountState
+
+    /**
+     *
+     */
+    object SuccessfulDeletion : AccountState
 }

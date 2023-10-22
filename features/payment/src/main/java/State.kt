@@ -1,9 +1,11 @@
 package com.magicpark.features.payment
 
 
-sealed class PaymentState {
+sealed interface  PaymentUiState {
 
+    
+    object Loading : PaymentUiState
 
-    data class PaymentUrl(val url: String) : PaymentState()
+    data class PaymentUrl(val url: String) : PaymentUiState
 
 }

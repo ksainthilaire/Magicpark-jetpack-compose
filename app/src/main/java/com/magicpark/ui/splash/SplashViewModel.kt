@@ -1,24 +1,25 @@
 package com.magicpark.ui.splash
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
 class SplashViewModel : ViewModel() {
 
-    protected val _state: MutableLiveData<SplashState> = MutableLiveData()
+    private val _state: MutableStateFlow<SplashUiState> = MutableStateFlow(SplashUiState.Loading)
 
     private fun onError(t: Throwable) {
         t.printStackTrace()
     }
 
-    val state: LiveData<SplashState>
+    val state: StateFlow<SplashUiState>
         get() = _state
 
     init {
-        _state.value = SplashState.Loading()
+        _state.value = SplashUiState.Loading
     }
 
     private fun checkUpdateRequired() = viewModelScope.launch {

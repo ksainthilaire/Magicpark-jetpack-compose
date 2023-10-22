@@ -2,29 +2,21 @@ package com.magicpark.data.repositories
 
 import com.magicpark.data.api.MagicparkApi
 import com.magicpark.data.model.request.order.CreateOrderRequest
-import com.magicpark.data.session.MagicparkDbSession
-import com.magicpark.domain.enums.PaymentMethodEnum
+import com.magicpark.domain.enums.PaymentMethod
 import com.magicpark.domain.model.*
 import com.magicpark.domain.repositories.IOrderRepository
-import io.reactivex.rxjava3.core.*
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.single
 import org.koin.java.KoinJavaComponent
-import javax.inject.Inject
 
 class OrderRepository : IOrderRepository {
 
+    private val api: MagicparkApi by KoinJavaComponent.inject(MagicparkApi::class.java)
 
-
-    private val magicparkDbSession: MagicparkDbSession by KoinJavaComponent.inject(
-        MagicparkDbSession::class.java
-    )
-    private val magicparkApi: MagicparkApi by KoinJavaComponent.inject(MagicparkApi::class.java)
-
-    override fun createOrder(
+    override suspend fun createOrder(
+        paymentMethod: PaymentMethod,
+        voucherCode: String?,
         shopItems: List<ShopItem>,
-        paymentMethod: PaymentMethodEnum,
-        voucherCode: String?
-    ): Observable<Order> {
+    ): Order {
 
         val request = CreateOrderRequest(
             items = shopItems,
@@ -32,19 +24,17 @@ class OrderRepository : IOrderRepository {
             paymentMethod = paymentMethod
         )
 
-        return magicparkApi.createOrder(magicparkDbSession.getToken(), request)
-            .subscribeOn(Schedulers.io())
-            .map {
-                it.order
-            }
+        val response = api.createOrder(request)
+            .single()
 
+        return response.order ?: throw Exception("The order is empty")
     }
 
-    override fun getOrder(orderId: Long): Observable<Order> {
-        return magicparkApi.getOrder(magicparkDbSession.getToken(), orderId.toString())
-            .subscribeOn(Schedulers.io())
-            .map {
-                it.order
-            }
+    override suspend fun getOrder(orderId: Long): Order {
+        val response = api
+            .getOrder(orderId.toString())
+            .single()
+
+        return response.order ?: throw Exception("The order is empty")
     }
 }

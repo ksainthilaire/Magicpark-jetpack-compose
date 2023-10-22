@@ -10,7 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -168,8 +168,8 @@ fun CartItem(
 fun CartScreen(navController: NavController? = null, viewModel: ShopViewModel) {
 
 
-    val shopItems by viewModel.cart.observeAsState()
-    val total by viewModel.price.observeAsState()
+    val shopItems by viewModel.cart.collectAsState()
+    val total by viewModel.price.collectAsState()
 
     LaunchedEffect(key1 = shopItems) {
         viewModel.getCart()

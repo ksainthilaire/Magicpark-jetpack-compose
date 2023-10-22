@@ -1,3 +1,5 @@
+package com.magicpark.features.login.register
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -5,51 +7,50 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavController
 import com.hbb20.CountryCodePicker
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
-import com.magicpark.features.login.LoginState
-import com.magicpark.features.login.LoginViewModel
-import com.magicpark.utils.ui.ErrorSnackbar
-import kotlinx.coroutines.delay
+import com.magicpark.features.login.LoginUiState
+
+
+private fun checkFields() {
+
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewModel) {
-
-    val state by viewModel.state.observeAsState()
-
-    viewModel.setLocalContext(appCompactActivity = LocalContext.current)
+fun RegisterScreen(
+    state: LoginUiState,
+    onBackPressed: () -> Unit,
+    goToPrivacyPolicy: () -> Unit,
+    register: (
+        fullName: String,
+        phoneNumber: String,
+        mail: String,
+        password: String
+    ) -> Unit,
+) {
 
     var countryCodePicker: CountryCodePicker? = null
 
@@ -64,12 +65,6 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
 
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
     var passwordConfirmationVisibility: Boolean by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = state) {
-        if (state is LoginState.RegisterSuccess) {
-            navController?.navigate("/shop")
-        }
-    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -309,7 +304,7 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                                 painter =
                                 if (!passwordConfirmationVisibility)
                                     painterResource(com.magicpark.utils.R.drawable.password_ok)
-                                else  painterResource(com.magicpark.utils.R.drawable.password_nok),
+                                else painterResource(com.magicpark.utils.R.drawable.password_nok),
                                 contentDescription = "Show password confirmation"
                             )
                         }
@@ -358,7 +353,7 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                         modifier = Modifier
                             .padding(start = 5.dp)
                             .clickable {
-                                navController?.navigate("/privacy-policy")
+                                goToPrivacyPolicy()
                             },
                         style = TextStyle(
                             textDecoration = TextDecoration.Underline,
@@ -369,14 +364,14 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
 
                 Button(
                     onClick = {
-                        viewModel.register(
+                        register(
                             mail,
                             password,
                             passwordConfirmation,
                             fullName,
-                            phoneNumber,
-                            countryCodePicker?.selectedCountryCode ?: "GN",
-                            cgvChecked
+                            // phoneNumber,
+                            // countryCodePicker?.selectedCountryCode ?: "GN",
+                            // cgvChecked
                         )
                     },
                 ) {
@@ -401,7 +396,7 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                         color = MagicparkTheme.colors.primary,
                         modifier = Modifier
                             .clickable {
-                                navController?.popBackStack()
+                                onBackPressed()
                             }
                     )
                 }
@@ -445,25 +440,11 @@ fun RegisterScreen(navController: NavController? = null, viewModel: LoginViewMod
                     start.linkTo(parent.start, 20.dp)
                 }
                 .clickable {
-                    navController?.popBackStack()
+                    onBackPressed()
                 },
             contentDescription = null,
             colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
         )
 
     }
-
-
-    if (state is LoginState.RegisterError) {
-
-        ErrorSnackbar((state as LoginState.RegisterError).message ?: "") {
-            viewModel.clear()
-        }
-
-        LaunchedEffect(key1 = state) {
-            delay(2000L)
-            viewModel.clear()
-        }
-    }
-
 }

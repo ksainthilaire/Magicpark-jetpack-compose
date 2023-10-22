@@ -1,6 +1,6 @@
 package com.magicpark.domain.enums
 
-enum class UserRankEnum {
+enum class UserRank {
     // Guest who can make a quick purchase in anonymous mode without registering
     CUSTOMER,
 

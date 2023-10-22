@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -119,7 +119,7 @@ fun ShopScreen(navController: NavController? = null, viewModel: ShopViewModel) {
     var searchText by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(1) }
 
-    val shop by viewModel.shop.observeAsState()
+    val shop by viewModel.shop.collectAsState()
 
     var shopItems = shop?.first ?: listOf()
     val categories = shop?.second ?: listOf()

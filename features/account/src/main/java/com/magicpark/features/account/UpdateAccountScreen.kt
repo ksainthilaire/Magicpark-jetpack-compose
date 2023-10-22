@@ -8,10 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -19,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +35,7 @@ fun UpdateAccountScreen(navController: NavController? = null,
     viewModel: SettingsViewModel) {
 
 
-    val user by viewModel.user.observeAsState()
+    val user by viewModel.user.collectAsState()
 
     var fullName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
@@ -58,9 +55,6 @@ fun UpdateAccountScreen(navController: NavController? = null,
             .background(Color(0xFFFFCA00))
     ) {
         val (view, home, shapeTopLeft, shapeMidRight, shapeBottomLeft) = createRefs()
-
-
-
 
         LazyColumn(
             Modifier

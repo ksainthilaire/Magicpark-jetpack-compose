@@ -1,31 +1,19 @@
 package com.magicpark.app
 
-import RegisterScreen
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-
 import com.magicpark.core.MagicparkMaterialTheme
-import com.magicpark.data.session.MagicparkDbSession
-import com.magicpark.domain.model.ShopItem
+import com.magicpark.features.shop.Cart
 import com.magicpark.features.account.UpdateAccountScreen
-import com.magicpark.features.login.ForgotScreen
-import com.magicpark.features.login.LoginScreen
-import com.magicpark.features.login.LoginViewModel
+import com.magicpark.features.login.LoginActivity
 import com.magicpark.features.payment.PaymentStatus
 import com.magicpark.features.settings.ContactScreen
 import com.magicpark.features.settings.SettingsScreen
@@ -47,23 +35,20 @@ import org.koin.java.KoinJavaComponent
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val magicparkDbSession: MagicparkDbSession by KoinJavaComponent.inject(
-        MagicparkDbSession::class.java
+    private val magicparkDbSession: Cart by KoinJavaComponent.inject(
+        Cart::class.java
     )
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
 
         val startDestination = if (magicparkDbSession.isLogged()) "/shop" else {
-            if (magicparkDbSession.getWelcome()) "/login"
+            if (magicparkDbSession.getWelcome()) return startLoginActivity()
             else "/splash"
         }
-
-
 
         setContent {
 
@@ -116,20 +101,6 @@ class MainActivity : AppCompatActivity() {
                         CartScreen(navController, viewModel)
                     }
 
-                    composable("/login") {
-
-                        val viewModel: LoginViewModel by  viewModel()
-                        LoginScreen(navController, viewModel)
-                    }
-                    composable("/register") {
-                        val viewModel: LoginViewModel by viewModel()
-                        RegisterScreen(navController, viewModel)
-                    }
-                    composable("/forgot") {
-                        val viewModel: LoginViewModel by viewModel()
-                        ForgotScreen(navController, viewModel)
-                    }
-
                     composable("/settings") {
                         val viewModel: SettingsViewModel by viewModel()
                         SettingsScreen(navController, viewModel, this@MainActivity)
@@ -139,8 +110,6 @@ class MainActivity : AppCompatActivity() {
                         val viewModel: SettingsViewModel by viewModel()
                         UpdateAccountScreen(navController, viewModel)
                     }
-
-
 
                     composable("/payment") {}
                     composable(
@@ -164,16 +133,14 @@ class MainActivity : AppCompatActivity() {
                         val viewModel: WalletViewModel by viewModel()
                         TicketScreen(navController, viewModel, id)
                     }
-
                 }
-
             }
         }
 
     }
 
-
-
-
-
+    private fun startLoginActivity() {
+        val intent = LoginActivity.intentFor(context = this)
+        startActivity(intent)
+    }
 }

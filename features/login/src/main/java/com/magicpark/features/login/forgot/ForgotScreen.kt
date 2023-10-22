@@ -1,23 +1,20 @@
-package com.magicpark.features.login
+package com.magicpark.features.login.forgot
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.magicpark.core.MagicparkTheme
+import com.magicpark.features.login.LoginUiState
 import com.magicpark.utils.ui.ErrorSnackbar
 import kotlinx.coroutines.delay
 import java.util.*
@@ -25,14 +22,12 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotScreen(navController: NavController? = null, viewModel: LoginViewModel) {
-
-    val state by viewModel.state.observeAsState()
-    viewModel.setLocalContext(appCompactActivity = LocalContext.current)
-
-
+fun ForgotScreen(
+    state: LoginUiState,
+    onBackPressed: () -> Unit,
+    forgot: (mail: String) -> Unit,
+) {
     var mail by remember { mutableStateOf("") }
-
 
     var isVisible by remember { mutableStateOf(false) }
 
@@ -78,7 +73,7 @@ fun ForgotScreen(navController: NavController? = null, viewModel: LoginViewModel
         OutlinedTextField(
             value = mail,
             singleLine = true,
-            isError = state is LoginState.ForgotError,
+            isError = state is LoginUiState.ForgotFailed,
             onValueChange = { value ->
                 mail = value
             },
@@ -94,7 +89,7 @@ fun ForgotScreen(navController: NavController? = null, viewModel: LoginViewModel
 
         Button(
             onClick = {
-                viewModel.forgot(mail)
+                      forgot(mail)
             },
         ) {
             Text(text = stringResource(com.magicpark.utils.R.string.forgot_button_continue))
@@ -103,7 +98,7 @@ fun ForgotScreen(navController: NavController? = null, viewModel: LoginViewModel
 
         Button(
             onClick = {
-                navController?.popBackStack()
+                      onBackPressed()
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.White,
@@ -117,15 +112,17 @@ fun ForgotScreen(navController: NavController? = null, viewModel: LoginViewModel
     }
 
 
-    if (state is LoginState.ForgotError) {
+    if (state is LoginUiState.ForgotFailed) {
 
-        ErrorSnackbar((state as LoginState.ForgotError).message ?: "") {
-            viewModel.clear()
+        val message = when {
+            else -> ""
+        }
+
+        ErrorSnackbar(message) {
         }
 
         LaunchedEffect(key1 = state) {
             delay(2000L)
-            viewModel.clear()
         }
     }
 

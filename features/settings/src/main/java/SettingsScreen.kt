@@ -15,7 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -88,8 +88,8 @@ fun MenuItem(
 @Composable
 fun SettingsScreen(navController: NavController? = null, viewModel: SettingsViewModel, activity: AppCompatActivity) {
 
-    val state by viewModel.state.observeAsState()
-    val user by viewModel.user.observeAsState()
+    val state by viewModel.state.collectAsState()
+    val user by viewModel.user.collectAsState()
 
 
     if (state is SettingsState.LogoutSucceeded) {
@@ -100,7 +100,7 @@ fun SettingsScreen(navController: NavController? = null, viewModel: SettingsView
 
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                viewModel.loadUser()
+             //   viewModel.loadUser()
             }
             else -> {}
         }

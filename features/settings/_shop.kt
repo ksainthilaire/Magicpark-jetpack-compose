@@ -1,1 +1,1 @@
-    val _shop: MutableLiveData<Shop> = MutableLiveData(Pair(listOf(), listOf()))
+    val _shop: MutableStateFlow<Shop> = MutableStateFlow(Pair(listOf(), listOf()))

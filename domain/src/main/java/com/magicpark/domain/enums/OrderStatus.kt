@@ -1,6 +1,6 @@
 package com.magicpark.domain.enums
 
-enum class OrderStatusEnum {
+enum class OrderStatus {
     PENDING,
     VALID
 }

@@ -50,7 +50,7 @@ Libraries and their versions can be configured directly in the `build.gradle` of
    ext.deps = [
                 lottie                  : "com.airbnb.android:lottie-compose:${versions.lottie}",
                 loggingInterceptor      : "com.squareup.okhttp3:logging-interceptor:${versions.loggingInterceptor}",
-                runtimeLiveData         : "androidx.compose.runtime:runtime-livedata:${versions.runtimeLiveData}",
+                runtimeStateFlow         : "androidx.compose.runtime:runtime-StateFlow:${versions.runtimeStateFlow}",
                 koin                    : "io.insert-koin:koin-core:${versions.koin}",
                 koinAndroid                   : "io.insert-koin:koin-android:${versions.koin}"
    ]

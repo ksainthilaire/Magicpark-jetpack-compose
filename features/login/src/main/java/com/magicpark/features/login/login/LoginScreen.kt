@@ -1,20 +1,16 @@
-package com.magicpark.features.login
+package com.magicpark.features.login.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -24,52 +20,45 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.NavController
-
 import com.magicpark.core.MagicparkTheme
+import com.magicpark.features.login.LoginError
+import com.magicpark.features.login.LoginUiState
 import com.magicpark.utils.ui.ErrorSnackbar
 import kotlinx.coroutines.delay
 import java.util.*
 
+private fun handleLoginError() {
 
-
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    navController: NavController? = null,
-    viewModel: LoginViewModel
+    state: LoginUiState,
+
+    login: (username: String, password: String) -> Unit,
+    loginWithGoogle: () -> Unit,
+    loginWithFacebook: () -> Unit,
+
+    onBackPressed: () -> Unit,
+
+    goToForgot: () -> Unit,
+    goToRegister: () -> Unit,
 ) {
-
-
-    val state by viewModel.state.observeAsState()
-
-    viewModel.setLocalContext(appCompactActivity = LocalContext.current)
 
     var mail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     var passwordVisibility by remember { mutableStateOf(false) }
-
-
-
-    LaunchedEffect(key1 = state) {
-        if (state is LoginState.LoginSuccessful) {
-            navController?.navigate("/shop")
-        }
-    }
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         val (view, home, shapeTopLeft, shapeBottomLeft) = createRefs()
-
-
-
 
         Column(
             Modifier
@@ -152,7 +141,7 @@ fun LoginScreen(
                 ),
                 fontSize = 12.sp,
                 modifier = Modifier.clickable {
-                    navController?.navigate("/forgot")
+                                              goToForgot()
                 },
                 color = MagicparkTheme.colors.primary
             )
@@ -180,7 +169,7 @@ fun LoginScreen(
                         contentColor = MagicparkTheme.facebookButtonColor
                     ),
                     modifier = Modifier.clickable {
-                        viewModel.loginWithFacebook()
+                        loginWithFacebook()
                     }
                 ) {
                     Icon(
@@ -197,16 +186,14 @@ fun LoginScreen(
                             .weight(1f)
                             .offset(x = (-12).dp)
                             .clickable {
-                                viewModel.loginWithFacebook()
+                                loginWithFacebook()
                             }
                     )
                 }
 
 
                 Button(
-                    onClick = {
-                              viewModel.loginWithGoogle()
-                    },
+                    onClick = loginWithGoogle,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
                         contentColor = Color.Black
@@ -228,7 +215,7 @@ fun LoginScreen(
                             .weight(1f)
                             .offset(x = (-12).dp)
                             .clickable {
-                                viewModel.loginWithGoogle()
+                                loginWithGoogle()
                             }
                     )
 
@@ -237,7 +224,7 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    viewModel.login(mail, password)
+                    login(mail, password)
                 },
             ) {
                 Text(text = stringResource(com.magicpark.utils.R.string.login_button_login))
@@ -256,7 +243,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .clickable {
-                        navController?.navigate("/register")
+                        goToRegister()
                     }
             )
         }
@@ -305,7 +292,7 @@ fun LoginScreen(
                     start.linkTo(parent.start, 20.dp)
                 }
                 .clickable {
-                    navController?.popBackStack()
+                           onBackPressed()
                 },
             contentDescription = null,
             colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
@@ -314,15 +301,20 @@ fun LoginScreen(
 
     }
 
-    if (state is LoginState.LoginError) {
+    if (state is LoginUiState.LoginFailed) {
 
-        ErrorSnackbar((state as LoginState.LoginError).message ?: "") {
-            viewModel.clear()
+        val message = when (state.error) {
+            is LoginError.Unknown -> ""
+            is LoginError.EmptyFields -> ""
+            else -> ""
+        }
+
+        ErrorSnackbar(message) {
+          //  viewModel.clear()
         }
 
         LaunchedEffect(key1 = state) {
             delay(2000L)
-            viewModel.clear()
         }
     }
 

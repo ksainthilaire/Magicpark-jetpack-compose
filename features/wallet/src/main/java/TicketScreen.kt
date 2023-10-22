@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,12 +37,11 @@ import io.github.g0dkar.qrcode.QRCode
 fun TicketScreen(navController: NavController? = null, viewModel: WalletViewModel, id: Long) {
 
 
-    val state by viewModel.state.observeAsState()
-    val inUse by viewModel.inUse.observeAsState()
-    val toUse by viewModel.inUse.observeAsState()
+    val state by viewModel.state.collectAsState()
 
 
-    val ticket = inUse?.find { it.id == id }
+    if (state !is WalletState.Tickets) return
+    val ticket = (state as WalletState.Tickets).inUse.find { it.id == id }
 
     var errorMessage by remember { mutableStateOf<String?>("La génération du QR Code a échoué") }
 

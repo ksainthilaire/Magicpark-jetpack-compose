@@ -7,5 +7,5 @@ import org.koin.java.KoinJavaComponent.inject
 import javax.inject.Inject
 
 class SupportUseCases(  @Inject val repository: ISupportRepository){
-    fun help(message: String): Completable = repository.help(message)
+    suspend fun help(message: String): Boolean = repository.help(message)
 }

@@ -1,31 +1,47 @@
 package com.magicpark.domain.repositories
 
-import androidx.appcompat.app.AppCompatActivity
+import com.magicpark.domain.enums.LoginProvider
 import com.magicpark.domain.model.User
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.Flow
 
 interface IUserRepository {
 
-    fun logout() : Completable
+    /**
+     * @param token
+     */
+    suspend fun login(
+        token: String,
+    ): String
 
-    fun updateUser(
+    /**
+     *
+     */
+    suspend fun logout()
+
+    /**
+     *
+     * @param mail
+     * @param fullName
+     * @param phoneNumber
+     * @param avatarUrl
+     * @param country
+     */
+    suspend fun updateUser(
         mail: String? = null,
-        fullname: String? = null,
+        fullName: String? = null,
         phoneNumber: String? = null,
         avatarUrl: String? = null,
-        country: String? = null
-    ): Completable
+        country: String? = null,
+    )
 
-    fun deleteUser(): Completable
+    /**
+     *
+     */
+    suspend fun deleteUser()
 
-    fun getUser(): Observable<User>
-    fun forgot(mail: String): Completable
-
-
-
-    fun loginWithFacebook(activity: AppCompatActivity): Observable<User>
-    fun loginWithGoogle(activity: AppCompatActivity): Observable<User>
-    fun loginWithMail(activity: AppCompatActivity, mail: String, password: String): Observable<User>
-    fun registerWithMail(activity: AppCompatActivity, fullName: String, phoneNumber: String, mail: String, password: String): Observable<User>
+    /**
+     *
+     */
+    suspend fun getUser(): User
 }
