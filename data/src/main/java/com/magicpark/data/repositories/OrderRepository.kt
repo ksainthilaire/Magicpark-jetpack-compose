@@ -5,7 +5,6 @@ import com.magicpark.data.model.request.order.CreateOrderRequest
 import com.magicpark.domain.enums.PaymentMethod
 import com.magicpark.domain.model.*
 import com.magicpark.domain.repositories.IOrderRepository
-import kotlinx.coroutines.flow.single
 import org.koin.java.KoinJavaComponent
 
 class OrderRepository : IOrderRepository {
@@ -25,7 +24,6 @@ class OrderRepository : IOrderRepository {
         )
 
         val response = api.createOrder(request)
-            .single()
 
         return response.order ?: throw Exception("The order is empty")
     }
@@ -33,8 +31,21 @@ class OrderRepository : IOrderRepository {
     override suspend fun getOrder(orderId: Long): Order {
         val response = api
             .getOrder(orderId.toString())
-            .single()
 
-        return response.order ?: throw Exception("The order is empty")
+        return response.order ?: throw Exception("The order fuekd is empty")
+    }
+
+    override suspend fun getPayment(orderId: Long): Payment {
+        val response = api
+            .getPayment(orderId.toString())
+
+        return response.payment ?: throw Exception("The payment field is empty")
+    }
+
+    override suspend fun getPaymentInvoice(orderId: Long): Invoice {
+        val response = api
+            .getInvoice(orderId.toString())
+
+        return response.invoice ?: throw Exception("The invoice field is empty")
     }
 }

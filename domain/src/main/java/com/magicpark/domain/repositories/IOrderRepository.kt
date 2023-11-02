@@ -12,4 +12,9 @@ interface IOrderRepository {
     ): Order
 
     suspend fun getOrder(orderId: Long): Order
+
+    suspend fun getPayment(orderId: Long): Payment
+
+    suspend fun getPaymentInvoice(orderId: Long): Invoice
+
 }

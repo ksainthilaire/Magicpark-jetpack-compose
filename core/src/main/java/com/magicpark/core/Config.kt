@@ -19,4 +19,6 @@ object Config {
      */
     const val SERVER_CLIENT_ID = "466002208137-o6rs77cfkvtqiat9tbciot15ghlgd9vj.apps.googleusercontent.com"
 
+
+    const val KEY_SHARED_PREFERENCES = "KEY-MAGICPARK"
 }

@@ -53,6 +53,7 @@ buildscript {
                 room                    : "androidx.room:room-runtime:${versions.room}",
                 roomCompiler            : "androidx.room:room-compiler:${versions.room}",
                 roomRxJava              : "androidx.room:room-rxjava3:${versions.room}",
+                roomKtx                 : "androidx.room:room-ktx:${versions.room}",
                 roomTesting             : "androidx.room:room-testing:${versions.room}",
                 glideCompose            : "com.github.bumptech.glide:compose:${versions.composeGlide}",
                 navigationCompose       : "androidx.navigation:navigation-compose:${versions.navigationCompose}"

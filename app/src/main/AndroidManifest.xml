@@ -28,6 +28,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="reversePortrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +41,8 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.magicpark.features.login.LoginActivity"
+            android:screenOrientation="reversePortrait"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

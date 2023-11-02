@@ -59,8 +59,8 @@
     <string name="register_error_wrong_email">L\'adresse e-mail est invalide</string>
     <string name="register_error_no_matching_passwords">Les mots de passe saisis ne sont pas identiques</string>
     <string name="register_error_terms_not_accepted">Vous n\'avez pas accepté les conditions d\'utilisation</string>
-    <string name="register_error_no_internet_connection">@string/register_error_unknown</string>
-    <string name="register_error_unknown">Une erreur est survenue, veuillez réessayer plus tard</string>
+    <string name="register_error_no_internet_connection">@string/common_error_unknown</string>
+    <string name="common_error_unknown">Une erreur est survenue, veuillez réessayer plus tard</string>
 
 
     <!-- Shop -->
@@ -94,6 +94,7 @@
     <string name="settings_cgv">CGV</string>
     <string name="settings_logout">Déconnexion</string>
 
+    <!-- Contact -->
 
     <!-- Help -->
     <string name="help_label_title">Aide</string>

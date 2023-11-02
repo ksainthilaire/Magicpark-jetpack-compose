@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7a127576-91ab-4049-81f2-986cab34d76b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/forgot/ForgotFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/deploymentTargetDropDown.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/magicpark/di/AppModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/magicpark/di/AppModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/magicpark/main/Application.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/magicpark/main/Application.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/magicpark/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/magicpark/main/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../core/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/com/magicpark/core/Config.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/com/magicpark/core/Config.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/api/MagicparkApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/api/MagicparkApi.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/model/response/OrderResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/model/response/OrderResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/model/response/OrdersResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/model/response/OrdersResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/OrderRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/OrderRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/SettingsRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/SettingsRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/ShopRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/ShopRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/SupportRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/SupportRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/TicketRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/TicketRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../data/src/main/java/com/magicpark/data/repositories/UserRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/model/Order.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/model/Order.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/repositories/IOrderRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/repositories/IOrderRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/repositories/ISupportRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/repositories/ISupportRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/usecases/OrderUseCases.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/usecases/OrderUseCases.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/usecases/RegisterUseCases.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/usecases/SupportUseCases.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/magicpark/domain/usecases/SupportUseCases.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/account/src/main/java/com/magicpark/features/account/AccountViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/account/src/main/java/com/magicpark/features/account/AccountViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/account/src/main/java/com/magicpark/features/account/State.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/account/src/main/java/com/magicpark/features/account/UpdateAccountScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/LoginActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/LoginUiState.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/LoginViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/forgot/ForgotScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/login/LoginScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/login/LoginFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/register/RegisterScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/login/src/main/java/com/magicpark/features/login/register/RegisterFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/payment/src/main/java/PaymentInvoiceScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/payment/src/main/java/PaymentMethodDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/payment/src/main/java/payment/PaymentMethodDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/payment/src/main/java/PaymentScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/payment/src/main/java/payment/PaymentFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/payment/src/main/java/PaymentStatusScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/payment/src/main/java/Extensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/payment/src/main/java/PaymentViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/payment/src/main/java/payment/PaymentViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/payment/src/main/java/PaymentWebViewClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/payment/src/main/java/payment/PaymentWebViewClient.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/payment/src/main/java/State.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/settings/src/main/java/ContactScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/settings/src/main/java/contact/ContactFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/settings/src/main/java/SettingsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/settings/src/main/java/settings/SettingsFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/settings/src/main/java/SettingsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/settings/src/main/java/settings/SettingsViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/settings/src/main/java/State.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/Cart.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/Cart.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/CartScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/CartScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/ShopItemScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/ShopItemScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/ShopScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/shop/src/main/java/com/magicpark/features/shop/ShopScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../features/wallet/src/main/java/WalletScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../features/wallet/src/main/java/WalletScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../utils/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../utils/src/main/res/values/strings.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2XWtq0wugylyYaKlevw6zZHzhw7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "/Users/SaintHilaire/Documents/git/Magicpark-jetpack-compose/domain"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a127576-91ab-4049-81f2-986cab34d76b" name="Changes" comment="" />
+      <created>1698756851061</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1698756851061</updated>
+    </task>
+    <servers />
+  </component>
+</project>

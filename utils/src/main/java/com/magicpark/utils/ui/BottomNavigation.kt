@@ -76,8 +76,6 @@ fun BottomNavigation(
 
     val route = navController?.currentDestination?.route ?: "/home"
 
-    println("current route is ${route}")
-
     Scaffold(
         floatingActionButton = {
             AnimatedVisibility(visible = showFloatingActionButton(route)) {

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/wallet_nav_graph"
+    app:startDestination="@id/walletFragment">
+
+    <fragment
+        android:id="@+id/walletFragment"
+        android:name="com.magicpark.features.wallet.wallet.WalletFragment"
+        android:label="WalletFragment" >
+        <action
+            android:id="@+id/action_walletFragment_to_ticketFragment"
+            app:destination="@id/ticketFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ticketFragment"
+        android:name="com.magicpark.features.wallet.ticket.TicketFragment"
+        android:label="TicketFragment" />
+</navigation>

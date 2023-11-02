@@ -19,7 +19,6 @@ class TicketRepository : ITicketRepository {
 
     override suspend fun getWallet(): List<UserTicket> {
         val response = magicparkApi.getWallet()
-            .single()
 
         val tickets = response.tickets ?: listOf()
         saveTickets(tickets)

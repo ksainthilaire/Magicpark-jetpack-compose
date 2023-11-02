@@ -1,7 +1,9 @@
 package com.magicpark.domain.usecases
 
 import com.magicpark.domain.enums.PaymentMethod
+import com.magicpark.domain.model.Invoice
 import com.magicpark.domain.model.Order
+import com.magicpark.domain.model.Payment
 import com.magicpark.domain.model.ShopItem
 import com.magicpark.domain.repositories.IOrderRepository
 import javax.inject.Inject
@@ -20,4 +22,10 @@ class OrderUseCases(@Inject var orderRepository: IOrderRepository) {
 
     suspend fun getOrder(orderId: Long): Order =
        orderRepository.getOrder(orderId)
+
+    suspend fun getPayment(id: Long) : Payment =
+        orderRepository.getPayment(id)
+
+    suspend fun getPaymentInvoice(id: Long) : Invoice =
+        orderRepository.getPaymentInvoice(id)
 }

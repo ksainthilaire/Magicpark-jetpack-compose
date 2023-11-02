@@ -18,7 +18,6 @@ class ShopRepository : IShopRepository {
     override suspend fun getShopCategories(): List<ShopCategory> {
         val response = api
             .getShopCategories()
-            .single()
 
         return response.categories ?: emptyList()
     }
@@ -26,7 +25,6 @@ class ShopRepository : IShopRepository {
     override suspend fun getShopItems(): Shop {
         val response = api
             .getShopItems()
-            .single()
 
         val items = response.shopItems ?: emptyList()
         val categories = response.shopCategories ?: emptyList()

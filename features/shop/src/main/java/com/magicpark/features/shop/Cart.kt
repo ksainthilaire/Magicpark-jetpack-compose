@@ -58,6 +58,6 @@ class Cart(context: Context) {
 
     companion object {
         const val TAG = "MagicparkDbSession"
-        const val KEY_SHARED_PREFERENCES = "KEY-MAGICPARK"
+
     }
 }

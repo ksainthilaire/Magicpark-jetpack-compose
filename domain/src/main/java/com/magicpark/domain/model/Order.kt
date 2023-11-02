@@ -47,7 +47,6 @@ data class Order(
     @ColumnInfo(name = "client_secret")
     var clientSecret: String? = null,
 
-
     @ColumnInfo(name = "created_at")
     @SerializedName("created_at")
     var createdAt: Date? = null

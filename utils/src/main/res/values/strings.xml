@@ -57,8 +57,8 @@
     <string name="register_error_fullname">Veuillez indiquer votre nom complet correctement</string>
     <string name="register_error_no_matching_passwords">Les mots de passe saisis ne sont pas identiques</string>
     <string name="register_error_terms_not_accepted">Vous n\'avez pas accepté les conditions d\'utilisation</string>
-    <string name="register_error_no_internet_connection">@string/register_error_unknown</string>
-    <string name="register_error_unknown">Une erreur est survenue, veuillez réessayer plus tard</string>
+    <string name="register_error_no_internet_connection">@string/common_error_unknown</string>
+    <string name="common_error_unknown">Une erreur est survenue, veuillez réessayer plus tard</string>
 
 
     <!-- Shop -->
@@ -137,6 +137,7 @@
 
     <string name="payment_successful">Paiement réussi</string>
     <string name="payment_cancel">Paiement annulé</string>
+    <string name="payment_error">Une erreur est survenie.</string>
     <string name="payment_cancel_details">Votre paiement a été annulé.\nLes détails de la transaction sont inclus ci-dessous</string>
     <string name="payment_processed">Votre paiement a été traité.\nLes détails de la transaction sont inclus ci-dessous</string>
     <string name="payment_transaction_number">Transaction Number : %s</string>

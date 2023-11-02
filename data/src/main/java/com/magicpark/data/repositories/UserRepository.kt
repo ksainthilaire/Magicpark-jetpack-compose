@@ -29,7 +29,6 @@ class UserRepository : IUserRepository {
 
         val response = api
             .login(request)
-            .single()
 
         return response.user?.token
             ?: throw Exception("Unable to get user token token = $token")
@@ -72,7 +71,6 @@ class UserRepository : IUserRepository {
     override suspend fun getUser(): User {
         val response = api
             .getUser()
-            .single()
 
         return response.user ?: throw Error("No token associated with the user")
     }

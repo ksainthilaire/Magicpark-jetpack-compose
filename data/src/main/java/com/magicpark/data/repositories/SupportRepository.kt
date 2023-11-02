@@ -10,11 +10,11 @@ class SupportRepository : ISupportRepository {
 
     private val magicparkApi: MagicparkApi by KoinJavaComponent.inject(MagicparkApi::class.java)
 
-    override suspend fun help(text: String): Boolean {
+    override suspend fun help(text: String): Unit {
         val request = HelpRequest(message = text)
 
         return magicparkApi
             .help(request)
-            .blockingAwait(200L, TimeUnit.SECONDS)
+            .blockingAwait()
     }
 }

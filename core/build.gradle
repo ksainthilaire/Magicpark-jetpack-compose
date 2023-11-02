@@ -52,6 +52,7 @@ dependencies {
     api deps.firebaseAuthKtx
     api deps.hiltNavigation
     api 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
+    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:1.3.3'
     api deps.hiltNavigationCompose
     api deps.facebookLogin
     api deps.playServicesAuth
@@ -64,6 +65,7 @@ dependencies {
     api deps.rxJava
     api deps.room
     api deps.roomRxJava
+    api deps.roomKtx
     api deps.glideCompose
     api deps.lottie
     api deps.navigationCompose

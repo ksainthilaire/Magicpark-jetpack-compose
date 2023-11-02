@@ -11,7 +11,6 @@ class SettingsRepository @Inject constructor(var api: MagicparkApi) : ISettingsR
     override suspend fun getSettings(): ApplicationConfiguration {
         val response = api
             .getSettings()
-            .single()
 
         return ApplicationConfiguration(
             appUrl = response.appUrl,

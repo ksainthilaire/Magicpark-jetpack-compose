@@ -6,6 +6,6 @@ import io.reactivex.rxjava3.core.Completable
 import org.koin.java.KoinJavaComponent.inject
 import javax.inject.Inject
 
-class SupportUseCases(  @Inject val repository: ISupportRepository){
-    suspend fun help(message: String): Boolean = repository.help(message)
+class SupportUseCases(@Inject val repository: ISupportRepository) {
+    suspend fun help(message: String): Unit = repository.help(message)
 }

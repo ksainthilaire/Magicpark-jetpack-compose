@@ -1,22 +1,23 @@
-package com.magicpark.core.di
+package com.magicpark.di
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.room.Room
 import com.magicpark.core.Config
+import com.magicpark.core.Config.KEY_SHARED_PREFERENCES
 import com.magicpark.data.api.MagicparkApi
 import com.magicpark.data.local.AppDatabase
-import com.magicpark.data.local.ShopDao
-import com.magicpark.data.local.UserTicketDao
 import com.magicpark.data.repositories.*
 import com.magicpark.features.shop.Cart
 import com.magicpark.domain.repositories.*
 import com.magicpark.domain.usecases.*
-import com.magicpark.features.login.LoginViewModel
-import com.magicpark.features.settings.SettingsViewModel
-import com.magicpark.features.shop.ShopViewModel
-import com.magicpark.features.wallet.WalletViewModel
+import com.magicpark.features.login.forgot.ForgotViewModel
+import com.magicpark.features.login.login.LoginViewModel
+import com.magicpark.features.login.register.RegisterViewModel
+import settings.SettingsViewModel
+import com.magicpark.features.shop.shopList.ShopViewModel
+import com.magicpark.features.wallet.wallet.WalletViewModel
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -37,6 +38,9 @@ val AppModule = module {
     }
 
     viewModel { LoginViewModel() }
+    viewModel { RegisterViewModel() }
+    viewModel { ForgotViewModel() }
+
     viewModel { ShopViewModel() }
     viewModel { WalletViewModel() }
     viewModel { SettingsViewModel() }
@@ -54,7 +58,7 @@ val AppModule = module {
 
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(
-                Cart.KEY_SHARED_PREFERENCES,
+                KEY_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE)
 
 
@@ -69,7 +73,7 @@ val AppModule = module {
             chain.proceed(request)
         }
 
-        val logging = HttpLoggingInterceptor();
+        val logging = HttpLoggingInterceptor()
 
         OkHttpClient()
             .newBuilder()
@@ -98,12 +102,12 @@ val AppModule = module {
         get<Retrofit>().create(MagicparkApi::class.java)
     }
 
-    single<ShopDao> {
+    single {
         val database = get<AppDatabase>()
         database.shopDao()
     }
 
-    single<UserTicketDao> {
+    single {
         val database = get<AppDatabase>()
         database.ticketDao()
     }
@@ -115,21 +119,13 @@ val AppModule = module {
     single<ITicketRepository> { TicketRepository() }
     single<ISettingsRepository> { SettingsRepository(get()) }
     single<IOrderRepository> { OrderRepository() }
-    single<Cart> { Cart(get()) }
 
+    single { Cart(get()) }
 
-
-
-
-
-
-
-    single<RegisterUseCases> { RegisterUseCases() }
-    single<ShopUseCases> { ShopUseCases(get()) }
-    single<UserUseCases> { UserUseCases(get()) }
-    single<SupportUseCases> { SupportUseCases(get()) }
-    single<TicketUseCases> { TicketUseCases(get()) }
-    single<SettingsUseCases> { SettingsUseCases(get()) }
-    single<OrderUseCases> { OrderUseCases(get()) }
-
+    single { ShopUseCases(get()) }
+    single { UserUseCases(get()) }
+    single { SupportUseCases(get()) }
+    single { TicketUseCases(get()) }
+    single { SettingsUseCases(get()) }
+    single { OrderUseCases(get()) }
 }
