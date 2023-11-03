@@ -67,6 +67,9 @@ fun ContactScreen(
     onBackPressed: () -> Unit,
     sendBugReport: (text: String) -> Unit,
 ) {
+
+    var text by remember { mutableStateOf("") }
+
     Image(
         painter = painterResource(id = R.drawable.ic_back),
         modifier = Modifier
@@ -81,8 +84,6 @@ fun ContactScreen(
         contentDescription = null,
         colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
     )
-
-    var text by remember { mutableStateOf("") }
 
     LazyColumn(
         modifier = Modifier
@@ -124,7 +125,7 @@ fun ContactScreen(
             )
 
             Button(
-                modifier = Modifier.padding(top = 50.dp),
+                modifier = Modifier.padding(top = 54.dp),
                 onClick = {
                     sendBugReport(text)
                 },

@@ -11,43 +11,43 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.magicpark.domain.enums.PaymentMethod
+import com.magicpark.utils.ui.CallbackWithParameter
+import com.magicpark.utils.ui.CallbackWithoutParameter
 
-/**
- *
- * Listener of use actions for [PaymentMethodDialog]
- */
-interface PaymentMethodDialogListener {
-    /**
-     * The user closes the dialog.
-     */
-    fun onClose()
+private val PaymentMethod.stringRes: String
+    get() = when (this) {
+        PaymentMethod.Orange -> "Orange"
+        PaymentMethod.PayPal -> "PayPal"
+        PaymentMethod.Stripe -> "Stripe"
+    }
 
-    /**
-     * User chooses to pay with payment method.
-     */
-    fun onSelectedPaymentMethod()
+@Composable
+@Preview
+private fun PaymentMethodDialog_Preview() {
+    PaymentMethodDialog(onClose = { /*TODO*/ }, onSelectedPaymentMethod = {})
 }
 
-
 /**
- * @param listener @see [PaymentMethodDialogListener]
+ * @param onClose The user closes the dialog.
+ * @param onSelectedPaymentMethod User chooses to pay with payment method.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun PaymentMethodDialog(listener: PaymentMethodDialogListener? = null) {
+fun PaymentMethodDialog(
+    onClose: CallbackWithoutParameter,
+    onSelectedPaymentMethod: CallbackWithParameter<PaymentMethod>,
+) {
     val context = LocalContext.current
-    val paymentMethods = arrayOf("Orange Money", "PayPal", "PaySafeCard")
+
+    val paymentMethods = PaymentMethod.values().map { it.stringRes }
+
     var expanded by remember { mutableStateOf(false) }
     var selectedPaymentMethod by remember { mutableStateOf(paymentMethods[0]) }
 
     AlertDialog(
-        onDismissRequest = {
-            listener?.onClose()
-        },
-        title = {
-            Text(text = stringResource(com.magicpark.utils.R.string.payment_title))
-        },
+        onDismissRequest = { onClose() },
+        title = { Text(text = stringResource(com.magicpark.utils.R.string.payment_title)) },
         text = {
             Box(
                 modifier = Modifier
@@ -89,7 +89,7 @@ fun PaymentMethodDialog(listener: PaymentMethodDialogListener? = null) {
         confirmButton = {
             Button(
                 onClick = {
-                    listener?.onClose()
+                    onSelectedPaymentMethod(PaymentMethod.Orange)//selectedPaymentMethod)
                 }
             ) {
                 Text(text = stringResource(com.magicpark.utils.R.string.common_button_continue))
@@ -98,7 +98,7 @@ fun PaymentMethodDialog(listener: PaymentMethodDialogListener? = null) {
         dismissButton = {
             Button(
                 onClick = {
-                    listener?.onClose()
+                    onClose()
                 }
             ) {
                 Text(text = stringResource(com.magicpark.utils.R.string.common_button_cancel))
