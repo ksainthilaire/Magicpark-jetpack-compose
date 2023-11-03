@@ -99,7 +99,7 @@ fun Ticket(shopItem: UserTicket, callback: (id: Long) -> Unit) = Column {
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)),
-                            contentDescription = ""
+                            contentDescription = null
                         )
 
                         Text(

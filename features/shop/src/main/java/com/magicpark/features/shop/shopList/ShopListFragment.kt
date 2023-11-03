@@ -229,7 +229,7 @@ private fun ShopItemCard(
                 .align(Alignment.CenterHorizontally)
                 .clip(RoundedCornerShape(16.dp, 16.dp, 16.dp, 16.dp))
                 .size(96.dp),
-            contentDescription = ""
+            contentDescription = null
         )
 
         Column {

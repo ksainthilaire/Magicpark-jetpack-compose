@@ -15,17 +15,46 @@ import org.koin.java.KoinJavaComponent
 sealed interface CartState  {
 
     /**
-     * Initial state
+     * Total cart amount
      */
-    object Loading : CartState
+    val amount: Float
+
+    /**
+     * Discount amount after a voucher applied
+     */
+    val voucher: Float
+
+    /**
+     * Shop Item List
+     * @see [ShopItem]
+     */
+    val items: List<ShopItem>
+
+    /**
+     *  List of shop categories
+     *  @see [ShopCategory]
+     */
+    val categories: List<ShopCategory>
+
+    /**
+     * Selected shop category
+     */
+    val currentCategory: Long
+
 
     /**
      * @param items List of shop items
      * @param categories List of shop categories
      */
     class Cart(
-        val items: List<ShopItem>,
-        val categories: List<ShopCategory>
+
+        override val currentCategory: Long,
+
+        override val amount: Float,
+        override val voucher: Float,
+
+        override val items: List<ShopItem>,
+        override val categories: List<ShopCategory>
     ) : CartState
 
 }
@@ -37,15 +66,25 @@ class CartViewModel : ViewModel() {
     private val shopUseCases: ShopUseCases by KoinJavaComponent.inject(ShopUseCases::class.java)
     private val cart: Cart by KoinJavaComponent.inject(Cart::class.java)
 
-    private val _state: MutableStateFlow<CartState> = MutableStateFlow(CartState.Loading)
+    private val _state: MutableStateFlow<CartState> = MutableStateFlow(CartState.Cart(
+        currentCategory = 0L,
+        amount = 0F,
+        voucher = 0F,
+        items = emptyList(),
+        categories = emptyList(),
+    ))
 
     val state: StateFlow<CartState>
         get() = _state
+
     init {
         viewModelScope.launch {
             val (items, categories) = shopUseCases.getShopItems()
 
             _state.value = CartState.Cart(
+                currentCategory = 0L,
+                amount = 10F,
+                voucher = 10F,
                 items = items,
                 categories = categories,
             )
@@ -65,5 +104,9 @@ class CartViewModel : ViewModel() {
      */
     fun removeProduct(shopItem: ShopItem) =
         cart.removeProduct(shopItem)
+
+    fun removeProduct(id: Long) {
+        TODO()
+    }
 
 }
