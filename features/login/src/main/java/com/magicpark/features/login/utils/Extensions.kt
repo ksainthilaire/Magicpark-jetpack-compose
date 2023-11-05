@@ -1,54 +1,15 @@
 package com.magicpark.features.login.utils
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuthException
+import com.magicpark.utils.R
 
-fun FirebaseAuthException.toLocaleString(): String {
+fun FirebaseAuthException.getStringRes(): Int {
     return when (errorCode) {
-        "credential-already-in-use" -> "This credential is already associated with a different user account."
-        "custom-token-mismatch" -> "The custom token corresponds to a different audience."
-        "requires-recent-login" -> "This operation is sensitive and requires recent authentication. Log in again before retrying this request."
-        "dynamic-link-not-activated" -> "Please activate Dynamic Links in the Firebase Console and agree to the terms and conditions."
-        "email-change-needs-verification" -> "Multi-factor users must always have a verified email."
-        "email-already-in-use" -> "The email address is already in use by another account."
-        "expired-action-code" -> "The action code has expired."
-        "internal-error" -> "An internal error has occurred."
-        "invalid-app-credential" -> "The phone verification request contains an invalid application verifier. The reCAPTCHA token response is either invalid or expired."
-        "invalid-app-id" -> "The mobile app identifier is not registered for the current project."
-        "invalid-user-token" -> "This user's credential isn't valid for this project. This can happen if the user's token has been tampered with, or if the user isn't for the project associated with this API key."
-        "invalid-auth-event" -> "An internal error has occurred."
-        "invalid-verification-code" -> "The SMS verification code used to create the phone auth credential is invalid. Please resend the verification code sms and be sure to use the verification code provided by the user."
-        "invalid-continue-uri" -> "The continue URL provided in the request is invalid."
-        "invalid-cordova-configuration" -> "The following Cordova plugins must be installed to enable OAuth sign-in: cordova-plugin-buildinfo, cordova-universal-links-plugin, cordova-plugin-browsertab, cordova-plugin-inappbrowser, and cordova-plugin-customurlscheme."
-        "invalid-custom-token" -> "The custom token format is incorrect. Please check the documentation."
-        "invalid-dynamic-link-domain" -> "The provided dynamic link domain is not configured or authorized for the current project."
-        "invalid-email" -> "The email address is badly formatted."
-        "invalid-api-key" -> "Your API key is invalid. Please check that you have copied it correctly."
-        "invalid-cert-hash" -> "The SHA-1 certificate hash provided is invalid."
-        "invalid-credential" -> "The supplied auth credential is malformed or has expired."
-        "invalid-message-payload" -> "The email template corresponding to this action contains invalid characters in its message. Please fix it by going to the Auth email templates section in the Firebase Console."
-        "invalid-multi-factor-session" -> "The request does not contain a valid proof of first-factor successful sign-in."
-        "invalid-oauth-provider" -> "EmailAuthProvider is not supported for this operation. This operation only supports OAuth providers."
-        "invalid-oauth-client-id" -> "The OAuth client ID provided is either invalid or does not match the specified API key."
-        "unauthorized-domain" -> "This domain is not authorized for OAuth operations for your Firebase project. Edit the list of authorized domains from the Firebase console."
-        "invalid-action-code" -> "The action code is invalid. This can happen if the code is malformed, expired, or has already been used."
-        "wrong-password" -> "The password is invalid or the user does not have a password."
-        "invalid-persistence-type" -> "The specified persistence type is invalid. It can only be local, session, or none."
-        "invalid-phone-number" -> "The format of the phone number provided is incorrect. Please enter the phone number in a format that can be parsed into E.164 format. E.164 phone numbers are written in the format [+][country code][subscriber number including area code]."
-        "invalid-provider-id" -> "The specified provider ID is invalid."
-        "invalid-recipient-email" -> "The email corresponding to this action failed to send as the provided recipient email address is invalid."
-        "invalid-sender" -> "The email template corresponding to this action contains an invalid sender email or name. Please fix it by going to the Auth email templates section in the Firebase Console."
-        "invalid-verification-id" -> "The verification ID used to create the phone auth credential is invalid."
-        "invalid-tenant-id" -> "The Auth instance's tenant ID is invalid."
-        "multi-factor-info-not-found" -> "The user does not have a second factor matching the identifier provided."
-        "multi-factor-auth-required" -> "Proof of ownership of a second factor is required to complete sign-in."
-        "missing-app-credential" -> "The phone verification request is missing an application verifier assertion. A reCAPTCHA response token needs to be provided."
-        "missing-verification-code" -> "The phone auth credential was created with an empty SMS verification code."
-        "missing-continue-uri" -> "A continue URL must be provided in the request."
-        "missing-multi-factor-info" -> "No second factor identifier is provided."
-        "missing-multi-factor-session" -> "The request is missing proof of first factor successful sign-in."
-        "missing-or-invalid-nonce" -> "The request does not contain a valid nonce. This can occur if the SHA-256 hash of the provided raw nonce does not match the hashed nonce in the ID token payload."
-        "missing-phone-number" -> "To send verification codes, provide a phone number for the recipient."
-        "missing-verification-id" -> "The phone auth credential was created with an empty verification ID."
-        else -> errorCode
+        "ERROR_INVALID_EMAIL" -> R.string.login_failed
+        else -> {
+            Log.d(FirebaseAuthException::class.java.simpleName, "$errorCode")
+            R.string.login_failed
+        }
     }
 }

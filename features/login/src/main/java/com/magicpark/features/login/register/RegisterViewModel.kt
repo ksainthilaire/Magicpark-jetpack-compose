@@ -9,7 +9,7 @@ import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuthException
 import com.magicpark.core.Config.KEY_SHARED_PREFERENCES
 import com.magicpark.domain.usecases.UserUseCases
-import com.magicpark.features.login.utils.toLocaleString
+import com.magicpark.features.login.utils.getStringRes
 import org.koin.java.KoinJavaComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +49,6 @@ class RegisterViewModel : ViewModel() {
 
     private val resources: Resources by KoinJavaComponent
         .inject(Resources::class.java)
-
 
     private val _state: MutableStateFlow<RegisterUiState> =
         MutableStateFlow(RegisterUiState.Loading)
@@ -154,22 +153,21 @@ class RegisterViewModel : ViewModel() {
         val matcher = pattern.matcher(fullName)
 
         val stringResource = when {
-            mail.isValidEmail() ->
-                R.string.register_error_wrong_email
 
-            password.isEmpty() ->
-                R.string.register_error_password_rules
-
-            passwordConfirmation.isEmpty() ->
+            fullName.isEmpty() || passwordConfirmation.isEmpty() || mail.isEmpty() ->
                 R.string.common_empty_fields
-
-            fullName.isEmpty() ->
-                R.string.register_error_fullname
 
             phoneNumber.isEmpty() ->
                 R.string.register_error_wrong_number
 
-            !matcher.matches() -> R.string.register_error_fullname
+            !mail.isValidEmail() ->
+                R.string.register_error_wrong_email
+
+            password.isEmpty() || (password.length < 12) ->
+                R.string.register_error_password_rules
+
+
+            //!matcher.matches() -> R.string.register_error_fullname
 
             passwordConfirmation != password ->
                 R.string.register_error_no_matching_passwords
@@ -194,7 +192,7 @@ class RegisterViewModel : ViewModel() {
     fun handleException(exception: Exception) {
         viewModelScope.launch {
             val errorMessage = when (exception) {
-                is FirebaseAuthException -> exception.toLocaleString()
+                is FirebaseAuthException -> resources.getString(exception.getStringRes())
                 else -> exception.message
                     ?: resources.getString(R.string.common_error_unknown)
             }

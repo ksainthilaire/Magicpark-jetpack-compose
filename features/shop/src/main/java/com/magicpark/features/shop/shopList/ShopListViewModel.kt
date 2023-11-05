@@ -6,19 +6,26 @@ import com.magicpark.domain.model.ShopCategory
 import com.magicpark.domain.model.ShopItem
 import com.magicpark.domain.usecases.ShopUseCases
 import com.magicpark.features.shop.Cart
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 
 
-sealed interface ShopListState  {
+sealed interface ShopListState {
 
-    object Loading : ShopListState
+    val items: List<ShopItem>
+    val categories: List<ShopCategory>
 
     class ShopList(
-        val items: List<ShopItem>,
-        val categories: List<ShopCategory>
+        override val items: List<ShopItem> = emptyList(),
+        override val categories: List<ShopCategory> = emptyList(),
+        val currentCategory: Long = 0L
     ) : ShopListState
 
 }
@@ -33,26 +40,46 @@ class ShopListViewModel : ViewModel() {
     private val shopUseCases: ShopUseCases by KoinJavaComponent.inject(ShopUseCases::class.java)
     private val cart: Cart by KoinJavaComponent.inject(Cart::class.java)
 
-    private val _state: MutableStateFlow<ShopListState> = MutableStateFlow(ShopListState.Loading)
+    private var items: List<ShopItem> =
+        emptyList()
 
-    val state: StateFlow<ShopListState>
-        get() = _state
+    private var categories: List<ShopCategory> =
+        emptyList()
 
-    init {
-        viewModelScope.launch {
-            val (items, categories) = shopUseCases.getShopItems()
+    private val currentStringSearch: MutableSharedFlow<String> = MutableStateFlow("")
+    private val currentCategory: MutableSharedFlow<Long> = MutableStateFlow(0L)
 
-            _state.value = ShopListState.ShopList(
-                items = items,
-                categories = categories,
-            )
+    val state: StateFlow<ShopListState> = combine(currentCategory, currentStringSearch)
+    { category,
+      stringSearch ->
+
+        ShopListState.ShopList(
+            items = items,//.filter { it.categories?.contains(category) ?: false },
+            categories = categories,
+        )
+    }
+        .onStart {
+            fetchShopItems()
         }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            ShopListState.ShopList(emptyList(), emptyList())
+        )
+
+    private suspend fun fetchShopItems() {
+        val response = shopUseCases.getShopItems()
+
+        items = response.first
+        categories = response.second
     }
 
-    fun addProduct(shopItem: ShopItem) =
-        cart.addProduct(shopItem)
+    fun changeCategory(category: Long) {
+        val indexes = categories.map { it.id ?: 0L }
+        if (category !in indexes) return
 
-    fun removeProduct(shopItem: ShopItem) =
-        cart.removeProduct(shopItem)
-
+        viewModelScope.launch {
+            currentCategory.emit(category)
+        }
+    }
 }

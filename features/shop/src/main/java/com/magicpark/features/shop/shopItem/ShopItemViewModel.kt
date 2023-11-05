@@ -1,14 +1,13 @@
 package com.magicpark.features.shop.shopItem
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.magicpark.domain.model.ShopCategory
 import com.magicpark.domain.model.ShopItem
 import com.magicpark.domain.usecases.ShopUseCases
 import com.magicpark.features.shop.Cart
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 
 
@@ -24,9 +23,10 @@ sealed interface ShopItemState  {
 }
 
 
-class ShopItemViewModel : ViewModel() {
+class ShopItemViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     companion object {
+        private const val KEY_SHOP_ITEM = "KEY-SHOP-ITEM"
         private val TAG = ShopItemViewModel::class.java.simpleName
     }
 
@@ -38,21 +38,20 @@ class ShopItemViewModel : ViewModel() {
     val state: StateFlow<ShopItemState>
         get() = _state
 
-    init {
-        viewModelScope.launch {
-            val (items, categories) = shopUseCases.getShopItems()
+    val shopItem: ShopItem
+        get() = savedStateHandle.get<ShopItem>(KEY_SHOP_ITEM) ?: ShopItem()
 
-            _state.value = ShopItemState.ShopList(
-                items = items,
-                categories = categories,
-            )
-        }
-    }
-
+    /**
+     * Add a product
+     * @param shopItem
+     */
     fun addProduct(shopItem: ShopItem) =
-        cart.addProduct(shopItem)
+        cart.addCart(shopItem)
 
+    /**
+     * Remove a product
+     * @param shopItem
+     */
     fun removeProduct(shopItem: ShopItem) =
         cart.removeProduct(shopItem)
-
 }

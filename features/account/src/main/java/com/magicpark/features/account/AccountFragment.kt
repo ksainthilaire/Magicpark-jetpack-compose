@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.User
 import com.magicpark.utils.R
@@ -53,11 +54,13 @@ class AccountFragment : Fragment() {
                     val state by viewModel.state.collectAsState()
                     val user by viewModel.user.collectAsState()
 
-                    UpdateAccountScreen(
-                        user,
-                        updateUser = viewModel::updateUser,
-                        onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() }
-                    )
+                    MagicparkMaterialTheme {
+                        UpdateAccountScreen(
+                            user,
+                            updateUser = viewModel::updateUser,
+                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() }
+                        )
+                    }
                 }
             }
 }

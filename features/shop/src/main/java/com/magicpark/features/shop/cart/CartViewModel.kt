@@ -2,27 +2,19 @@ package com.magicpark.features.shop.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.magicpark.domain.model.ShopCategory
 import com.magicpark.domain.model.ShopItem
-import com.magicpark.domain.usecases.ShopUseCases
 import com.magicpark.features.shop.Cart
+import com.magicpark.features.shop.CartState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.koin.java.KoinJavaComponent
 
 
-sealed interface CartState  {
+sealed interface CartUiState  {
 
-    /**
-     * Total cart amount
-     */
     val amount: Float
-
-    /**
-     * Discount amount after a voucher applied
-     */
-    val voucher: Float
 
     /**
      * Shop Item List
@@ -31,64 +23,49 @@ sealed interface CartState  {
     val items: List<ShopItem>
 
     /**
-     *  List of shop categories
-     *  @see [ShopCategory]
-     */
-    val categories: List<ShopCategory>
-
-    /**
-     * Selected shop category
-     */
-    val currentCategory: Long
-
-
-    /**
      * @param items List of shop items
-     * @param categories List of shop categories
      */
     class Cart(
-
-        override val currentCategory: Long,
-
-        override val amount: Float,
-        override val voucher: Float,
-
+        override val amount: Float = 0F,
         override val items: List<ShopItem>,
-        override val categories: List<ShopCategory>
-    ) : CartState
+    ) : CartUiState
 
 }
 class CartViewModel : ViewModel() {
+
     companion object {
         private val TAG = CartViewModel::class.java.simpleName
     }
 
-    private val shopUseCases: ShopUseCases by KoinJavaComponent.inject(ShopUseCases::class.java)
     private val cart: Cart by KoinJavaComponent.inject(Cart::class.java)
 
-    private val _state: MutableStateFlow<CartState> = MutableStateFlow(CartState.Cart(
-        currentCategory = 0L,
-        amount = 0F,
-        voucher = 0F,
-        items = emptyList(),
-        categories = emptyList(),
-    ))
+    private val _state: MutableStateFlow<CartUiState> = MutableStateFlow(
+        CartUiState.Cart(
+            items = emptyList(),
+        )
+    )
 
-    val state: StateFlow<CartState>
+    val state: StateFlow<CartUiState>
         get() = _state
 
     init {
-        viewModelScope.launch {
-            val (items, categories) = shopUseCases.getShopItems()
 
-            _state.value = CartState.Cart(
-                currentCategory = 0L,
-                amount = 10F,
-                voucher = 10F,
-                items = items,
-                categories = categories,
-            )
+        cart
+            .state
+            .onEach(::onCartStateChanged)
+            .launchIn(viewModelScope)
+    }
+
+    private fun onCartStateChanged(state: CartState) {
+        val newState = when (state) {
+            is CartState.Cart ->
+                CartUiState.Cart(amount = cart.amount, items = state.items)
+
+            is CartState.Empty ->
+                CartUiState.Cart(items = emptyList())
         }
+
+        _state.value = newState
     }
 
     /**
@@ -96,7 +73,7 @@ class CartViewModel : ViewModel() {
      * @param shopItem
      */
     fun addProduct(shopItem: ShopItem) =
-        cart.addProduct(shopItem)
+        cart.addCart(shopItem)
 
     /**
      * Remove a product
@@ -104,9 +81,5 @@ class CartViewModel : ViewModel() {
      */
     fun removeProduct(shopItem: ShopItem) =
         cart.removeProduct(shopItem)
-
-    fun removeProduct(id: Long) {
-        TODO()
-    }
 
 }

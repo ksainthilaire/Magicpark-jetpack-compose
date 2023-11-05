@@ -30,6 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.R
 import com.magicpark.domain.model.UserTicket
 import com.magicpark.features.wallet.wallet.WalletViewModel
@@ -53,11 +54,13 @@ class TicketFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    TicketScreen(
-                        ticket = UserTicket(),
-                        download = {},
-                        onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() }
-                    )
+                    MagicparkMaterialTheme {
+                        TicketScreen(
+                            ticket = UserTicket(),
+                            download = {},
+                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() }
+                        )
+                    }
                 }
             }
 }
@@ -265,9 +268,4 @@ fun TicketScreen(
         )
 
     }
-
-
-   // errorMessage?.let { ErrorSnackbar(text = it) }
-
-
 }

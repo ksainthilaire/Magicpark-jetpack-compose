@@ -1,17 +1,15 @@
 package com.magicpark.features.login.forgot
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthException
-import com.magicpark.features.login.utils.toLocaleString
+import com.magicpark.features.login.utils.getStringRes
 import com.magicpark.utils.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
-
 
 sealed interface ForgotUiState {
     /**
@@ -52,9 +50,10 @@ class ForgotViewModel : ViewModel() {
     fun handleForgotException(exception: Exception) {
         viewModelScope.launch {
             val errorMessage = when (exception) {
-                is FirebaseAuthException -> exception.toLocaleString()
-                else -> exception.message
-                    ?: resources.getString(R.string.common_error_unknown)
+                is FirebaseAuthException ->
+                    resources.getString(exception.getStringRes())
+                else ->
+                    exception.message ?: resources.getString(R.string.common_error_unknown)
             }
 
             _state.value = ForgotUiState.ForgotFailed(errorMessage)

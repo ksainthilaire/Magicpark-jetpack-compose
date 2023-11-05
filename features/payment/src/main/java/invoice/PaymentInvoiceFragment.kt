@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.features.payment.PaymentStatusEnum
 import com.magicpark.features.payment.PaymentStatusEnum.*
 import com.magicpark.features.payment.statusText
@@ -39,11 +40,13 @@ class PaymentInvoiceFragment : Fragment() {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
 
-                    PaymentInvoiceScreen(
-                        state = SUCCESS,
-                        download = {},
-                        tryAgain = {},
-                    )
+                    MagicparkMaterialTheme {
+                        PaymentInvoiceScreen(
+                            state = SUCCESS,
+                            download = {},
+                            tryAgain = {},
+                        )
+                    }
                 }
             }
 

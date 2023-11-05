@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.utils.ui.CallbackWithoutParameter
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,11 +40,14 @@ class PaymentFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    PaymentScreen(
-                        state = state,
-                        onSuccess = viewModel::onSuccess,
-                        onFailed = viewModel::onFailed,
-                        onCanceled = viewModel::onCanceled) {
+                    MagicparkMaterialTheme {
+                        PaymentScreen(
+                            state = state,
+                            onSuccess = viewModel::onSuccess,
+                            onFailed = viewModel::onFailed,
+                            onCanceled = viewModel::onCanceled
+                        ) {
+                        }
                     }
                 }
             }

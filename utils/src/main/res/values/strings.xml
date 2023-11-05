@@ -66,6 +66,9 @@
     <string name="shop_title">Je vais jouer avec Samba</string>
     <string name="shop_label_search">Rechercher</string>
 
+
+    <string name="shop_category_promotions">Promotions \uD83D\uDD16</string>
+
     <string name="shop_item_title">Détails</string>
     <string name="shop_item_label_choose_a_color">Choose a color : </string>
     <string name="shop_item_label_quantity">Select quantity :</string>

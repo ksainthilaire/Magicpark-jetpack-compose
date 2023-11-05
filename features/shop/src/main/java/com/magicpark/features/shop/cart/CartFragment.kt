@@ -51,9 +51,10 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.ShopItem
-import com.magicpark.features.payment.payment.PaymentWebViewListener
+import com.magicpark.domain.model.currentPrice
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.CallbackWithParameter
 import com.magicpark.utils.ui.CallbackWithoutParameter
@@ -77,14 +78,16 @@ class CartFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    CartScreen(
-                        state = state,
+                    MagicparkMaterialTheme {
+                        CartScreen(
+                            state = state,
 
-                        addFromCart = { _, _ -> },
-                        removeFromCart = viewModel::removeProduct,
-                        onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
-                        showPaymentDialog = ::showPaymentDialog,
-                    )
+                            addFromCart = viewModel::addProduct,
+                            removeFromCart = viewModel::removeProduct,
+                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
+                            showPaymentDialog = ::showPaymentDialog,
+                        )
+                    }
                 }
             }
 
@@ -97,15 +100,11 @@ class CartFragment : Fragment() {
 @Composable
 fun CartScreen_Preview() =
     CartScreen(
-        state = CartState.Cart(
+        state = CartUiState.Cart(
             items = emptyList(),
-            categories = emptyList(),
-            amount = 0F,
-            voucher = 0F,
-            currentCategory = 0L,
         ),
 
-        addFromCart = { _, _ -> },
+        addFromCart = {  _ -> },
         removeFromCart = {},
         onBackPressed = {},
         showPaymentDialog = {}
@@ -114,7 +113,7 @@ fun CartScreen_Preview() =
 /**
  * Cart screen, contains the list of items the user wants to purchase.
  *
- *  @param state @see [CartState]
+ *  @param state @see [CartUiState]
  *  @param addFromCart listener, add a product to the cart
  *  @param removeFromCart listener, remove a product from the cart
  *  @param showPaymentDialog listener, displays the payment method dialog
@@ -123,10 +122,10 @@ fun CartScreen_Preview() =
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
-    state: CartState,
+    state: CartUiState,
 
-    addFromCart: (ShopItem, Long) -> Unit,
-    removeFromCart: CallbackWithParameter<Long>,
+    addFromCart: (ShopItem) -> Unit,
+    removeFromCart: CallbackWithParameter<ShopItem>,
 
     showPaymentDialog: CallbackWithoutParameter,
     onBackPressed: CallbackWithoutParameter,
@@ -175,6 +174,7 @@ fun CartScreen(
 
                         Row(
                             modifier = Modifier
+                                .padding(top = 32.dp)
                                 .background(Color.Transparent)
                                 .fillMaxWidth()
                                 .fillMaxHeight()
@@ -278,6 +278,7 @@ fun CartScreen(
     }
 }
 
+
 /**
  * Item in user's cart
  * @param shopItem @see [ShopItem]
@@ -288,17 +289,20 @@ fun CartScreen(
 private fun CartItem(
     shopItem: ShopItem,
 
-    addFromCart: (ShopItem, Long) -> Unit,
-    removeFromCart: CallbackWithParameter<Long>,
+    addFromCart: (ShopItem) -> Unit,
+    removeFromCart: CallbackWithParameter<ShopItem>,
 ) {
     Column(
         Modifier
+            .clip(RoundedCornerShape(16.dp, 16.dp, 16.dp, 16.dp))
             .fillMaxWidth()
             .background(Color.White)
             .padding(32.dp)
     ) {
 
         Row(Modifier.padding(bottom = 16.dp)) {
+
+
 
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -308,13 +312,31 @@ private fun CartItem(
                     .build(), ImageLoader(LocalContext.current)
             )
 
-            Image(
-                painter = painter,
-                modifier = Modifier
-                    .size(140.dp)
-                    .clip(RoundedCornerShape(16.dp, 16.dp, 16.dp, 16.dp)),
-                contentDescription = null
-            )
+            Box {
+
+                Image(
+                    painter = painter,
+                    modifier = Modifier
+                        .size(140.dp)
+                        .clip(RoundedCornerShape(16.dp, 16.dp, 16.dp, 16.dp)),
+                    contentDescription = null
+                )
+
+                Column(
+                    Modifier
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MagicparkTheme.colors.primary)
+                        .padding(4.dp)
+                ) {
+                    Text(
+                        text = "%s GNF".format(shopItem.currentPrice.toString()),
+                        style = TextStyle(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+            }
 
             Column(Modifier.padding(start = 24.dp)) {
 
@@ -329,7 +351,8 @@ private fun CartItem(
                     )
 
                     Icon(
-                        modifier = Modifier.size(16.dp),
+                        modifier = Modifier.size(16.dp)
+                            .clickable { removeFromCart(shopItem) },
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
                         tint = MagicparkTheme.colors.primary
@@ -353,28 +376,17 @@ private fun CartItem(
                             text = stringResource(id = R.string.cart_quantity)
                         )
 
-                        Row {
-                            Column(Modifier.weight(1f)) {
-                                Counter()
-                            }
-                            Column(
-                                Modifier.weight(0.5f),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "%s GNF".format(shopItem.price.toString()),
-                                    modifier = Modifier.align(Alignment.End),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                )
-                            }
+                        Column {
+                            Counter(
+                                value = shopItem.quantity ?: 1,
+                                onAdd = { addFromCart(shopItem) },
+                                onRemove = { removeFromCart(shopItem) }
+                            )
+
                         }
                     }
                 }
             }
         }
-        Divider(color = Color.LightGray, thickness = 1.dp)
     }
 }

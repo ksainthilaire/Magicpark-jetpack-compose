@@ -5,11 +5,24 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
+
+
+    private val viewModel: LoginActivityViewModel by viewModel()
+
+    private val session: Session by KoinJavaComponent.inject(
+        Session::class.java
+    )
 
     companion object {
         private val TAG: String = LoginActivity::class.java.simpleName
@@ -32,9 +45,29 @@ class LoginActivity : AppCompatActivity() {
         }
         val navController = navHostFragment.navController
 
-        onBackPressedDispatcher
-            .addCallback {
-                navController.popBackStack()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {  viewModel.event.collect { event -> onLoginEvent(event) } }
+                launch {  session.events.collect { event -> onSessionEvent(event) } }
             }
+        }
+
+        onBackPressedDispatcher
+            .addCallback { navController.popBackStack() }
     }
+
+    private fun onLoginEvent(event: LoginEvent) : Unit =
+        when (event) {
+            is LoginEvent.LoginSuccessful ->
+                Unit
+            is LoginEvent.Idle ->
+                Unit
+        }
+
+    private fun onSessionEvent(event: SessionEvent) : Unit =
+        when (event) {
+            is SessionEvent.Disconnected -> {}
+            is SessionEvent.Connected ->
+                finish()
+        }
 }

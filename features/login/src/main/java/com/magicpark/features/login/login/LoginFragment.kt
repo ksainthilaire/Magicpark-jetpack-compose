@@ -42,10 +42,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.magicpark.core.Config
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.data.utils.GoogleSignInActivityContract
 import com.magicpark.features.login.R
-import com.magicpark.utils.ui.ErrorSnackbar
+import com.magicpark.features.login.forgot.ForgotUiState
+import com.magicpark.utils.ui.Toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,7 +60,7 @@ class LoginFragment : Fragment() {
         private val TAG = LoginFragment::class.java.simpleName
     }
 
-    private val viewModel: LoginViewModel by viewModel()
+    private val viewModel: LoginFragmentViewModel by viewModel()
 
     /**
      * @see
@@ -93,17 +95,17 @@ class LoginFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    LoginScreen(
-                        state = state,
-                        login = ::loginWithMail,
-                        loginWithGoogle = ::loginWithGoogle,
-                        loginWithFacebook = ::loginWithFacebook,
-                        onBackPressed = ::onBackPressedListener,
-                        goToForgot = {
-                            findNavController().navigate(R.id.forgotFragment)
-                                     },
-                        goToRegister = {  findNavController().navigate(R.id.registerFragment) },
-                    )
+                    MagicparkMaterialTheme {
+                        LoginScreen(
+                            state = state,
+                            login = ::loginWithMail,
+                            loginWithGoogle = ::loginWithGoogle,
+                            loginWithFacebook = ::loginWithFacebook,
+                            onBackPressed = ::onBackPressedListener,
+                            goToForgot = { findNavController().navigate(R.id.forgotFragment) },
+                            goToRegister = { findNavController().navigate(R.id.registerFragment) },
+                        )
+                    }
                 }
             }
 
@@ -121,6 +123,7 @@ class LoginFragment : Fragment() {
 
         firebaseAuth.signInWithEmailAndPassword(mail, password)
             .addOnFailureListener { exception ->
+                Log.e(TAG, "An error occurred during user login, mail = $mail.", exception)
                 viewModel.handleLoginException(exception)
             }
             .addOnSuccessListener {
@@ -129,12 +132,13 @@ class LoginFragment : Fragment() {
                 user
                     .getIdToken(false)
                     .addOnFailureListener { exception ->
+                        Log.e(TAG, "An error occurred during user login, mail = $mail.", exception)
                         viewModel.handleLoginException(exception)
                     }
                     .addOnSuccessListener { result ->
                         val firebaseToken = result.token ?: return@addOnSuccessListener
                         Log.i(TAG, "User login with Firebase was successful. mail = $mail")
-                        viewModel.login(context, firebaseToken)
+                        viewModel.login(firebaseToken)
                     }
             }
     }
@@ -163,15 +167,17 @@ class LoginFragment : Fragment() {
                                     "token = $firebaseToken"
                         )
 
-                        viewModel.login(context, firebaseToken)
+                        viewModel.login(firebaseToken)
                     }
 
                     override fun onCancel() {
                         Log.i(TAG, "The user has canceled their connection with Facebook.")
                     }
 
-                    override fun onError(error: FacebookException): Unit =
+                    override fun onError(error: FacebookException) {
+                        Log.e(TAG, "An error occurred while the user signed in with Facebook", error)
                         viewModel.handleLoginException(error)
+                    }
                 })
 
         LoginManager
@@ -204,6 +210,10 @@ class LoginFragment : Fragment() {
                 firebaseAuth
                     .signInWithCredential(firebaseCredential)
                     .addOnFailureListener { exception ->
+                        Log.e(
+                            TAG,
+                            "An error occurred while the user signed in with Google",
+                            exception,)
                         viewModel.handleLoginException(exception)
                     }
                     .addOnSuccessListener {
@@ -213,6 +223,10 @@ class LoginFragment : Fragment() {
                         currentUser
                             .getIdToken(false)
                             .addOnFailureListener { exception ->
+                                Log.e(
+                                    TAG,
+                                    "An error occurred while the user signed in with Google",
+                                    exception,)
                                 viewModel.handleLoginException(exception)
                             }
                             .addOnSuccessListener { result ->
@@ -224,13 +238,14 @@ class LoginFragment : Fragment() {
                                             " firebaseToken = $firebaseToken"
                                 )
 
-                                viewModel.login(context, firebaseToken)
+                                viewModel.login(firebaseToken)
                             }
                     }
             }
 
             is GoogleSignInActivityContract.Result.Failure -> {
                 Log.e(TAG, "The user is unable to sign in with Google.", result.exception)
+                viewModel.handleLoginException(result.exception)
             }
         }
     }
@@ -257,12 +272,19 @@ fun LoginScreen(
 
     goToForgot: () -> Unit,
     goToRegister: () -> Unit,
-) {
+) = Box(modifier = Modifier.fillMaxSize()) {
 
     var mail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     var passwordVisibility by remember { mutableStateOf(false) }
+
+    when (state) {
+        is LoginUiState.LoginFailed ->
+            key(state) { Toast(text = state.errorMessage) }
+
+        else -> Unit
+    }
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -326,7 +348,7 @@ fun LoginScreen(
                             painter =
                             if (!passwordVisibility)
                                 painterResource(com.magicpark.utils.R.drawable.password_ok)
-                            else  painterResource(com.magicpark.utils.R.drawable.password_nok),
+                            else painterResource(com.magicpark.utils.R.drawable.password_nok),
                             contentDescription = "Show password"
                         )
                     }
@@ -504,14 +526,4 @@ fun LoginScreen(
             colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
         )
     }
-
-    if (state is LoginUiState.LoginFailed) {
-
-        ErrorSnackbar(state.errorMessage) {}
-
-        LaunchedEffect(key1 = state) {
-            delay(2000L)
-        }
-    }
-
 }

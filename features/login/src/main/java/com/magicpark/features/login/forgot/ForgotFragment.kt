@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -24,12 +25,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.facebook.bolts.Task.Companion.delay
 import com.google.firebase.auth.FirebaseAuth
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import java.util.*
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.CallbackWithoutParameter
 import com.magicpark.utils.ui.CallbackWithParameter
-import com.magicpark.utils.ui.ErrorSnackbar
+import com.magicpark.utils.ui.Toast
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,14 +54,15 @@ class ForgotFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    ForgotScreen(
-                        state = state,
-                        onBackPressed = this@ForgotFragment::onBackPressedListener,
-                        onForgot = ::forgot,
-                    )
+                    MagicparkMaterialTheme {
+                        ForgotScreen(
+                            state = state,
+                            onBackPressed = this@ForgotFragment::onBackPressedListener,
+                            onForgot = ::forgot,
+                        )
+                    }
                 }
             }
-
 
     /**
      * User requests password reset.
@@ -72,6 +75,7 @@ class ForgotFragment : Fragment() {
 
             Log.i(TAG, "The user has been successfully created on Firebase.")
         } catch (e: Exception) {
+            Log.e(TAG, "An error occurred during password reset", e)
             viewModel.handleForgotException(e)
         }
     }
@@ -100,16 +104,21 @@ fun ForgotScreen(
     state: ForgotUiState,
     onBackPressed: CallbackWithoutParameter,
     onForgot: CallbackWithParameter<String>,
-) {
+) = Box(modifier = Modifier.fillMaxSize()) {
     var mail by remember { mutableStateOf("") }
+
+    when (state) {
+        is ForgotUiState.ForgotFailed ->
+            key(state) { Toast(text = state.errorMessage) }
+
+        else -> Unit
+    }
 
     Column(
         Modifier
             .padding(top = 20.dp, bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
-
         Image(
             painter = painterResource(R.drawable.illustration_magicpark),
             modifier = Modifier
@@ -132,9 +141,8 @@ fun ForgotScreen(
             style = TextStyle(textAlign = TextAlign.Center)
         )
 
-
         OutlinedTextField(
-            modifier = Modifier.padding(horizontal = 24.dp),
+            modifier = Modifier.padding(24.dp),
             value = mail,
             singleLine = true,
             isError = state is ForgotUiState.ForgotFailed,
@@ -160,11 +168,6 @@ fun ForgotScreen(
             )
         ) {
             Text(text = stringResource(R.string.forgot_button_cancel))
-        }
-
-        if (state is ForgotUiState.ForgotFailed) {
-            ErrorSnackbar(state.errorMessage) {}
-            LaunchedEffect(key1 = state) { delay(2000L) }
         }
     }
 }

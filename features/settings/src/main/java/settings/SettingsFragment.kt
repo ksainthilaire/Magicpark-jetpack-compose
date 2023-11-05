@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.utils.R
 import com.magicpark.domain.enums.UserRank
@@ -64,22 +65,24 @@ class SettingsFragment : Fragment() {
                 setContent {
                     val user by viewModel.user.collectAsState()
 
-                    SettingsScreen(
-                        user = user,
+                    MagicparkMaterialTheme {
+                        SettingsScreen(
+                            user = user,
 
-                        onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
-                        logout = {
-                                 viewModel.logout(context = requireContext())
-                        },
-                        deleteAccount = ::deleteAccount,
-                        goToAccountSettings = {
-                            navController.navigate("/account/settings")
-                        },
-                        goToPrivacyPolicy = {
-                            navController.navigate("/privacy-policy")
-                        },
-                        goToContact = { navController.navigate("/contact") },
-                    )
+                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
+                            logout = {
+                                viewModel.logout(context = requireContext())
+                            },
+                            deleteAccount = ::deleteAccount,
+                            goToAccountSettings = {
+                                navController.navigate("/account/settings")
+                            },
+                            goToPrivacyPolicy = {
+                                navController.navigate("/privacy-policy")
+                            },
+                            goToContact = { navController.navigate("/contact") },
+                        )
+                    }
                 }
             }
 

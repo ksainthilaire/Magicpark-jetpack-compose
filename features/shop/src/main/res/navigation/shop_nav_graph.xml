@@ -8,20 +8,22 @@
         android:id="@+id/shopListFragment"
         android:name="com.magicpark.features.shop.shopList.ShopListFragment"
         android:label="ShopListFragment" >
+
         <action
-            android:id="@+id/action_shopListFragment_to_shopItemFragment2"
-            app:destination="@id/shopItemFragment2" />
+            android:id="@+id/action_shopListFragment_to_shopItemFragment"
+            app:destination="@id/shopItemFragment" >
+
+
+        </action>
         <action
             android:id="@+id/action_shopListFragment_to_cartFragment"
             app:destination="@id/cartFragment" />
     </fragment>
     <fragment
-        android:id="@+id/shopItemFragment2"
+        android:id="@+id/shopItemFragment"
         android:name="com.magicpark.features.shop.shopItem.ShopItemFragment"
         android:label="ShopItemFragment" >
-        <action
-            android:id="@+id/action_shopItemFragment2_to_cartFragment"
-            app:destination="@id/cartFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/cartFragment"

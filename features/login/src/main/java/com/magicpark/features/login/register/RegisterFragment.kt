@@ -39,11 +39,15 @@ import com.facebook.bolts.Task
 import com.hbb20.CountryCodePicker
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.utils.R
-import com.magicpark.utils.ui.ErrorSnackbar
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.magicpark.core.MagicparkMaterialTheme
+import com.magicpark.features.login.forgot.ForgotUiState
+import com.magicpark.features.login.login.LoginUiState
+import com.magicpark.utils.ui.CallbackWithoutParameter
+import com.magicpark.utils.ui.Toast
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -77,12 +81,14 @@ class RegisterFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    RegisterScreen(
-                        state = state,
-                        onBackPressed = {},//navController::popBackStack,
-                        goToPrivacyPolicy = {},// navController.navigate("/privacy-policy") },
-                        register = this@RegisterFragment::register,
-                    )
+                    MagicparkMaterialTheme {
+                        RegisterScreen(
+                            state = state,
+                            onBackPressed = ::onBackPressedListener,
+                            goToPrivacyPolicy = {},// navController.navigate("/privacy-policy") },
+                            register = this@RegisterFragment::register,
+                        )
+                    }
                 }
             }
 
@@ -202,9 +208,8 @@ private fun RegisterScreenPreview() =
         _: Boolean ->
     }
 
-private typealias callback = () -> Unit
 
-private typealias registerCallback = (
+private typealias RegisterCallback = (
     fullName: String,
     mail: String,
     password: String,
@@ -220,10 +225,10 @@ private typealias registerCallback = (
 @Composable
 fun RegisterScreen(
     state: RegisterUiState,
-    onBackPressed: callback,
-    goToPrivacyPolicy: callback,
-    register: registerCallback,
-) {
+    onBackPressed: CallbackWithoutParameter,
+    goToPrivacyPolicy: CallbackWithoutParameter,
+    register: RegisterCallback,
+) = Box(modifier = Modifier.fillMaxSize()){
     val context = LocalContext.current
     val countryCodePicker: CountryCodePicker = remember {
         CountryCodePicker(context).also {
@@ -233,6 +238,7 @@ fun RegisterScreen(
             it.setCountryForPhoneCode(224)
         }
     }
+
 
     var fullName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
@@ -603,15 +609,13 @@ fun RegisterScreen(
             contentDescription = null,
             colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
         )
+    }
 
-        if (state is RegisterUiState.RegisterFailed) {
+    when (state) {
+        is RegisterUiState.RegisterFailed ->
+            key(state) { Toast(text = state.errorMessage) }
 
-            ErrorSnackbar(state.errorMessage) {}
-
-            LaunchedEffect(key1 = state) {
-                Task.delay(2000L)
-            }
-        }
+        else -> Unit
     }
 }
 

@@ -1,6 +1,5 @@
 package com.magicpark.features.payment.invoice
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.magicpark.domain.model.Invoice
 import com.magicpark.domain.usecases.OrderUseCases
@@ -8,10 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.java.KoinJavaComponent
 
-/**
- *
- */
-sealed interface  PaymentInvoiceListState {
+
+sealed interface PaymentInvoiceListState {
     /**
      * Initial state
      */
@@ -24,7 +21,7 @@ sealed interface  PaymentInvoiceListState {
     data class InvoiceList(val list: List<Invoice>) : PaymentInvoiceListState
 }
 
-class PaymentInvoiceListViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+class PaymentInvoiceListViewModel : ViewModel() {
 
     companion object {
         private val TAG = PaymentInvoiceListViewModel::class.java.simpleName
@@ -36,10 +33,4 @@ class PaymentInvoiceListViewModel(private val savedStateHandle: SavedStateHandle
 
     private val orderUseCases: OrderUseCases by KoinJavaComponent.inject(OrderUseCases::class.java)
 
-    /**
-     * Fetch user invoices
-     */
-    private fun getInvoices() {
-
-    }
 }

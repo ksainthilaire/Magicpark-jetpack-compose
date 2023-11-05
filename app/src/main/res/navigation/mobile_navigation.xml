@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/navigation_shop">
+    app:startDestination="@id/shopListFragment">
 
+    <fragment
+        android:id="@+id/shopListFragment"
+        android:name="com.magicpark.features.shop.shopList.ShopListFragment"
+        android:label="Shop List"
+      />
 
+    <include app:graph="@navigation/shop_nav_graph"  />
     <include app:graph="@navigation/payment_nav_graph" />
     <include app:graph="@navigation/settings_nav_graph" />
     <include app:graph="@navigation/wallet_nav_graph" />

@@ -9,11 +9,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,40 +58,48 @@ fun CircleButton(
     }
 }
 
+
 @Composable
-@Preview
-fun Counter() {
+fun Counter(
+    value: Int = 0,
+    onRemove: CallbackWithParameter<Int>,
+    onAdd: CallbackWithParameter<Int>,
+) {
 
-    var counter = remember { mutableStateOf(0) }
+    var counter by remember { mutableStateOf(value) }
 
+    val onChange: CallbackWithoutParameter = {
+        if (counter < value) onRemove(value - counter)
+        if (counter > value) onAdd(counter - value)
+    }
 
     Row(
+        modifier = Modifier.wrapContentSize(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-
         CircleButton(
-            imageVector = Icons.Default.Add,
+            imageVector = Icons.Filled.Remove,
             contentDescription = "Minus",
-        ){
-            counter.value -= 1
+        )
+        {
+            counter -= 1
         }
 
         Text(
-            text = counter.value.toString(),
-            modifier = Modifier.padding(start=10.dp, end=10.dp),
+            text = counter.coerceAtLeast(1).toString(),
+            modifier = Modifier.padding(horizontal = 10.dp),
             style = TextStyle(
-                fontSize = 15.sp,
+                fontSize = 16.sp,
                 color = Color.Black
             )
         )
 
         CircleButton(
             imageVector = Icons.Default.Add,
-            contentDescription = "Add"
-        ){
-            counter.value += 1
+            contentDescription = "Add",
+        ) {
+            counter += 1
+            onChange()
         }
-
     }
-
 }

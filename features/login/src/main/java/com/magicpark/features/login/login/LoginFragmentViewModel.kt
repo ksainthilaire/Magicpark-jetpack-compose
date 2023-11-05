@@ -1,14 +1,12 @@
 package com.magicpark.features.login.login
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuthException
-import com.magicpark.core.Config.KEY_SHARED_PREFERENCES
 import com.magicpark.domain.usecases.UserUseCases
-import com.magicpark.features.login.utils.toLocaleString
+import com.magicpark.features.login.Session
+import com.magicpark.features.login.utils.getStringRes
 import org.koin.java.KoinJavaComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +31,7 @@ sealed interface LoginUiState {
     class LoginFailed(val errorMessage: String) : LoginUiState
 }
 
-class LoginViewModel : ViewModel() {
+class LoginFragmentViewModel : ViewModel() {
 
     private companion object {
         const val TAG = "RegisterViewModel"
@@ -48,6 +46,12 @@ class LoginViewModel : ViewModel() {
     private val resources: Resources by KoinJavaComponent
         .inject(Resources::class.java)
 
+
+    private val session: Session by KoinJavaComponent.inject(
+        Session::class.java
+    )
+
+
     private val _state: MutableStateFlow<LoginUiState> =
         MutableStateFlow(LoginUiState.Loading)
 
@@ -55,38 +59,20 @@ class LoginViewModel : ViewModel() {
         get() = _state
 
     /**
-     * Saves the token that allows the user to authenticate with the API
-     * as an already registered and logged in user.
-     */
-    private fun saveToken(context: Context, token: String) {
-        val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(
-                KEY_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE
-            )
-
-        sharedPreferences.edit()
-            .apply {
-                putString(KEY_API_TOKEN, token)
-                apply()
-            }
-    }
-
-    /**
      * Connects the user to the server.
      * This function is called when the user has been added in Firebase.
      *
-     * @param context see [android.content.Context]
      * @param firebaseToken Token provided by Firebase Authentication after the user
      * creates an account.
      */
-    fun login(context: Context, firebaseToken: String) = viewModelScope.launch {
+    fun login(firebaseToken: String) = viewModelScope.launch {
         try {
             val token = userUseCases.login(firebaseToken)
-            saveToken(context, token)
+            session.saveToken(token)
 
             _state.value = LoginUiState.LoginSuccessful
         } catch (e: Throwable) {
+            Log.e(TAG, "An error occurred during user login,", e)
             val errorMessage = resources
                 .getString(
                     R.string.common_error_unknown)
@@ -101,7 +87,7 @@ class LoginViewModel : ViewModel() {
     fun handleLoginException(exception: Exception) {
         viewModelScope.launch {
             val errorMessage = when (exception) {
-                is FirebaseAuthException -> exception.toLocaleString()
+                is FirebaseAuthException -> resources.getString(exception.getStringRes())
                 else -> exception.message
                     ?: resources.getString(R.string.common_error_unknown)
             }

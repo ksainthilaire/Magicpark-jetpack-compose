@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.domain.model.UserTicket
 import com.magicpark.utils.ui.CallbackWithParameter
 import com.magicpark.utils.ui.MagicparkContainer
@@ -54,10 +55,12 @@ class WalletFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    WalletScreen(
-                        state = state,
-                        goToTicket = {},
-                    )
+                    MagicparkMaterialTheme {
+                        WalletScreen(
+                            state = state,
+                            goToTicket = {},
+                        )
+                    }
                 }
             }
 }

@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
@@ -47,6 +48,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.ShopItem
 import com.magicpark.utils.R
@@ -71,11 +73,13 @@ class ShopItemFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    ShopItemScreen(
-                        shopItem = ShopItem(),
-                        addToCart = {},
-                        onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() }
-                    )
+                    MagicparkMaterialTheme {
+                        ShopItemScreen(
+                            shopItem = viewModel.shopItem,
+                            addToCart = viewModel::addProduct,
+                            onBackPressed = { findNavController().navigate(com.magicpark.features.shop.R.id.cartFragment)}//activity?.onBackPressedDispatcher?.onBackPressed() }
+                        )
+                    }
                 }
             }
 }
@@ -96,7 +100,7 @@ fun ShopItemScreen(
     onBackPressed: CallbackWithoutParameter,
 ) {
     val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(R.raw.lottie_abstract_background)
+        spec = LottieCompositionSpec.RawRes(R.raw.lottie_abstract_background),
     )
 
     Column(
@@ -150,7 +154,7 @@ fun ShopItemScreen(
                     .align(Alignment.Center)
                     .width(200.dp)
                     .height(200.dp),
-                contentDescription = null
+                contentDescription = null,
             )
         }
 
@@ -158,16 +162,17 @@ fun ShopItemScreen(
             Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .background(Color.White, shape = RoundedCornerShape(24.dp))
+                .background(Color.White, shape = RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp))
                 .padding(start = 24.dp, end = 24.dp, top = 50.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+
                 Text(shopItem.name ?: "")
                 Text(
                     text = "%s GNF".format(shopItem.price),
@@ -200,7 +205,7 @@ fun ShopItemScreen(
                 text = shopItem.description ?: "",
                 Modifier
                     .padding(top = 24.dp)
-                    .align(Alignment.Start)
+                    .align(Alignment.Start),
             )
 
             Button(
@@ -209,7 +214,8 @@ fun ShopItemScreen(
                     addToCart(shopItem)
                     onBackPressed()
                 },
-            ) {
+            )
+            {
                 Text(text = stringResource(R.string.cart_button_pay))
             }
         }

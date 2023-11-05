@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.utils.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,10 +42,12 @@ class ContactFragment : Fragment() {
             .apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    ContactScreen(
-                        onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
-                        sendBugReport = viewModel::sendBugReport,
-                    )
+                    MagicparkMaterialTheme {
+                        ContactScreen(
+                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
+                            sendBugReport = viewModel::sendBugReport,
+                        )
+                    }
                 }
             }
 }

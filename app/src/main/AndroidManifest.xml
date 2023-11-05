@@ -27,7 +27,7 @@
 
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.magicpark.main.MainActivity"
             android:screenOrientation="reversePortrait"
             android:exported="true">
             <intent-filter>

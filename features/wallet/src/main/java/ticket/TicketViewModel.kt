@@ -1,4 +1,4 @@
-package com.magicpark.features.wallet.ticket
+package ticket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,27 +8,27 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 
-sealed interface  ContactState  {
+sealed interface  TicketState  {
 
     /**
      * Loading the settings screen.
      */
-    object Loading : ContactState
+    object Loading : TicketState
 
     /**
      * Bug report sent to the server.
      */
-    object HelpRequestSent : ContactState
+    object HelpRequestSent : TicketState
 
     /**
      * Sending the bug report to the server failed.
      * @param message bug report message.
      */
-    class HelpRequestError(private val message: String? = null) : ContactState
+    class HelpRequestError(private val message: String? = null) : TicketState
 }
 
 
-class ContactViewModel : ViewModel() {
+class TicketViewModel : ViewModel() {
 
     companion object {
         const val KEY_API_TOKEN = "KEY-API-TOKEN"
@@ -36,8 +36,8 @@ class ContactViewModel : ViewModel() {
 
     private val supportUseCases: SupportUseCases by KoinJavaComponent.inject(SupportUseCases::class.java)
 
-    private val _state: MutableStateFlow<ContactState> = MutableStateFlow(ContactState.Loading)
-    val state: StateFlow<ContactState> =_state
+    private val _state: MutableStateFlow<TicketState> = MutableStateFlow(TicketState.Loading)
+    val state: StateFlow<TicketState> =_state
 
     /**
      * Send a bug report to the server.
@@ -48,10 +48,10 @@ class ContactViewModel : ViewModel() {
             supportUseCases
                 .help(text)
 
-            _state.value = ContactState.HelpRequestSent
+            _state.value = TicketState.HelpRequestSent
         }
         catch (e: Exception) {
-            _state.value = ContactState.HelpRequestError(e.message)
+            _state.value = TicketState.HelpRequestError(e.message)
         }
     }
 }

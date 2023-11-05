@@ -30,21 +30,30 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
-import com.magicpark.domain.model.ShopCategory
 import com.magicpark.domain.model.ShopItem
+import com.magicpark.features.shop.Cart
 import com.magicpark.utils.R
+import com.magicpark.features.shop.R.navigation.shop_nav_graph
+import com.magicpark.features.shop.R.id.action_shopListFragment_to_shopItemFragment
 import com.magicpark.utils.ui.CallbackWithParameter
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent
 
 @AndroidEntryPoint
 class ShopListFragment : Fragment() {
+
+    companion object {
+        private const val KEY_SHOP_ITEM = "KEY-SHOP-ITEM"
+    }
 
     private val viewModel: ShopListViewModel by viewModel()
 
@@ -58,15 +67,24 @@ class ShopListFragment : Fragment() {
                 setContent {
                     val state by viewModel.state.collectAsState()
 
-                    ShopListScreen(
-                        items = emptyList(),
+                    MagicparkMaterialTheme {
+                        ShopListScreen(
+                            state = state,
+                            currentCategoryId = 0L,
+                            goToCategory = viewModel::changeCategory,
+                            goToShopItem = { shopItem ->
+                                val bundle = Bundle().apply {
+                                    putSerializable(KEY_SHOP_ITEM, shopItem)
+                                }
 
-                        currentCategoryId = 0L,
-                        categories = emptyList(),
-
-                        goToCategory = {},
-                        goToShopItem = {},
-                    )
+                                findNavController().apply {
+                                    setGraph(shop_nav_graph)
+                                    // navigate(com.magicpark.features.shop.R.id.cartFragment)
+                                    navigate(action_shopListFragment_to_shopItemFragment, bundle)
+                                }
+                            },
+                        )
+                    }
                 }
             }
 }
@@ -75,10 +93,13 @@ class ShopListFragment : Fragment() {
 @Composable
 fun ShopListScreen_Preview() =
     ShopListScreen(
-        items = emptyList(),
+
+        state = ShopListState.ShopList(
+            items = emptyList(),
+            categories = emptyList(),
+        ),
 
         currentCategoryId = 0L,
-        categories = emptyList(),
 
         goToCategory = {},
         goToShopItem = {},
@@ -87,10 +108,8 @@ fun ShopListScreen_Preview() =
 
 /**
  * Shop list screen.
- * @param items List of shop items
  *
  * @param currentCategoryId Current category of the shop.
- * @param categories Shop categories
  *
  * @param goToCategory Go to shop category
  * @param goToShopItem Go to shop item
@@ -98,10 +117,10 @@ fun ShopListScreen_Preview() =
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShopListScreen(
-    items: List<ShopItem>,
+
+    state: ShopListState,
 
     currentCategoryId: Long,
-    categories: List<ShopCategory>,
 
     goToCategory: CallbackWithParameter<Long>,
     goToShopItem: CallbackWithParameter<ShopItem>,
@@ -109,84 +128,66 @@ fun ShopListScreen(
 
     var search by remember { mutableStateOf("") }
 
-    Box(
-        contentAlignment = Alignment.Center,
-    ) {
-        Image(
-            painter = painterResource(id = com.magicpark.core.R.drawable.background_shop_header),
+
+    Column(
+        Modifier
+            .padding(horizontal = 24.dp)
+            .fillMaxSize()) {
+
+        OutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            contentDescription = null,
+                .padding(top = 12.dp)
+                .fillMaxWidth(),
+            value = search,
+            onValueChange = { value ->
+                search = value
+            },
+            shape = RoundedCornerShape(12.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = Color.White,
+                unfocusedBorderColor = Color.Transparent
+            ),
+            placeholder = { Text(stringResource(id = R.string.shop_label_search)) },
         )
-        Image(
-            painter = painterResource(id = com.magicpark.core.R.drawable.illustration_elephant),
-            modifier = Modifier
-                .width(72.dp)
-                .height(96.dp)
-                .align(Alignment.CenterStart),
-            contentDescription = null,
-        )
-        Text(
-            text = stringResource(R.string.shop_title),
-            modifier = Modifier.align(Alignment.Center),
-            color = Color.White,
-        )
-    }
 
-    OutlinedTextField(
-        modifier = Modifier
-            .padding(top = 12.dp)
-            .fillMaxWidth(),
-        value = search,
-        onValueChange = { value ->
-            search = value
-        },
-        shape = RoundedCornerShape(12.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = Color.White,
-            unfocusedBorderColor = Color.Transparent
-        ),
-        placeholder = { Text(stringResource(id = R.string.shop_label_search)) },
-    )
+        LazyRow(Modifier.padding(top = 24.dp)) {
 
-    LazyRow(Modifier.padding(top = 24.dp)) {
-
-        item {
-            Button(
-                onClick = {
-                    goToCategory(0L)
-                },
-            ) {
-                Text("Promotions \uD83D\uDD16")
-            }
-        }
-
-        categories.forEach { category ->
             item {
                 Button(
-                    modifier = Modifier.padding(top = 12.dp),
                     onClick = {
-                        val categoryId = category.id ?: 0L
-                        goToCategory(categoryId)
+                        goToCategory(0L)
                     },
                 ) {
-                    Text(category.name.toString())
+                    Text(text = stringResource(R.string.shop_category_promotions))
+                }
+            }
+
+            state.categories.forEach { category ->
+                item {
+                    Button(
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        onClick = {
+                            val categoryId = category.id ?: 0L
+                            goToCategory(categoryId)
+                        },
+                    ) {
+                        Text(category.name.toString())
+                    }
                 }
             }
         }
-    }
 
-    items.let { shopItems ->
-        LazyVerticalGrid(
-            modifier = Modifier.padding(top = 12.dp),
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            items(shopItems) { shopItem ->
-                ShopItemCard(shopItem = shopItem, goToShopItem)
+        state.items.let { shopItems ->
+            LazyVerticalGrid(
+                modifier = Modifier.padding(top = 12.dp),
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(shopItems) { shopItem ->
+                    ShopItemCard(shopItem = shopItem, goToShopItem)
+                }
             }
         }
     }
@@ -207,7 +208,6 @@ private fun ShopItemCard(
             .padding(10.dp)
             .wrapContentSize()
     ) {
-
         Image(
             painter = painterResource(com.magicpark.core.R.drawable.ic_like),
             modifier = Modifier.size(32.dp),
@@ -229,7 +229,7 @@ private fun ShopItemCard(
                 .align(Alignment.CenterHorizontally)
                 .clip(RoundedCornerShape(16.dp, 16.dp, 16.dp, 16.dp))
                 .size(96.dp),
-            contentDescription = null
+            contentDescription = null,
         )
 
         Column {
