@@ -86,7 +86,7 @@
     <string name="cart_quantity">Quantité</string>
     <string name="cart_promo_code">Code promo?</string>
     <string name="cart_gnf">%s GNF</string>
-    <string name="cart_prevent">Taxes d\'expédition et remises calculées à la caisse</string>
+    <string name="cart_prevent">TVA et remises calculées à la caisse</string>
     <string name="cart_buy">Payer maintenant</string>
 
     <string name="menu_label_home">Accueil</string>

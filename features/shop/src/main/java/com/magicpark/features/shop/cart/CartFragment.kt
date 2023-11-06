@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -84,6 +83,7 @@ class CartFragment : Fragment() {
 
                             addFromCart = viewModel::addProduct,
                             removeFromCart = viewModel::removeProduct,
+                            removeAllFromCart = viewModel::removeAllProduct,
                             onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
                             showPaymentDialog = ::showPaymentDialog,
                         )
@@ -106,6 +106,7 @@ fun CartScreen_Preview() =
 
         addFromCart = {  _ -> },
         removeFromCart = {},
+        removeAllFromCart = {},
         onBackPressed = {},
         showPaymentDialog = {}
     )
@@ -126,6 +127,7 @@ fun CartScreen(
 
     addFromCart: (ShopItem) -> Unit,
     removeFromCart: CallbackWithParameter<ShopItem>,
+    removeAllFromCart: CallbackWithParameter<ShopItem>,
 
     showPaymentDialog: CallbackWithoutParameter,
     onBackPressed: CallbackWithoutParameter,
@@ -167,6 +169,7 @@ fun CartScreen(
                                     shopItem = item,
                                     addFromCart = addFromCart,
                                     removeFromCart = removeFromCart,
+                                    removeAllFromCart = removeAllFromCart,
                                 )
                             }
                         }
@@ -281,7 +284,7 @@ fun CartScreen(
 
 /**
  * Item in user's cart
- * @param shopItem @see [ShopItem]
+ * @param @see [ShopItem] @see [ShopItem]
  * @param addFromCart @see [CartScreen]
  * @param removeFromCart @see [CartScreen]
  */
@@ -289,8 +292,9 @@ fun CartScreen(
 private fun CartItem(
     shopItem: ShopItem,
 
-    addFromCart: (ShopItem) -> Unit,
+    addFromCart: CallbackWithParameter<ShopItem>,
     removeFromCart: CallbackWithParameter<ShopItem>,
+    removeAllFromCart: CallbackWithParameter<ShopItem>,
 ) {
     Column(
         Modifier
@@ -301,7 +305,6 @@ private fun CartItem(
     ) {
 
         Row(Modifier.padding(bottom = 16.dp)) {
-
 
 
             val painter = rememberAsyncImagePainter(
@@ -352,7 +355,7 @@ private fun CartItem(
 
                     Icon(
                         modifier = Modifier.size(16.dp)
-                            .clickable { removeFromCart(shopItem) },
+                            .clickable { removeAllFromCart(shopItem) },
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
                         tint = MagicparkTheme.colors.primary
@@ -379,10 +382,9 @@ private fun CartItem(
                         Column {
                             Counter(
                                 value = shopItem.quantity ?: 1,
-                                onAdd = { addFromCart(shopItem) },
-                                onRemove = { removeFromCart(shopItem) }
+                                addListener = { addFromCart(shopItem) },
+                                removeListener = { removeFromCart(shopItem) },
                             )
-
                         }
                     }
                 }

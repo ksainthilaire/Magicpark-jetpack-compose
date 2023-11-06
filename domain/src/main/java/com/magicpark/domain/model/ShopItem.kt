@@ -60,14 +60,11 @@ data class ShopItem(
     var deletedAt: Date? = null
 ) : Parcelable, Serializable
 
-
 val ShopItem.currentPrice: Float?
     get() = promotionalPrice ?: price
 
-
+val ShopItem.displayablePrice: String?
+    get() = currentPrice.toString()
 
 typealias Shop = Pair<List<ShopItem>, List<ShopCategory>>
 
-fun Shop.create() : Shop {
-    return Pair(listOf(), listOf())
-}

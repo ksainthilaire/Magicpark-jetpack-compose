@@ -70,16 +70,22 @@ class CartViewModel : ViewModel() {
 
     /**
      * Add a product
-     * @param shopItem
+     * @param @see [ShopItem]
      */
     fun addProduct(shopItem: ShopItem) =
         cart.addCart(shopItem)
 
     /**
      * Remove a product
-     * @param shopItem
+     * @param @see [ShopItem]
      */
     fun removeProduct(shopItem: ShopItem) =
-        cart.removeProduct(shopItem)
+        cart.removeProduct(shopItem = shopItem, allQuantity = false)
 
+    /**
+     * Remove all [shopItem] from the cart.
+     * @param @see [ShopItem]
+     */
+    fun removeAllProduct(shopItem: ShopItem) =
+        cart.removeProduct(shopItem = shopItem, allQuantity = true)
 }

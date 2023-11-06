@@ -18,7 +18,7 @@ import com.magicpark.features.login.register.RegisterViewModel
 import settings.SettingsViewModel
 import com.magicpark.features.shop.shopList.ShopListViewModel
 import com.magicpark.features.shop.shopItem.ShopItemViewModel
-import com.magicpark.features.wallet.wallet.WalletViewModel
+import wallet.WalletViewModel
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

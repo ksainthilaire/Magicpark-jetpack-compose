@@ -65,12 +65,25 @@ class Cart(context: Context) {
     private val _state: MutableStateFlow<CartState> = MutableStateFlow(CartState.Empty)
     val state: StateFlow<CartState> = _state
 
-    init {
-        fetchCart()
-    }
+    init { fetchCart() }
 
-    fun removeProduct(shopItem: ShopItem) =
-        removeProduct(shopItem = shopItem, quantity = 0)
+    fun removeProduct(shopItem: ShopItem, allQuantity: Boolean = false) {
+
+        if (!allQuantity) {
+            removeProduct(shopItem = shopItem, quantity = 1)
+            return
+        }
+
+        if (state.value !is CartState.Cart) {
+            Log.e(TAG, "Cannot delete a product if the basket is empty")
+            return
+        }
+
+        val state = state.value as CartState.Cart
+        val item = state.items.find { item -> item.equals(shopItem.id) } ?: return
+
+        removeProduct(shopItem = shopItem, quantity = item.quantity ?: 0)
+    }
 
     private fun removeProduct(shopItem: ShopItem, quantity: Int)  = coroutineScope.launch {
 
@@ -106,7 +119,7 @@ class Cart(context: Context) {
 
     /**
      * Add a product to the cart.
-     * @param shopItem
+     * @param @see [ShopItem]
      */
     fun addCart(shopItem: ShopItem) = coroutineScope.launch {
 

@@ -61,28 +61,20 @@ fun CircleButton(
 
 @Composable
 fun Counter(
-    value: Int = 0,
-    onRemove: CallbackWithParameter<Int>,
-    onAdd: CallbackWithParameter<Int>,
+    value: Int,
+    removeListener: CallbackWithoutParameter,
+    addListener: CallbackWithoutParameter,
 ) {
 
     var counter by remember { mutableStateOf(value) }
-
-    val onChange: CallbackWithoutParameter = {
-        if (counter < value) onRemove(value - counter)
-        if (counter > value) onAdd(counter - value)
-    }
 
     Row(
         modifier = Modifier.wrapContentSize(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CircleButton(
-            imageVector = Icons.Filled.Remove,
-            contentDescription = "Minus",
-        )
-        {
+        CircleButton(imageVector = Icons.Filled.Remove, contentDescription = "Minus") {
             counter -= 1
+            removeListener()
         }
 
         Text(
@@ -94,12 +86,9 @@ fun Counter(
             )
         )
 
-        CircleButton(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Add",
-        ) {
+        CircleButton(imageVector = Icons.Default.Add, contentDescription = "Add") {
             counter += 1
-            onChange()
+            addListener()
         }
     }
 }

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/walletFragment"
-        android:name="com.magicpark.features.wallet.wallet.WalletFragment"
+        android:name="wallet.WalletFragment"
         android:label="WalletFragment" >
         <action
             android:id="@+id/action_walletFragment_to_ticketFragment"
@@ -14,6 +14,6 @@
     </fragment>
     <fragment
         android:id="@+id/ticketFragment"
-        android:name="com.magicpark.features.wallet.ticket.TicketFragment"
+        android:name="ticket.TicketFragment"
         android:label="TicketFragment" />
 </navigation>

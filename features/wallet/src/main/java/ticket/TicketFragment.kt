@@ -1,4 +1,4 @@
-package com.magicpark.features.wallet.ticket
+package ticket
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -33,7 +33,7 @@ import com.google.gson.Gson
 import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.R
 import com.magicpark.domain.model.UserTicket
-import com.magicpark.features.wallet.wallet.WalletViewModel
+import wallet.WalletViewModel
 import com.magicpark.utils.ui.CallbackWithoutParameter
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.g0dkar.qrcode.QRCode
@@ -80,10 +80,12 @@ fun TicketScreen(
     download: CallbackWithoutParameter,
     onBackPressed: CallbackWithoutParameter,
 ) {
-    var errorMessage by remember { mutableStateOf<String?>("La génération du QR Code a échoué") }
-
-    val bitmap = QRCode(Gson().toJson(ticket))
-        .render().nativeImage() as Bitmap
+    val bitmap = QRCode(
+        Gson()
+            .toJson(ticket)
+    )
+        .render()
+        .nativeImage() as Bitmap
 
     ConstraintLayout(
         modifier = Modifier
@@ -92,15 +94,10 @@ fun TicketScreen(
     ) {
         val (view, home, shapeTopLeft, shapeMidRight, shapeBottomLeft) = createRefs()
 
-
         val painter = painterResource(id = R.drawable.shape_bottom_left_gold)
         val imageRatio = painter.intrinsicSize.width / painter.intrinsicSize.height
 
-
-
-
         Image(
-
             painter = painter,
             modifier = Modifier
                 .constrainAs(shapeBottomLeft) {
@@ -115,12 +112,10 @@ fun TicketScreen(
             contentDescription = null
         )
 
-
-
         LazyColumn(
             Modifier
                 .fillMaxSize()
-                .padding(top = 100.dp, bottom = 20.dp)
+                .padding(top = 96.dp, bottom = 24.dp)
                 .constrainAs(view) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -128,31 +123,28 @@ fun TicketScreen(
                     bottom.linkTo(parent.bottom)
                     width = Dimension.fillToConstraints
                 },
-            horizontalAlignment = Alignment.CenterHorizontally
-
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
             item {
-
-
                 Text(
                     text = stringResource(com.magicpark.utils.R.string.ticket_title),
-                    modifier = Modifier.padding(bottom = 20.dp),
+                    modifier = Modifier.padding(bottom = 24.dp),
                     style = TextStyle(
                         fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 )
 
                 BoxWithConstraints(
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.illustration_family),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        contentDescription = null
+                        contentDescription = null,
                     )
 
                     Image(
@@ -160,22 +152,17 @@ fun TicketScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        contentDescription = null
+                        contentDescription = null,
                     )
 
-
-                    // QR Code
                     Image(
                         bitmap = bitmap.asImageBitmap(),
                         modifier = Modifier
                             .width(100.dp)
                             .height(100.dp),
-                        contentDescription = null
+                        contentDescription = null,
                     )
-
-
                 }
-
 
                 Text(
                     text = "MAPAR2023", //stringResource(com.magicpark.utils.R.string.ticket_format),
@@ -198,12 +185,11 @@ fun TicketScreen(
                         Modifier
                             .background(Color.White)
                             .fillMaxWidth()
-                            .padding(10.dp),
+                            .padding(12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
 
-                        // QR Code
                         Image(
                             bitmap = bitmap.asImageBitmap(),
                             modifier = Modifier
@@ -212,10 +198,9 @@ fun TicketScreen(
                             contentDescription = null
                         )
 
-
                         Button(
                             onClick = {
-                                TODO("Download")
+                               download()
                             },
                         ) {
                             Text("Télécharger")
@@ -243,7 +228,7 @@ fun TicketScreen(
             painter = painterResource(id = R.drawable.shape_mid_gold),
             modifier = Modifier
                 .constrainAs(shapeMidRight) {
-                    top.linkTo(parent.top, 100.dp)
+                    top.linkTo(parent.top, 96.dp)
                     end.linkTo(parent.end)
                 },
             contentDescription = null
@@ -258,14 +243,13 @@ fun TicketScreen(
                 .width(30.dp)
                 .height(30.dp)
                 .constrainAs(home) {
-                    top.linkTo(parent.top, 20.dp)
-                    start.linkTo(parent.start, 20.dp)
+                    top.linkTo(parent.top, 24.dp)
+                    start.linkTo(parent.start, 24.dp)
                 }
                 .clickable {
-                           onBackPressed
+                    onBackPressed()
                 },
-            contentDescription = null
+            contentDescription = null,
         )
-
     }
 }

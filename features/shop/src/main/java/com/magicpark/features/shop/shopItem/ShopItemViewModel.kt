@@ -43,14 +43,14 @@ class ShopItemViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     /**
      * Add a product
-     * @param shopItem
+     * @param @see [ShopItem]
      */
     fun addProduct(shopItem: ShopItem) =
         cart.addCart(shopItem)
 
     /**
      * Remove a product
-     * @param shopItem
+     * @param @see [ShopItem]
      */
     fun removeProduct(shopItem: ShopItem) =
         cart.removeProduct(shopItem)

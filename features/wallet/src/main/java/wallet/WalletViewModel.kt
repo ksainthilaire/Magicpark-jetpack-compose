@@ -1,5 +1,6 @@
-package com.magicpark.features.wallet.wallet
+package wallet
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.magicpark.domain.model.UserTicket
@@ -8,9 +9,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
+import java.util.Calendar
+import java.util.Date
 
 sealed interface WalletState {
-
     /**
      * Initial state.
      */
@@ -41,23 +43,30 @@ class WalletViewModel : ViewModel() {
     val state: StateFlow<WalletState>
         get() = _state
 
-    init {
-        loadWalletList()
-    }
+    init { fetchWallet() }
 
     /**
      * Fetch the user's ticket list
      */
-
-    fun loadWalletList() = viewModelScope.launch {
+    private fun fetchWallet() = viewModelScope.launch {
         val tickets = walletUseCases.getWallet()
 
+        Log.i(TAG, "Fetch the user's ticket list. tickets = $tickets.")
+
         _state.value = WalletState.Tickets(
-            inUse = tickets,
-            toUse = tickets,
-            expired = tickets,
+            inUse = tickets.getInUse(),
+            toUse = tickets.filter { ticket -> !ticket.isExpired() },
+            expired = tickets.filter { ticket -> ticket.isExpired() },
         )
     }
+
+    private fun UserTicket.isExpired(): Boolean {
+        val date: Date = Calendar.getInstance().time
+        val expiredAt = expiredAt ?: return false
+        return (expiredAt.time > date.time)
+    }
+
+    private fun List<UserTicket>.getInUse() : List<UserTicket> = this
 
     companion object {
         const val TAG = "WalletViewModel"
