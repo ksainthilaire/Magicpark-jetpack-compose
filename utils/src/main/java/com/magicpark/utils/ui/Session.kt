@@ -1,4 +1,4 @@
-package com.magicpark.features.login
+package com.magicpark.utils.ui
 
 import android.content.Context
 import android.content.SharedPreferences

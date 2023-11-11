@@ -1,9 +1,5 @@
 package wallet
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,63 +16,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.domain.model.UserTicket
+import com.magicpark.domain.model.isExpired
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.CallbackWithParameter
-import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.compose.getViewModel
 import java.util.*
 
 enum class WalletCategory(val stringRes: Int) {
-    IN_USE(""),
-    TO_USE(""),
-    EXPIRED(""),
+    IN_USE(R.string.wallet_in_use),
+    TO_USE(R.string.wallet_to_use),
+    EXPIRED(R.string.wallet_expired),
 }
-
-@AndroidEntryPoint
-class WalletFragment : Fragment() {
-
-    private val viewModel: WalletViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    val state by viewModel.state.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        WalletScreen(
-                            state = state,
-                            goToTicket = {},
-                        )
-                    }
-                }
-            }
-}
-
-@Preview
-@Composable
-fun WalletFragmentPreview() =
-    WalletScreen(
-        state = WalletState.Loading,
-        goToTicket = {},
-    )
 
 /**
  * @param ticket User ticket
@@ -86,7 +44,7 @@ fun WalletFragmentPreview() =
 @Composable
 fun Ticket(
     ticket: UserTicket,
-    goToTicket: CallbackWithParameter<Long>
+    goToTicket: CallbackWithParameter<UserTicket>
 ) {
     Column(
         Modifier
@@ -132,8 +90,9 @@ fun Ticket(
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
-                        goToTicket(ticket.id ?: 0L)
+                        goToTicket(ticket)
                     },
+                    enabled = !ticket.isExpired()
                 ) {
                     Text(text = "Valider le ticket")
                 }
@@ -208,14 +167,17 @@ fun Ticket(
 }
 
 /**
- * @param state
  * @param goToTicket
  */
 @Composable
 fun WalletScreen(
-    state: WalletState,
-    goToTicket: CallbackWithParameter<Long>,
+    goToTicket: CallbackWithParameter<UserTicket>,
 ) {
+
+    val viewModel: WalletViewModel = getViewModel()
+    val state by viewModel.state.collectAsState()
+
+
 
     var currentCategory by remember { mutableStateOf(WalletCategory.TO_USE) }
 
@@ -253,19 +215,18 @@ fun WalletScreen(
                 }
             }
 
-            when (state) {
+            when (val state = state) {
 
                 is WalletState.Loading -> Unit
 
                 is WalletState.Tickets -> {
 
-                    val wallet = state as WalletState.Tickets
-
                     val tickets = when (currentCategory) {
-                        WalletCategory.IN_USE -> wallet.inUse
-                        WalletCategory.TO_USE -> wallet.toUse
-                        WalletCategory.EXPIRED -> wallet.expired
+                        WalletCategory.IN_USE -> state.inUse
+                        WalletCategory.TO_USE -> state.toUse
+                        WalletCategory.EXPIRED -> state.expired
                     }
+
                     tickets.forEach { ticket -> Ticket(ticket, goToTicket) }
                 }
             }

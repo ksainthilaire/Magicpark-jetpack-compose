@@ -15,6 +15,8 @@ dependencyResolutionManagement {
 rootProject.name = "app"
 include ':app'
 include ':core'
+include ':utils'
+include ':features:navigation'
 include ':features:shop'
 include ':features:payment'
 include ':features:account'
@@ -24,4 +26,3 @@ include ':features:login'
 include ':domain'
 include ':data'
 include ':app:navigation'
-include ':utils'

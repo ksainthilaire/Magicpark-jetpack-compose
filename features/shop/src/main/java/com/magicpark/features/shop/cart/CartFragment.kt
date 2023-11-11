@@ -1,9 +1,5 @@
 package com.magicpark.features.shop.cart
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,9 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -40,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.fragment.app.Fragment
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
@@ -50,7 +43,6 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.ShopItem
 import com.magicpark.domain.model.currentPrice
@@ -58,55 +50,12 @@ import com.magicpark.utils.R
 import com.magicpark.utils.ui.CallbackWithParameter
 import com.magicpark.utils.ui.CallbackWithoutParameter
 import com.magicpark.utils.ui.Counter
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
-class CartFragment : Fragment() {
-
-    private val viewModel: CartViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(
-                    ViewCompositionStrategy
-                        .DisposeOnViewTreeLifecycleDestroyed
-                )
-                setContent {
-                    val state by viewModel.state.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        CartScreen(
-                            state = state,
-
-                            addFromCart = viewModel::addProduct,
-                            removeFromCart = viewModel::removeProduct,
-                            removeAllFromCart = viewModel::removeAllProduct,
-                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
-                            showPaymentDialog = ::showPaymentDialog,
-                        )
-                    }
-                }
-            }
-
-    private fun showPaymentDialog() {
-
-    }
-}
+import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
 fun CartScreen_Preview() =
     CartScreen(
-        state = CartUiState.Cart(
-            items = emptyList(),
-        ),
-
-        addFromCart = {  _ -> },
-        removeFromCart = {},
-        removeAllFromCart = {},
         onBackPressed = {},
         showPaymentDialog = {}
     )
@@ -114,24 +63,19 @@ fun CartScreen_Preview() =
 /**
  * Cart screen, contains the list of items the user wants to purchase.
  *
- *  @param state @see [CartUiState]
- *  @param addFromCart listener, add a product to the cart
- *  @param removeFromCart listener, remove a product from the cart
  *  @param showPaymentDialog listener, displays the payment method dialog
  *  @param onBackPressed listener go back
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
-    state: CartUiState,
-
-    addFromCart: (ShopItem) -> Unit,
-    removeFromCart: CallbackWithParameter<ShopItem>,
-    removeAllFromCart: CallbackWithParameter<ShopItem>,
-
     showPaymentDialog: CallbackWithoutParameter,
     onBackPressed: CallbackWithoutParameter,
 ) {
+
+    val viewModel: CartViewModel= getViewModel()
+    val state by viewModel.state.collectAsState()
+
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.lottie_swipe)
     )
@@ -167,9 +111,9 @@ fun CartScreen(
                             state.items.forEach { item ->
                                 CartItem(
                                     shopItem = item,
-                                    addFromCart = addFromCart,
-                                    removeFromCart = removeFromCart,
-                                    removeAllFromCart = removeAllFromCart,
+                                    addFromCart = viewModel::addProduct,
+                                    removeFromCart = viewModel::removeProduct,
+                                    removeAllFromCart = viewModel::removeAllProduct,
                                 )
                             }
                         }
@@ -332,7 +276,7 @@ private fun CartItem(
                         .padding(4.dp)
                 ) {
                     Text(
-                        text = "%s GNF".format(shopItem.currentPrice.toString()),
+                        text = "%s".format(shopItem.promotionalPrice),
                         style = TextStyle(
                             color = Color.White,
                             fontWeight = FontWeight.Bold

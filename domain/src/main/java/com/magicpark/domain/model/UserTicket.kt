@@ -3,6 +3,8 @@ package com.magicpark.domain.model
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
 import com.magicpark.domain.converters.DateConverter
+import java.io.Serializable
+import java.util.Calendar
 import java.util.Date
 
 @Entity(tableName = "wallet")
@@ -48,4 +50,10 @@ data class UserTicket(
     @ColumnInfo(name="deleted_at")
     @SerializedName("deleted_at")
     var deletedAt: Date? = null
-)
+) : Serializable
+
+fun UserTicket.isExpired(): Boolean {
+    val date: Date = Calendar.getInstance().time
+    val expiredAt = expiredAt ?: return false
+    return (expiredAt.time < date.time)
+}

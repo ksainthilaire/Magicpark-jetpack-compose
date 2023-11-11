@@ -1,9 +1,5 @@
 package com.magicpark.features.shop.shopItem
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,15 +17,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -37,68 +30,40 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Size
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.ShopItem
+import com.magicpark.domain.model.displayableBasePrice
+import com.magicpark.domain.model.displayablePrice
 import com.magicpark.utils.R
-import com.magicpark.utils.ui.CallbackWithParameter
 import com.magicpark.utils.ui.CallbackWithoutParameter
-import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
-
-@AndroidEntryPoint
-class ShopItemFragment : Fragment() {
-
-    private val viewModel: ShopItemViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    val state by viewModel.state.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        ShopItemScreen(
-                            shopItem = viewModel.shopItem,
-                            addToCart = viewModel::addProduct,
-                            onBackPressed = { findNavController().navigate(com.magicpark.features.shop.R.id.cartFragment)}//activity?.onBackPressedDispatcher?.onBackPressed() }
-                        )
-                    }
-                }
-            }
-}
+import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
 fun ShopItemScreen_Preview() =
     ShopItemScreen(
         shopItem = ShopItem(),
-        addToCart = {},
         onBackPressed = {}
     )
 
 @Composable
 fun ShopItemScreen(
     shopItem: ShopItem,
-    addToCart: CallbackWithParameter<ShopItem>,
     onBackPressed: CallbackWithoutParameter,
 ) {
+
+    val viewModel: ShopItemViewModel = getViewModel()
+
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.lottie_abstract_background),
     )
@@ -142,6 +107,8 @@ fun ShopItemScreen(
 
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .diskCachePolicy(CachePolicy.ENABLED)
                     .decoderFactory(SvgDecoder.Factory())
                     .data(shopItem.imageUrl)
                     .size(Size.ORIGINAL)
@@ -174,30 +141,33 @@ fun ShopItemScreen(
             ) {
 
                 Text(shopItem.name ?: "")
-                Text(
-                    text = "%s GNF".format(shopItem.price),
-                    style = if (shopItem.promotionalPrice != null) {
-                        TextStyle(
-                            fontSize = 32.sp, textDecoration = TextDecoration.LineThrough
-                        )
-                    } else {
-                        TextStyle(
-                            textDecoration = TextDecoration.Underline,
-                            fontSize = 32.sp
-                        )
-                    },
-                    color = MagicparkTheme.colors.primary,
-                )
 
-                if (shopItem.promotionalPrice != null) {
+                Column {
                     Text(
-                        text = "%s GNF".format(shopItem.promotionalPrice),
-                        style = TextStyle(
-                            textDecoration = TextDecoration.Underline,
-                            fontSize = 32.sp
-                        ),
-                        color = MagicparkTheme.colors.primary
+                        text = "%s".format(shopItem.displayableBasePrice),
+                        style = if (shopItem.promotionalPrice != null) {
+                            TextStyle(
+                                fontSize = 32.sp, textDecoration = TextDecoration.LineThrough
+                            )
+                        } else {
+                            TextStyle(
+                                textDecoration = TextDecoration.Underline,
+                                fontSize = 32.sp
+                            )
+                        },
+                        color = MagicparkTheme.colors.primary,
                     )
+
+                    if (shopItem.promotionalPrice != null) {
+                        Text(
+                            text = "%s".format(shopItem.displayablePrice),
+                            style = TextStyle(
+                                textDecoration = TextDecoration.Underline,
+                                fontSize = 32.sp
+                            ),
+                            color = MagicparkTheme.colors.primary
+                        )
+                    }
                 }
             }
 
@@ -211,7 +181,7 @@ fun ShopItemScreen(
             Button(
                 modifier = Modifier.padding(top = 64.dp),
                 onClick = {
-                    addToCart(shopItem)
+                    viewModel.addProduct(shopItem)
                     onBackPressed()
                 },
             )

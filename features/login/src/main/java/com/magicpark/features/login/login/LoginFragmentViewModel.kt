@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuthException
 import com.magicpark.domain.usecases.UserUseCases
-import com.magicpark.features.login.Session
+import com.magicpark.utils.ui.Session
 import com.magicpark.features.login.utils.getStringRes
 import org.koin.java.KoinJavaComponent
 import kotlinx.coroutines.flow.MutableStateFlow

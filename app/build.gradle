@@ -53,12 +53,14 @@ dependencies {
     implementation project(":core")
     implementation project(":data")
     implementation project(":domain")
+    implementation project(':features:navigation')
     implementation project(':features:shop')
     implementation project(':features:payment')
     implementation project(':features:account')
     implementation project(':features:settings')
     implementation project(':features:wallet')
     implementation project(':features:login')
+    implementation project(':utils')
 
 
     kapt 'com.google.dagger:dagger-compiler:2.46.1'

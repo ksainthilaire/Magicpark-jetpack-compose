@@ -1,9 +1,5 @@
 package com.magicpark.features.account
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,8 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -28,64 +22,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.fragment.app.Fragment
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
-import com.magicpark.domain.model.User
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.CallbackWithoutParameter
-import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
-@AndroidEntryPoint
-class AccountFragment : Fragment() {
-
-    private val viewModel: AccountViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-
-                    val state by viewModel.state.collectAsState()
-                    val user by viewModel.user.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        UpdateAccountScreen(
-                            user,
-                            updateUser = viewModel::updateUser,
-                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() }
-                        )
-                    }
-                }
-            }
-}
+import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
 private fun UpdateAccountScreenPreview() {
-    UpdateAccountScreen(user = User(), updateUser = { s: String, s1: String, s2: String, s3: String, s4: String -> }, onBackPressed = {})
+    UpdateAccountScreen(onBackPressed = {})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateAccountScreen(
-    user: User,
-
-    updateUser: (
-        fullName: String,
-        mail: String,
-        password: String,
-        passwordConfirmation: String,
-        number: String,
-    ) -> Unit,
-
     onBackPressed: CallbackWithoutParameter,
 ) {
+
+    val viewModel: AccountViewModel = getViewModel()
+    val state by viewModel.state.collectAsState()
+    val user by viewModel.user.collectAsState()
+
     var fullName by remember { mutableStateOf("") }
     var mail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -245,7 +202,7 @@ fun UpdateAccountScreen(
                 Button(
                     modifier = Modifier.padding(top = 32.dp),
                     onClick = {
-                        updateUser(
+                        viewModel.updateUser(
                             fullName,
                             mail,
                             password,
@@ -256,20 +213,6 @@ fun UpdateAccountScreen(
                 ) {
                     Text("Modifier")
                 }
-
-                Text(
-                    "[Supprimer mon compte]",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    fontSize = 12.sp,
-                    color = MagicparkTheme.colors.primary,
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .clickable {
-                            onBackPressed()
-                        }
-                )
             }
         }
 
@@ -314,8 +257,8 @@ fun UpdateAccountScreen(
                 .width(50.dp)
                 .height(50.dp)
                 .constrainAs(home) {
-                    top.linkTo(parent.top, 20.dp)
-                    start.linkTo(parent.start, 20.dp)
+                    top.linkTo(parent.top, 24.dp)
+                    start.linkTo(parent.start, 24.dp)
                 }
                 .clickable {
                     onBackPressed()

@@ -2,8 +2,6 @@ package com.magicpark.domain.converters
 
 import androidx.room.TypeConverter
 import java.util.Date
-import java.util.*
-
 
 object DateConverter {
     @TypeConverter
@@ -13,6 +11,6 @@ object DateConverter {
 
     @TypeConverter
     fun toTimestamp(date: Date?): Long? {
-        return if (date == null) null else date.getTime()
+        return date?.time
     }
 }

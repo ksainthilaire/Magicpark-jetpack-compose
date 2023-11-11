@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.magicpark.core.Config
 import com.magicpark.domain.model.User
 import com.magicpark.domain.usecases.UserUseCases
+import com.magicpark.utils.ui.Session
 import contact.ContactViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,6 +50,10 @@ class SettingsViewModel : ViewModel() {
     }
 
     private val userUseCases: UserUseCases by KoinJavaComponent.inject(UserUseCases::class.java)
+
+    private val session: Session by KoinJavaComponent.inject(
+        Session::class.java
+    )
 
     private val _user: MutableStateFlow<User> = MutableStateFlow(User())
     val user: StateFlow<User> = _user
@@ -114,8 +119,9 @@ class SettingsViewModel : ViewModel() {
      */
     fun logout(context: Context) = viewModelScope.launch {
         try {
+            session.removeToken()
             userUseCases.logout()
-            clearToken(context)
+
 
             _state.value = SettingsState.LogoutSucceeded
         } catch (e: Exception) {

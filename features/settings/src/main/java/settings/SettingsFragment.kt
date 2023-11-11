@@ -1,12 +1,6 @@
 package settings
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,16 +10,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -34,18 +27,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
-import com.magicpark.utils.R
 import com.magicpark.domain.enums.UserRank
-import com.magicpark.domain.model.User
+import com.magicpark.utils.R
 import com.magicpark.utils.ui.Alert
 import com.magicpark.utils.ui.CallbackWithoutParameter
-import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.compose.getViewModel
 
+/*
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
@@ -67,8 +56,6 @@ class SettingsFragment : Fragment() {
 
                     MagicparkMaterialTheme {
                         SettingsScreen(
-                            user = user,
-
                             onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
                             logout = {
                                 viewModel.logout(context = requireContext())
@@ -93,7 +80,12 @@ class SettingsFragment : Fragment() {
         val activity = requireActivity()
         val builder = AlertDialog.Builder(activity)
         val inflater = activity.layoutInflater
-        builder.setView(inflater.inflate(com.magicpark.features.settings.R.layout.dialog_delete, null))
+        builder.setView(
+            inflater.inflate(
+                com.magicpark.features.settings.R.layout.dialog_delete,
+                null
+            )
+        )
             .setPositiveButton(R.string.common_button_delete) { _, _ ->
                 viewModel.deleteAccount(context)
             }
@@ -103,6 +95,8 @@ class SettingsFragment : Fragment() {
         builder.create().show()
     }
 }
+
+ */
 
 @Composable
 fun Title(text: String) {
@@ -117,23 +111,23 @@ fun Title(text: String) {
 }
 
 /**
- * @param id ID of the drawable to display to the left of the MenuItem.
+ * @param drawableId ID of the drawable to display to the left of the MenuItem.
  * @param text Text displayed in the menu.
- * @param listener Function called when the user presses the MenuItem.
+ * @param onClick Function called when the user presses the MenuItem.
  */
 @Composable
 private fun MenuItem(
-    @DrawableRes id: Int,
+    @DrawableRes drawableId: Int,
     text: String,
-    listener: CallbackWithoutParameter
+    onClick: CallbackWithoutParameter
 ) {
     Row(
-        modifier = Modifier.clickable { listener.invoke() },
+        modifier = Modifier.clickable { onClick.invoke() },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         Image(
-            painterResource(id = id),
+            painterResource(id = drawableId),
             modifier = Modifier
                 .width(28.dp)
                 .height(28.dp),
@@ -146,7 +140,7 @@ private fun MenuItem(
             modifier = Modifier.padding(start = 10.dp),
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
-                color = MagicparkTheme.colors.primary
+                color = MagicparkTheme.colors.primary,
             )
         )
     }
@@ -157,7 +151,6 @@ private fun MenuItem(
 @Composable
 fun SettingScreen_Preview() =
     SettingsScreen(
-        user = User(),
         onBackPressed = { /*TODO*/ },
         logout = { /*TODO*/ },
         deleteAccount = { /*TODO*/ },
@@ -166,8 +159,6 @@ fun SettingScreen_Preview() =
     }
 
 /**
- *
- * @param user User information
  *
  * @param onBackPressed  listener go back
  *
@@ -180,7 +171,6 @@ fun SettingScreen_Preview() =
  */
 @Composable
 fun SettingsScreen(
-    user: User,
     onBackPressed: CallbackWithoutParameter,
 
     logout: CallbackWithoutParameter,
@@ -191,30 +181,17 @@ fun SettingsScreen(
     goToPrivacyPolicy: CallbackWithoutParameter,
 ) {
 
-    Image(
-        painter = painterResource(id = R.drawable.ic_back),
-        modifier = Modifier
-            .clickable { }
-            .width(100.dp)
-            .height(50.dp)
-            .padding(
-                top = MagicparkTheme.defaultPadding,
-                end = MagicparkTheme.defaultPadding
-            )
-            .clickable {
-                onBackPressed()
-            },
-        contentDescription = null,
-        colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
-    )
+    val viewModel: SettingsViewModel = getViewModel()
+    val state by viewModel.state.collectAsState()
+    val user by viewModel.user.collectAsState()
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = 50.dp,
+                top = 64.dp,
                 start = 32.dp,
-                end = 32.dp
+                end = 32.dp,
             )
     ) {
 
@@ -234,61 +211,94 @@ fun SettingsScreen(
                         Image(
                             painter = painterResource(R.drawable.illustration_elephant),
                             modifier = Modifier.fillMaxSize(),
-                            contentDescription = "avatar",
+                            contentDescription = null,
                             contentScale = ContentScale.FillBounds
                         )
                     }
                 }
-                Text(modifier = Modifier.padding(top = 10.dp), text = user.fullName.toString())
+                Text(
+                    modifier = Modifier.padding(top = 12.dp),
+                    text = user.fullName.toString()
+                )
             }
-
-            Spacer(Modifier.height(10.dp))
 
             user.avatarUrl?.let {} ?: Alert(
-                stringResource(
-                   R.string.settings_upload_picture
+                modifier = Modifier.padding(vertical = 24.dp),
+                text = stringResource(
+                    R.string.settings_upload_picture
                 ),
-                Color.Red,
-                Color.White
+                backgroundColor = Color.Red,
+                textColor = Color.White
             )
 
+            MenuItem(
+                drawableId = R.drawable.ic_edit_user,
+                text = stringResource(id = R.string.settings_menu_edit_account),
+                onClick = goToAccountSettings,
+            )
 
-            Title("Mon compte")
-            MenuItem(R.drawable.ic_edit_user, "Modifier mon profil", goToAccountSettings)
-            MenuItem(R.drawable.ic_support, "Nous contacter", goToContact)
-            MenuItem(R.drawable.ic_trash, "Supprimer mon compte", deleteAccount)
+            MenuItem(
+                drawableId = R.drawable.ic_support,
+                text = stringResource(id = R.string.settings_menu_contact),
+                onClick = goToContact,
+            )
+            MenuItem(
+                drawableId = R.drawable.ic_trash,
+                text = stringResource(id = R.string.settings_menu_delete_account),
+                onClick = deleteAccount,
+            )
 
-            Title("Légal")
-            MenuItem(R.drawable.ic_tos, "Conditions générales", goToPrivacyPolicy)
+            Title(text = stringResource(R.string.settings_menu_legal))
 
-            if (user.role == UserRank.ADMINISTRATOR) {
-                Title("Administration")
-                MenuItem(R.drawable.ic_admin_qr, "Contrôler un ticket") {}
-                MenuItem(R.drawable.ic_bo, "Back-office") {}
+            MenuItem(
+                drawableId = R.drawable.ic_tos,
+                text = stringResource(id = R.string.settings_menu_terms),
+                onClick = goToPrivacyPolicy,
+            )
+
+            when (user.role) {
+
+                UserRank.ADMINISTRATOR -> {
+                    Title(text = stringResource(id = R.string.settings_menu_administration))
+                    MenuItem(
+                        drawableId = R.drawable.ic_admin_qr,
+                        text = stringResource(id = R.string.settings_menu_administration),
+                        onClick = {},
+                    )
+                    MenuItem(
+                        drawableId = R.drawable.ic_bo,
+                        text = stringResource(id = R.string.settings_menu_back_office),
+                        onClick = {},
+                    )
+                }
+
+                else -> Unit
             }
 
+            val context = LocalContext.current
+
             Button(
-                onClick = {},
+                onClick = {
+                          viewModel.logout(context)
+                },
                 modifier = Modifier
-                    .padding(top = 50.dp)
+                    .padding(top = 64.dp),
             ) {
                 Image(
                     painterResource(R.drawable.ic_logout),
                     modifier = Modifier.size(24.dp),
-                    contentDescription = "drawable icons",
-                    colorFilter = ColorFilter.tint(Color.White)
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(Color.White),
                 )
                 Text(
-                    text = "Se déconnecter",
+                    text = stringResource(R.string.settings_menu_logout),
                     color = Color.White,
                     style = TextStyle(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .weight(1f)
                         .offset(x = (-12).dp)
-                        .clickable {
-                            logout()
-                        }
+                        .clickable { logout() },
                 )
             }
         }

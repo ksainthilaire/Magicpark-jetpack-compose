@@ -20,8 +20,7 @@ import com.magicpark.core.MagicparkTheme
 import com.magicpark.core.R
 
 @Composable
-fun WebViewScreen(navController: NavController? = null, url: String) {
-
+fun WebViewScreen(onBackPressed: () -> Unit, url: String) {
     Image(
         painter = painterResource(id = R.drawable.ic_back),
         modifier = Modifier
@@ -32,7 +31,7 @@ fun WebViewScreen(navController: NavController? = null, url: String) {
                 end = MagicparkTheme.defaultPadding
             )
             .clickable {
-                navController?.popBackStack()
+                       onBackPressed()
             },
         contentDescription = null,
         colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)

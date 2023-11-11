@@ -1,9 +1,6 @@
 package com.magicpark.features.payment.payment
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.compose.foundation.layout.*
@@ -13,57 +10,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.fragment.app.Fragment
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.utils.ui.CallbackWithoutParameter
-import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.compose.getViewModel
 import java.util.*
-
-@AndroidEntryPoint
-class PaymentFragment : Fragment() {
-
-    private val viewModel: PaymentViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    val state by viewModel.state.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        PaymentScreen(
-                            state = state,
-                            onSuccess = viewModel::onSuccess,
-                            onFailed = viewModel::onFailed,
-                            onCanceled = viewModel::onCanceled
-                        ) {
-                        }
-                    }
-                }
-            }
-}
 
 @Preview
 @Composable
 private fun PaymentScreenPreview() {
     PaymentScreen(
-        state = PaymentState.Payment(
-            paymentUrl = "/payment",
-            successUrl = "/success",
-            errorUrl = "/error",
-            cancelUrl = "/cancel",
-            200L,
-        ),
         onSuccess = {},
         onFailed = {},
         onCanceled = {},
@@ -78,14 +35,15 @@ private fun PaymentScreenPreview() {
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-private fun PaymentScreen(
-    state: PaymentState,
-
+fun PaymentScreen(
     onSuccess: CallbackWithoutParameter,
     onFailed: CallbackWithoutParameter,
     onCanceled: CallbackWithoutParameter,
     onBackPressed: CallbackWithoutParameter,
 ) {
+
+    val viewModel: PaymentViewModel = getViewModel()
+    val state by viewModel.state.collectAsState()
 
     val paymentListener = rememberSaveable {
         object : PaymentWebViewListener {
@@ -100,7 +58,7 @@ private fun PaymentScreen(
         }
     }
 
-    when (state) {
+    when (val state = state) {
 
         is PaymentState.Payment ->
         AndroidView(

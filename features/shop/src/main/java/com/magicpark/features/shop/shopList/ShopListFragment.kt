@@ -1,9 +1,5 @@
 package com.magicpark.features.shop.shopList
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,9 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,79 +23,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Size
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.model.ShopItem
-import com.magicpark.features.shop.Cart
+import com.magicpark.domain.model.displayableBasePrice
+import com.magicpark.domain.model.displayablePrice
 import com.magicpark.utils.R
-import com.magicpark.features.shop.R.navigation.shop_nav_graph
-import com.magicpark.features.shop.R.id.action_shopListFragment_to_shopItemFragment
 import com.magicpark.utils.ui.CallbackWithParameter
-import dagger.hilt.android.AndroidEntryPoint
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.java.KoinJavaComponent
-
-@AndroidEntryPoint
-class ShopListFragment : Fragment() {
-
-    companion object {
-        private const val KEY_SHOP_ITEM = "KEY-SHOP-ITEM"
-    }
-
-    private val viewModel: ShopListViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    val state by viewModel.state.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        ShopListScreen(
-                            state = state,
-                            currentCategoryId = 0L,
-                            goToCategory = viewModel::changeCategory,
-                            goToShopItem = { shopItem ->
-                                val bundle = Bundle().apply {
-                                    putSerializable(KEY_SHOP_ITEM, shopItem)
-                                }
-
-                                findNavController().apply {
-                                    setGraph(shop_nav_graph)
-                                    // navigate(com.magicpark.features.shop.R.id.cartFragment)
-                                    navigate(action_shopListFragment_to_shopItemFragment, bundle)
-                                }
-                            },
-                        )
-                    }
-                }
-            }
-}
+import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
 fun ShopListScreen_Preview() =
     ShopListScreen(
-
-        state = ShopListState.ShopList(
-            items = emptyList(),
-            categories = emptyList(),
-        ),
-
-        currentCategoryId = 0L,
-
-        goToCategory = {},
         goToShopItem = {},
     )
 
@@ -109,25 +48,18 @@ fun ShopListScreen_Preview() =
 /**
  * Shop list screen.
  *
- * @param currentCategoryId Current category of the shop.
- *
- * @param goToCategory Go to shop category
  * @param goToShopItem Go to shop item
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShopListScreen(
-
-    state: ShopListState,
-
-    currentCategoryId: Long,
-
-    goToCategory: CallbackWithParameter<Long>,
     goToShopItem: CallbackWithParameter<ShopItem>,
 ) {
 
-    var search by remember { mutableStateOf("") }
+    val viewModel: ShopListViewModel = getViewModel()
+    val state by viewModel.state.collectAsState()
 
+    var search by remember { mutableStateOf("") }
 
     Column(
         Modifier
@@ -139,8 +71,10 @@ fun ShopListScreen(
                 .padding(top = 12.dp)
                 .fillMaxWidth(),
             value = search,
+            singleLine = true,
             onValueChange = { value ->
                 search = value
+                viewModel.changeSearch(search)
             },
             shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -152,23 +86,14 @@ fun ShopListScreen(
 
         LazyRow(Modifier.padding(top = 24.dp)) {
 
-            item {
-                Button(
-                    onClick = {
-                        goToCategory(0L)
-                    },
-                ) {
-                    Text(text = stringResource(R.string.shop_category_promotions))
-                }
-            }
-
             state.categories.forEach { category ->
                 item {
                     Button(
                         modifier = Modifier.padding(horizontal = 12.dp),
+                        enabled = category.id != state.currentCategory,
                         onClick = {
                             val categoryId = category.id ?: 0L
-                            goToCategory(categoryId)
+                            viewModel.changeCategory(categoryId)
                         },
                     ) {
                         Text(category.name.toString())
@@ -216,6 +141,8 @@ private fun ShopItemCard(
 
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .diskCachePolicy(CachePolicy.ENABLED)
                 .decoderFactory(SvgDecoder.Factory())
                 .data(shopItem.imageUrl)
                 .size(Size.ORIGINAL)
@@ -242,7 +169,7 @@ private fun ShopItemCard(
             )
 
             Text(
-                text = "%s GNF".format(shopItem.price),
+                text = "%s".format(shopItem.displayableBasePrice),
                 style = if (shopItem.promotionalPrice != null) TextStyle(textDecoration = TextDecoration.LineThrough) else
                     TextStyle(),
                 color = MagicparkTheme.colors.primary
@@ -250,7 +177,7 @@ private fun ShopItemCard(
 
             if (shopItem.promotionalPrice != null) {
                 Text(
-                    text = "%s GNF".format(shopItem.promotionalPrice),
+                    text = "%s".format(shopItem.displayablePrice),
                     color = MagicparkTheme.colors.primary
                 )
             }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.magicpark.domain.model.UserTicket
+import com.magicpark.domain.model.isExpired
 import com.magicpark.domain.usecases.TicketUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -58,12 +59,6 @@ class WalletViewModel : ViewModel() {
             toUse = tickets.filter { ticket -> !ticket.isExpired() },
             expired = tickets.filter { ticket -> ticket.isExpired() },
         )
-    }
-
-    private fun UserTicket.isExpired(): Boolean {
-        val date: Date = Calendar.getInstance().time
-        val expiredAt = expiredAt ?: return false
-        return (expiredAt.time > date.time)
     }
 
     private fun List<UserTicket>.getInUse() : List<UserTicket> = this

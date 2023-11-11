@@ -180,6 +180,10 @@
     <string name="common_button_continue">Continuer</string>
     <string name="common_button_close">Fermer</string>
 
+    <!-- Wallet -->
+    <string name="wallet_in_use">En cours</string>
+    <string name="wallet_to_use">À utiliser</string>
+    <string name="wallet_expired">Expiré</string>
 
     <!-- Deletion -->
     <string name="deletion_text">Cette action supprimera toutes les informations associées à votre compte, <u>y compris les produits que vous avez acheter</u>, vous ne pourrez plus les récupérer</string>
@@ -197,10 +201,29 @@
     <!-- Settings -->
     <string name="settings_update_success">Vos informations ont été mis à jour</string>
     <string name="settings_update_error">Une erreur est survenue, veuillez réessayer ultérieurement</string>
+    <string name="settings_menu_account">Mon compte</string>
+    <string name="settings_menu_terms">Conditions générales</string>
+    <string name="settings_menu_edit_account">Modifier mon profil</string>
+    <string name="settings_menu_contact">Nous contacter</string>
+    <string name="settings_menu_delete_account">Supprimer mon compte</string>
+    <string name="settings_menu_administration">Administration</string>
+    <string name="settings_menu_legal">Légal</string>
+    <string name="settings_menu_">Contrôler un ticket</string>
+    <string name="settings_menu_back_office">Back-office</string>
+    <string name="settings_menu_logout">Se déconnecter</string>
 
-    <string name="privacy_policy_url">https://magicpark-gn.com/Politique-et-confidentialit%C3%A9.html</string>
+    <string name="support_headline">Pouvez-vous décrire le problème que vous rencontrer?</string>
+    <string name="support_description">"Nous ferons part de votre commentaire au support Magicpark afin d'améliorer notre service et éviter que ce problème se reproduise.</string>
+    <string name="support_submit">Transmettre au support</string>
+    <string name="support_text_placeholder">Renseignez-vous ici le problème rencontré</string>
+
+    <string name="privacy_policy_url">https://magicpark-gn.com/politique-et-confidentialite/</string>
     <string name="payment_success_url">https://magicpark-gn.com/?success</string>
     <string name="payment_cancel_url">https://magicpark-gn.com/?cancel</string>
     <string name="payment_error_url">https://magicpark-gn.com/?error</string>
     <string name="back_office_url"></string>
+
+    <string name="navigation_item_plus">Plus</string>
+    <string name="navigation_item_shop">Boutique</string>
+    <string name="navigation_item_wallet">Wallet</string>
 </resources>

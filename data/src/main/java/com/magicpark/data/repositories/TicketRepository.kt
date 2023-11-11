@@ -4,7 +4,9 @@ import com.magicpark.data.api.MagicparkApi
 import com.magicpark.data.local.UserTicketDao
 import com.magicpark.domain.model.UserTicket
 import com.magicpark.domain.repositories.ITicketRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +23,10 @@ class TicketRepository : ITicketRepository {
         val response = magicparkApi.getWallet()
 
         val tickets = response.tickets ?: listOf()
-        saveTickets(tickets)
+
+        withContext(Dispatchers.IO) {
+            saveTickets(tickets)
+        }
 
         return tickets
     }

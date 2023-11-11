@@ -12,23 +12,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
 @Composable
 fun Alert(
+    modifier: Modifier,
     text: String,
     backgroundColor: Color,
     textColor: Color
 ) {
     Column(
-        Modifier
-            .background(backgroundColor)
+       modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
             .wrapContentHeight()
+            .clip(RoundedCornerShape(20.dp))
+            .background(backgroundColor)
             .padding(10.dp)
     ) {
         Text(

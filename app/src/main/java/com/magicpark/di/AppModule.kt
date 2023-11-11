@@ -11,7 +11,6 @@ import com.magicpark.data.local.AppDatabase
 import com.magicpark.data.repositories.*
 import com.magicpark.domain.repositories.*
 import com.magicpark.domain.usecases.*
-import com.magicpark.features.login.Session
 import com.magicpark.features.login.forgot.ForgotViewModel
 import com.magicpark.features.login.login.LoginFragmentViewModel
 import com.magicpark.features.login.register.RegisterViewModel
@@ -39,6 +38,8 @@ import com.magicpark.features.payment.invoice.PaymentInvoiceViewModel
 import com.magicpark.features.payment.invoice.PaymentInvoiceListViewModel
 import com.magicpark.features.shop.Cart
 import com.magicpark.ui.splash.SplashViewModel
+import com.magicpark.utils.ui.Session
+import contact.ContactViewModel
 
 val AppModule = module {
 
@@ -50,7 +51,7 @@ val AppModule = module {
     viewModel { LoginActivityViewModel() }
     viewModel { RegisterViewModel() }
     viewModel { ForgotViewModel() }
-
+    viewModel { ContactViewModel() }
 
     viewModel { ShopListViewModel() }
     viewModel { ShopItemViewModel(get()) }
@@ -66,7 +67,7 @@ val AppModule = module {
     viewModel { SplashViewModel() }
 
     single {
-        Session(androidContext())
+       Session(androidContext())
     }
 
     single {

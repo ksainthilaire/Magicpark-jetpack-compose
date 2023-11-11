@@ -12,12 +12,8 @@ import org.koin.core.context.startKoin
 @HiltAndroidApp
 class MainApplication : Application() {
 
-
-
     override fun onCreate() {
         super.onCreate()
-
-
 
         startKoin {
             androidContext(this@MainApplication)
@@ -25,7 +21,5 @@ class MainApplication : Application() {
 
             modules(AppModule)
         }
-
     }
-
 }

@@ -49,5 +49,5 @@ data class Order(
 
     @ColumnInfo(name = "created_at")
     @SerializedName("created_at")
-    var createdAt: Date? = null
+    var createdAt: Date? = null,
 )

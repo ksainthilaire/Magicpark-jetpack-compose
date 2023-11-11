@@ -1,10 +1,6 @@
 package ticket
 
 import android.graphics.Bitmap
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -28,42 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.fragment.app.Fragment
 import com.google.gson.Gson
-import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.R
 import com.magicpark.domain.model.UserTicket
-import wallet.WalletViewModel
 import com.magicpark.utils.ui.CallbackWithoutParameter
-import dagger.hilt.android.AndroidEntryPoint
 import io.github.g0dkar.qrcode.QRCode
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
-class TicketFragment : Fragment() {
-
-    private val viewModel: WalletViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    val state by viewModel.state.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        TicketScreen(
-                            ticket = UserTicket(),
-                            download = {},
-                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() }
-                        )
-                    }
-                }
-            }
-}
 
 @Preview
 @Composable
@@ -233,9 +197,6 @@ fun TicketScreen(
                 },
             contentDescription = null
         )
-
-
-
 
         Image(
             painter = painterResource(id = R.drawable.background_ticket_close),
