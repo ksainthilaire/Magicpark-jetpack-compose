@@ -58,6 +58,7 @@ class PaymentWebViewClient(
     val listener: PaymentWebViewListener,
 ) : WebViewClient() {
 
+    @Deprecated("Deprecated in Java")
     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
         return when {
             url.contains(errorUrl) -> {

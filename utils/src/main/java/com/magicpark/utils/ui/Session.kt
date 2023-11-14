@@ -2,7 +2,10 @@ package com.magicpark.utils.ui
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.magicpark.core.Config
+import com.magicpark.domain.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,6 +18,7 @@ sealed interface SessionEvent {
 }
 class Session(val context: Context) {
     companion object {
+        const val KEY_API_USER = "KEY-API-USER"
         const val KEY_API_TOKEN = "KEY-API-TOKEN"
     }
 
@@ -31,6 +35,27 @@ class Session(val context: Context) {
     val events: SharedFlow<SessionEvent> = _events
     val isConnected: Boolean
         get() = sharedPreferences.getString(KEY_API_TOKEN, "")?.isNotEmpty() ?: false
+
+    /**
+     * Back up current user data
+     */
+    fun saveUserData(user: User) {
+        val json = Gson().toJson(user)
+
+        sharedPreferences.edit()
+            .putString(KEY_API_USER, json)
+            .apply()
+    }
+
+    /**
+     * Get current user data.
+     */
+    fun getUserData(): User {
+        val json = sharedPreferences.getString(KEY_API_USER, null)
+
+        val userType = object : TypeToken<User>() {}.type
+        return Gson().fromJson(json, userType)
+    }
 
     /**
      * Saves the token that allows the user to authenticate with the API

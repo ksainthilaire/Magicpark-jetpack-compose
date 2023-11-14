@@ -39,6 +39,7 @@
     <string name="register_label_whatsapp">N° WhatsApp</string>
     <string name="register_label_country">Pays de résidence</string>
     <string name="register_label_mail">E-mail</string>
+    <string name="register_label_new_password">Nouveau mot de passe</string>
     <string name="register_label_password">Mot de passe</string>
     <string name="register_label_identity">Identité*</string>
     <string name="register_title_password">Mot de passe*</string>
@@ -73,6 +74,7 @@
     <string name="shop_item_label_choose_a_color">Choose a color : </string>
     <string name="shop_item_label_quantity">Select quantity :</string>
     <string name="shop_item_button_buy">J\'ACHÈTE</string>
+    <string name="shop_item_pack">Ce produit est un pack vous offrant %s articles "%s".</string>
 
 
     <!-- Cart -->
@@ -81,13 +83,14 @@
     <string name="cart_label_order_summary">Récapulatif de la commande</string>
     <string name="cart_label_delivery">Livraison</string>
     <string name="cart_label_total">Total</string>
-    <string name="cart_empty">Votre panier est vide.</string>
+    <string name="cart_empty_text">Le panier est vide.\nVous avez retirer tous les éléments du panier.\n\nRetourner à la boutique si vous souhaitez remplir votre panier.</string>
     <string name="cart_button_pay">ACHETEZ LE TICKET</string>
     <string name="cart_quantity">Quantité</string>
     <string name="cart_promo_code">Code promo?</string>
     <string name="cart_gnf">%s GNF</string>
     <string name="cart_prevent">TVA et remises calculées à la caisse</string>
     <string name="cart_buy">Payer maintenant</string>
+    <string name="cart_button_shop">Retourner à la boutique</string>
 
     <string name="menu_label_home">Accueil</string>
     <string name="menu_admin">Contrôleur</string>
@@ -118,6 +121,12 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="account_settings_update_successful">Les informations ont été mise à jour.</string>
+    <string name="account_settings_update_failed">Les informations ont pas pu être mise à jour.</string>
+
+    <string name="account_settings_edit_password_successful">Le mot de passe a été changer.</string>
+    <string name="account_settings_edit_password_failed">Le mot de passe ne correspond pas.</string>
+
 
     <!-- Navigation menu -->
     <string name="menu_home">Acceuil</string>
@@ -140,7 +149,9 @@
 
     <string name="payment_successful">Paiement réussi</string>
     <string name="payment_cancel">Paiement annulé</string>
-    <string name="payment_error">Une erreur est survenie.</string>
+    <string name="payment_failed">Paiement échoué</string>
+    <string name="payment_invoice">Facture</string>
+    <string name="payment_error">Une erreur est survenue.</string>
     <string name="payment_cancel_details">Votre paiement a été annulé.\nLes détails de la transaction sont inclus ci-dessous</string>
     <string name="payment_processed">Votre paiement a été traité.\nLes détails de la transaction sont inclus ci-dessous</string>
     <string name="payment_transaction_number">Transaction Number : %s</string>
@@ -148,6 +159,9 @@
     <string name="payment_payed_by">Payer avec</string>
     <string name="payment_transaction_date">Date de paiement</string>
 
+    <string name="payment_shop_button">Retourner à la boutique</string>
+    <string name="payment_cart_button">Retourner au panier</string>
+    <string name="payment_settings_button">Revenir aux paramètres</string>
 
     <!-- Forgot -->
     <string name="forgot_title">Rechercher votre compte</string>
@@ -158,7 +172,7 @@
     <string name="forgot_enter_code">Saisir le code</string>
     <string name="forgot_mail_sent">Un email de réinitialisation de mot de passe a été envoyer</string>
     <string name="forgot_mail_error">L\'adresse e-mail est introuvable !</string>
-    <string name="forgot_we_sent">Nous avons envoyé un code à <u>%s</u>. Saissisez le code ici pour continuer.</string>
+    <string name="forgot_we_sent">Nous avons envoyé un lien pour rénitialiser votre mot de passe.</string>
     <string name="forgot_label_code">Code</string>
     <string name="forgot_did_not_receive">Vous ne l\'avez pas de reçu ? <u>Renvoyer le code</u></string>
     <string name="forgot_button_resend">Renvoyer le code</string>
@@ -184,6 +198,7 @@
     <string name="wallet_in_use">En cours</string>
     <string name="wallet_to_use">À utiliser</string>
     <string name="wallet_expired">Expiré</string>
+    <string name="wallet_empty_text">Vous n\'avez pas de tickets dans votre portefeuille.\nPour obtenir un ticket, achetez-le depuis l\'onglet Boutique.</string>
 
     <!-- Deletion -->
     <string name="deletion_text">Cette action supprimera toutes les informations associées à votre compte, <u>y compris les produits que vous avez acheter</u>, vous ne pourrez plus les récupérer</string>
@@ -206,6 +221,7 @@
     <string name="settings_menu_edit_account">Modifier mon profil</string>
     <string name="settings_menu_contact">Nous contacter</string>
     <string name="settings_menu_delete_account">Supprimer mon compte</string>
+    <string name="settings_menu_edit_password">Modifier mon mot de passe</string>
     <string name="settings_menu_administration">Administration</string>
     <string name="settings_menu_legal">Légal</string>
     <string name="settings_menu_">Contrôler un ticket</string>
@@ -217,6 +233,10 @@
     <string name="support_submit">Transmettre au support</string>
     <string name="support_text_placeholder">Renseignez-vous ici le problème rencontré</string>
 
+    <string name="internet_required_title">Connexion à Internet, non disponible</string>
+    <string name="internet_required_text">Veuillez rétablir votre connexion Internet pour utiliser l\'application.</string>
+
+
     <string name="privacy_policy_url">https://magicpark-gn.com/politique-et-confidentialite/</string>
     <string name="payment_success_url">https://magicpark-gn.com/?success</string>
     <string name="payment_cancel_url">https://magicpark-gn.com/?cancel</string>
@@ -226,4 +246,5 @@
     <string name="navigation_item_plus">Plus</string>
     <string name="navigation_item_shop">Boutique</string>
     <string name="navigation_item_wallet">Wallet</string>
+
 </resources>

@@ -10,6 +10,13 @@ sealed class Navigation(
         const val KEY_WEBVIEW_ARG = "KEY_WEBVIEW_ARG"
         const val KEY_TICKET_ARG = "KEY_TICKET_ARG"
         const val KEY_SHOP_ARG = "KEY_SHOP_ARG"
+        const val KEY_INVOICE_ARG = "KEY_INVOICE_ARG"
+        const val KEY_PAYMENT_STATUS_ARG = "KEY_PAYMENT_STATUS_ARG"
+
+
+        const val KEY_PAYMENT_METHOD_ARG = "KEY_PAYMENT_METHOD_ARG"
+        const val KEY_PAYMENT_VOUCHER_ARG = "KEY_VOUCHER_ARG"
+        const val KEY_PAYMENT_SHOP_ITEMS_ARG = "KEY_PAYMENT_SHOP_ITEMS_ARG"
     }
 
     sealed class ParentNavigation(
@@ -71,8 +78,11 @@ sealed class Navigation(
     // Navigating to the contact screen
     object Contact : Navigation("contact")
 
-    // Navigating to the contact screen
+    // Navigating to account settings
     object AccountSettings : Navigation("account/settings")
+
+    // Navigating to password settings
+    object AccountEditPassword : Navigation("account/edit-password")
 
     // Navigating to payment screen
     object Payment : Navigation("payment/{paymentMethod}")
@@ -80,6 +90,9 @@ sealed class Navigation(
     object WebView : Navigation("webview")
 
     object Unknown : Navigation("unknown")
+
+    object Invoices : Navigation("invoices")
+    object Invoice : Navigation("invoice")
 }
 
 

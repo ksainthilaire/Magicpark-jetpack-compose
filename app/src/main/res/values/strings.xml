@@ -147,7 +147,7 @@
     <string name="forgot_enter_code">Saisir le code</string>
     <string name="forgot_mail_sent">Un email de réinitialisation de mot de passe a été envoyer</string>
     <string name="forgot_mail_error">L\'adresse e-mail est introuvable !</string>
-    <string name="forgot_we_sent">Nous avons envoyé un code à <u>%s</u>. Saissisez le code ici pour continuer.</string>
+    <string name="forgot_we_sent">Nous avons envoyé un lien pour rénitialiser votre mot de passe.</string>
     <string name="forgot_label_code">Code</string>
     <string name="forgot_did_not_receive">Vous ne l\'avez pas de reçu ? <u>Renvoyer le code</u></string>
     <string name="forgot_button_resend">Renvoyer le code</string>
@@ -173,6 +173,10 @@
     <string name="update_required_title">Mise à jour requise</string>
     <string name="update_required_text">Une nouvelle version de l\'application est disponible. Veuillez la télécharger maintenant pour continuer.</string>
     <string name="update_required_maj">Mettre à jour</string>
+
+    <string name="internet_required_title">Connexion à Internet, non disponible</string>
+    <string name="internet_required_text">Veuillez rétablir votre connexion Internet pour utiliser l\'application.</string>
+
 
     <!-- Controller -->
     <string name="controller_title">Contrôleur</string>

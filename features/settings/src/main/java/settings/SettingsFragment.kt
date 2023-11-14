@@ -7,11 +7,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,76 +36,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.SvgDecoder
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import coil.size.Size
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.domain.enums.UserRank
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.Alert
 import com.magicpark.utils.ui.CallbackWithoutParameter
 import org.koin.androidx.compose.getViewModel
-
-/*
-@AndroidEntryPoint
-class SettingsFragment : Fragment() {
-
-    private val viewModel: SettingsViewModel by viewModel()
-
-    private val navController by lazy {
-        findNavController()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View =
-        ComposeView(requireContext())
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    val user by viewModel.user.collectAsState()
-
-                    MagicparkMaterialTheme {
-                        SettingsScreen(
-                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
-                            logout = {
-                                viewModel.logout(context = requireContext())
-                            },
-                            deleteAccount = ::deleteAccount,
-                            goToAccountSettings = {
-                                navController.navigate("/account/settings")
-                            },
-                            goToPrivacyPolicy = {
-                                navController.navigate("/privacy-policy")
-                            },
-                            goToContact = { navController.navigate("/contact") },
-                        )
-                    }
-                }
-            }
-
-
-    @SuppressLint("InflateParams")
-    private fun deleteAccount() {
-        val context = requireContext()
-        val activity = requireActivity()
-        val builder = AlertDialog.Builder(activity)
-        val inflater = activity.layoutInflater
-        builder.setView(
-            inflater.inflate(
-                com.magicpark.features.settings.R.layout.dialog_delete,
-                null
-            )
-        )
-            .setPositiveButton(R.string.common_button_delete) { _, _ ->
-                viewModel.deleteAccount(context)
-            }
-            .setNegativeButton(R.string.common_button_cancel) { dialog, _ ->
-                dialog.cancel()
-            }
-        builder.create().show()
-    }
-}
-
- */
 
 @Composable
 fun Title(text: String) {
@@ -122,15 +73,16 @@ private fun MenuItem(
     onClick: CallbackWithoutParameter
 ) {
     Row(
-        modifier = Modifier.clickable { onClick.invoke() },
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .clickable { onClick.invoke() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
         Image(
             painterResource(id = drawableId),
             modifier = Modifier
-                .width(28.dp)
-                .height(28.dp),
+                .size(14.dp),
             contentDescription = null,
             colorFilter = ColorFilter.tint(MagicparkTheme.colors.primary)
         )
@@ -155,8 +107,9 @@ fun SettingScreen_Preview() =
         logout = { /*TODO*/ },
         deleteAccount = { /*TODO*/ },
         goToAccountSettings = { /*TODO*/ },
-        goToContact = { /*TODO*/ }) {
-    }
+        goToContact = { /*TODO*/ },
+        goToEditPassword = {},
+        goToPrivacyPolicy = {})
 
 /**
  *
@@ -179,19 +132,23 @@ fun SettingsScreen(
     goToAccountSettings: CallbackWithoutParameter,
     goToContact: CallbackWithoutParameter,
     goToPrivacyPolicy: CallbackWithoutParameter,
+    goToEditPassword: CallbackWithoutParameter,
 ) {
 
     val viewModel: SettingsViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
     val user by viewModel.user.collectAsState()
 
+    val openAccountDeletionDialog = remember { mutableStateOf(false) }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = 64.dp,
+                top = 24.dp,
                 start = 32.dp,
                 end = 32.dp,
+                bottom = 24.dp,
             )
     ) {
 
@@ -208,9 +165,23 @@ fun SettingsScreen(
                             .clip(CircleShape)
                             .border(2.dp, MagicparkTheme.colors.primary, CircleShape)
                     ) {
+
+                        val painter = if (!user.avatarUrl.isNullOrEmpty()) {
+                            rememberAsyncImagePainter(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .decoderFactory(SvgDecoder.Factory())
+                                    .data(user.avatarUrl)
+                                    .size(Size.ORIGINAL)
+                                    .build(), ImageLoader(LocalContext.current)
+                            )
+                        } else painterResource(R.drawable.illustration_elephant)
+
                         Image(
-                            painter = painterResource(R.drawable.illustration_elephant),
-                            modifier = Modifier.fillMaxSize(),
+                            painter = painter,
+                            modifier = Modifier
+                                .fillMaxSize(),
                             contentDescription = null,
                             contentScale = ContentScale.FillBounds
                         )
@@ -222,7 +193,7 @@ fun SettingsScreen(
                 )
             }
 
-            user.avatarUrl?.let {} ?: Alert(
+            user.avatarUrl?.let { Spacer(Modifier.padding(vertical = 24.dp)) } ?: Alert(
                 modifier = Modifier.padding(vertical = 24.dp),
                 text = stringResource(
                     R.string.settings_upload_picture
@@ -238,17 +209,26 @@ fun SettingsScreen(
             )
 
             MenuItem(
+                drawableId = R.drawable.ic_user,
+                text = stringResource(id = R.string.settings_menu_edit_password),
+                onClick = goToEditPassword,
+            )
+
+            MenuItem(
+                drawableId = R.drawable.ic_trash,
+                text = stringResource(id = R.string.settings_menu_delete_account),
+                onClick = {
+                    openAccountDeletionDialog.value = true
+                },
+            )
+
+            Title(text = stringResource(R.string.settings_menu_legal))
+
+            MenuItem(
                 drawableId = R.drawable.ic_support,
                 text = stringResource(id = R.string.settings_menu_contact),
                 onClick = goToContact,
             )
-            MenuItem(
-                drawableId = R.drawable.ic_trash,
-                text = stringResource(id = R.string.settings_menu_delete_account),
-                onClick = deleteAccount,
-            )
-
-            Title(text = stringResource(R.string.settings_menu_legal))
 
             MenuItem(
                 drawableId = R.drawable.ic_tos,
@@ -278,11 +258,9 @@ fun SettingsScreen(
             val context = LocalContext.current
 
             Button(
-                onClick = {
-                          viewModel.logout(context)
-                },
                 modifier = Modifier
                     .padding(top = 64.dp),
+                onClick = { viewModel.logout(context) }
             ) {
                 Image(
                     painterResource(R.drawable.ic_logout),
@@ -297,10 +275,76 @@ fun SettingsScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .weight(1f)
-                        .offset(x = (-12).dp)
-                        .clickable { logout() },
+                        .offset(x = (-12).dp),
                 )
             }
         }
     }
+
+    val context = LocalContext.current
+
+    if (openAccountDeletionDialog.value) {
+        AccountDeletionDialog(
+            isLoading = state is SettingsState.AccountDeletingProgress,
+            onDismissRequest = {
+                openAccountDeletionDialog.value = false
+            },
+            onConfirmation = {
+                viewModel.deleteAccount()
+            })
+    }
+}
+
+@Preview
+@Composable
+fun AccountDeletionDialog(
+    onDismissRequest: (() -> Unit)? = null,
+    onConfirmation: (() -> Unit)? = null,
+    isLoading: Boolean = false,
+) {
+    AlertDialog(
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = null,
+            )
+        },
+        title = {
+            Text(text = stringResource(id = R.string.settings_menu_delete_account))
+        },
+        text = {
+            Text(text = stringResource(R.string.deletion_text))
+        },
+        onDismissRequest = {
+            onDismissRequest?.invoke()
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirmation?.invoke()
+                }
+            ) {
+                Text(text = stringResource(id = R.string.common_button_delete))
+
+                if (isLoading)
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(start = 12.dp)
+                            .size(16.dp)
+                            .aspectRatio(1f),
+                        color = Color.White,
+                    )
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = {
+                    onDismissRequest?.invoke()
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+            ) {
+                Text(text = stringResource(id = R.string.common_button_cancel))
+            }
+        }
+    )
 }

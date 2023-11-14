@@ -1,4 +1,4 @@
-package com.magicpark.features.shop
+package com.magicpark.utils.ui
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -80,7 +80,7 @@ class Cart(context: Context) {
         }
 
         val state = state.value as CartState.Cart
-        val item = state.items.find { item -> item.equals(shopItem.id) } ?: return
+        val item = state.items.find { item -> item.id == shopItem.id } ?: return
 
         removeProduct(shopItem = shopItem, quantity = item.quantity ?: 0)
     }
@@ -95,7 +95,7 @@ class Cart(context: Context) {
         }
         val state = state.value as CartState.Cart
 
-        val item = state.items.find { item -> item.equals(shopItem.id) } ?: return@launch
+        val item = state.items.find { item -> item.id == shopItem.id } ?: return@launch
         val items = state.items.toMutableList()
         val itemQuantity = item.quantity ?: 0
 
@@ -134,7 +134,7 @@ class Cart(context: Context) {
 
             is CartState.Cart -> {
                 val items = state.items.toMutableList()
-                val item = items.find { item -> item.id?.equals(shopItem.id) ?: false }
+                val item = items.find { item -> item.id == shopItem.id }
 
                 if (item == null) {
                     items.add(shopItem.copy(quantity = 1))
@@ -162,7 +162,8 @@ class Cart(context: Context) {
             .getString(KEY_CART, null)
 
         if (json == null) {
-            Log.e(TAG, "The basket is empty, nothing " +
+            Log.e(
+                TAG, "The basket is empty, nothing " +
                     "was saved locally during the previous session.")
             _state.value = CartState.Empty
             return

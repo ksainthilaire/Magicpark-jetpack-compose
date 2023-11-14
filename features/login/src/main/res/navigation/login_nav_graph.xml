@@ -23,4 +23,8 @@
         android:id="@+id/forgotFragment"
         android:name="com.magicpark.features.login.forgot.ForgotFragment"
         android:label="ForgotFragment" />
+    <fragment
+        android:id="@+id/privacyFragment"
+        android:name="com.magicpark.features.login.webview.PrivacyPolicyFragment"
+        android:label="PrivacyFragment" />
 </navigation>

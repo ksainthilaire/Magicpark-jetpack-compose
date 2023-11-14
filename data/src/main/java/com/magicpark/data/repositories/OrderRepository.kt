@@ -1,6 +1,7 @@
 package com.magicpark.data.repositories
 
 import com.magicpark.data.api.MagicparkApi
+import com.magicpark.data.model.request.toShopItemRequest
 import com.magicpark.data.model.request.order.CreateOrderRequest
 import com.magicpark.domain.enums.PaymentMethod
 import com.magicpark.domain.model.*
@@ -18,7 +19,7 @@ class OrderRepository : IOrderRepository {
     ): Order {
 
         val request = CreateOrderRequest(
-            items = shopItems,
+            items = shopItems.map { shopItem -> shopItem.toShopItemRequest() },
             voucherCode = voucherCode,
             paymentMethod = paymentMethod
         )
@@ -32,7 +33,7 @@ class OrderRepository : IOrderRepository {
         val response = api
             .getOrder(orderId.toString())
 
-        return response.order ?: throw Exception("The order fuekd is empty")
+        return response.order ?: throw Exception("The order field is empty")
     }
 
     override suspend fun getPayment(orderId: Long): Payment {
@@ -42,10 +43,10 @@ class OrderRepository : IOrderRepository {
         return response.payment ?: throw Exception("The payment field is empty")
     }
 
-    override suspend fun getPaymentInvoice(orderId: Long): Invoice {
+    override suspend fun getPaymentInvoices(): List<Invoice> {
         val response = api
-            .getInvoice(orderId.toString())
+            .getInvoices()
 
-        return response.invoice ?: throw Exception("The invoice field is empty")
+        return response.invoices ?: throw Exception("The invoices field is empty")
     }
 }

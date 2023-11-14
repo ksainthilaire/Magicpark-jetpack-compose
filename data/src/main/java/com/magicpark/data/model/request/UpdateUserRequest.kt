@@ -16,5 +16,9 @@ data class UpdateUserRequest(
     @SerializedName("avatar_url")
     val avatarUrl: String? = null,
 
+    @SerializedName("password")
+    val password: String? = null,
+
+    @SerializedName("country")
     val country: String? = null
 ) 

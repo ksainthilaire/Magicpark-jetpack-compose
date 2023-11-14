@@ -28,31 +28,30 @@ import com.magicpark.core.MagicparkTheme
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.Alert
 import com.magicpark.utils.ui.CallbackWithoutParameter
+import com.magicpark.utils.ui.Toast
 import org.koin.androidx.compose.getViewModel
 
 @RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
-private fun UpdateAccountScreenPreview() {
-    UpdateAccountScreen(onBackPressed = {})
+private fun AccountEditPasswordPreview() {
+    AccountEditPasswordScreen(onBackPressed = {})
 }
 
 @RequiresApi(Build.VERSION_CODES.M)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateAccountScreen(
+fun AccountEditPasswordScreen(
     onBackPressed: CallbackWithoutParameter,
 ) {
 
-    val viewModel: AccountViewModel = getViewModel()
+    val viewModel: AccountEditPasswordViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
-    val user by viewModel.user.collectAsState()
 
-    var fullName by remember { mutableStateOf("") }
-    var mail by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordConfirmation by remember { mutableStateOf("") }
-    var number by remember { mutableStateOf("") }
+
 
     ConstraintLayout(
         modifier = Modifier
@@ -73,6 +72,8 @@ fun UpdateAccountScreen(
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
+
+
             item {
                 Box(
                     contentAlignment = Alignment.Center
@@ -88,94 +89,27 @@ fun UpdateAccountScreen(
                     )
 
                     Text(
-                        "Mon profil",
-                        fontSize = 36.sp,
+                        "Modifier mon mot de passe",
+                        fontSize = 14.sp,
                         modifier = Modifier.padding(bottom = 15.dp)
                     )
-
-                    Image(
-                        painter = painterResource(
-                            R.drawable.illustration_basketball
-                        ),
-                        modifier = Modifier
-                            .padding(bottom = 16.dp)
-                            .align(Alignment.BottomEnd),
-                        contentDescription = null
-                    )
-
                 }
 
-
-                if (state is AccountState.UserUpdateFailed)
+                if (state is AccountEditPasswordState.UserUpdateFailed)
                     Alert(
                         modifier = Modifier.padding(vertical = 12.dp, horizontal = 32.dp),
-                        text = (state as AccountState.UserUpdateFailed).message,
+                        text = (state as AccountEditPasswordState.UserUpdateFailed).message,
                         backgroundColor = Color.Red,
                         textColor = Color.White,
                     )
 
-                if (state is AccountState.UserUpdateSuccessful)
+                if (state is AccountEditPasswordState.UserUpdateSuccessful)
                     Alert(
                         modifier = Modifier.padding(vertical = 12.dp, horizontal = 32.dp),
-                        text = stringResource(R.string.account_settings_update_successful),
+                        text = stringResource(R.string.account_settings_edit_password_successful),
                         backgroundColor = Color.Green,
                         textColor = Color.White,
                     )
-
-                Text(
-                    modifier = Modifier
-                        .wrapContentWidth(align = Alignment.Start)
-                        .padding(start = MagicparkTheme.defaultPadding),
-                    text = stringResource(R.string.register_label_identity),
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-
-                OutlinedTextField(
-                    modifier = Modifier.padding(top = 24.dp),
-                    value = fullName,
-                    singleLine = true,
-                    onValueChange = { value ->
-                        fullName = value
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        containerColor = Color.White,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    placeholder = { Text(user.fullName ?: "") }
-                )
-
-                OutlinedTextField(
-                    modifier = Modifier.padding(top = 12.dp),
-                    value = number,
-                    singleLine = true,
-                    onValueChange = { value ->
-                        number = value
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        containerColor = Color.White,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    placeholder = { Text(user.phoneNumber ?: "") }
-                )
-
-                OutlinedTextField(
-                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-                    value = mail,
-                    singleLine = true,
-                    onValueChange = { value ->
-                        mail = value
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        containerColor = Color.White,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    placeholder = { Text(user.mail ?: "") }
-                )
 
                 Text(
                     modifier = Modifier
@@ -205,6 +139,22 @@ fun UpdateAccountScreen(
 
                 OutlinedTextField(
                     modifier = Modifier.padding(top = 12.dp),
+                    value = newPassword,
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    onValueChange = { value ->
+                        newPassword = value
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        containerColor = Color.White,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    placeholder = { Text(stringResource(id = R.string.register_label_new_password)) }
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier.padding(top = 12.dp),
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true,
                     value = passwordConfirmation,
@@ -222,13 +172,7 @@ fun UpdateAccountScreen(
                 Button(
                     modifier = Modifier.padding(top = 32.dp),
                     onClick = {
-                        viewModel.updateUser(
-                            fullName,
-                            mail,
-                            password,
-                            passwordConfirmation,
-                            number
-                        )
+                              viewModel.updatePassword(newPassword, password, passwordConfirmation)
                     },
                 ) {
                     Text("Modifier")

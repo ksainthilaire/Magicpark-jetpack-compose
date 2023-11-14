@@ -40,6 +40,7 @@ class UserRepository : IUserRepository {
         phoneNumber: String?,
         avatarUrl: String?,
         country: String?,
+        password: String?,
     ) {
 
         val request = UpdateUserRequest(
@@ -48,6 +49,7 @@ class UserRepository : IUserRepository {
             phoneNumber = phoneNumber,
             avatarUrl = avatarUrl,
             country = country,
+            password = password,
         )
 
         return api

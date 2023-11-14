@@ -10,11 +10,12 @@ class UserUseCases @Inject constructor(private val repository: IUserRepository) 
         repository.login(firebaseToken)
 
     suspend fun updateUser(
-        mail: String?,
-        fullName: String?,
-        phoneNumber: String?,
-        avatarUrl: String?,
-        country: String?
+        mail: String? = null,
+        fullName: String? = null,
+        phoneNumber: String? = null,
+        avatarUrl:  String? = null,
+        country: String? = null,
+        password: String? = null,
     ): Unit =
         repository.updateUser(
             mail = mail,
@@ -22,6 +23,7 @@ class UserUseCases @Inject constructor(private val repository: IUserRepository) 
             phoneNumber = phoneNumber,
             avatarUrl = avatarUrl,
             country = country,
+            password = password,
         )
 
     suspend fun getUser(): User =

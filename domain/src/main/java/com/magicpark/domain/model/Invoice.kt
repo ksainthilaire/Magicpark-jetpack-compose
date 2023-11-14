@@ -1,6 +1,7 @@
 package com.magicpark.domain.model
 
 import com.google.gson.annotations.SerializedName
+import com.magicpark.domain.enums.PaymentMethod
 
 data class Invoice(
     @SerializedName("payment_method")
@@ -18,3 +19,15 @@ data class Invoice(
     @SerializedName("date")
     val date: String? = null,
 )
+
+fun Invoice.getAmount(): String {
+    return "3"
+}
+
+fun Invoice.getPaymentMethod(): String {
+    return ""
+}
+
+fun Invoice.getDate(): String {
+    return "lok"
+}

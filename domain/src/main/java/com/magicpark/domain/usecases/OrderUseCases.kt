@@ -26,6 +26,6 @@ class OrderUseCases(@Inject var orderRepository: IOrderRepository) {
     suspend fun getPayment(id: Long) : Payment =
         orderRepository.getPayment(id)
 
-    suspend fun getPaymentInvoice(id: Long) : Invoice =
-        orderRepository.getPaymentInvoice(id)
+    suspend fun getPaymentInvoices() : List<Invoice> =
+        orderRepository.getPaymentInvoices()
 }

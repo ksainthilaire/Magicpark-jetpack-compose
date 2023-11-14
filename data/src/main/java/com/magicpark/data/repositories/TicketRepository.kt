@@ -19,14 +19,19 @@ class TicketRepository : ITicketRepository {
     private val magicparkApi: MagicparkApi by KoinJavaComponent.inject(MagicparkApi::class.java)
     private val userTicketDao: UserTicketDao by KoinJavaComponent.inject(UserTicketDao::class.java)
 
-    override suspend fun getWallet(): List<UserTicket> {
+    override suspend fun getWallet(userId: Long): List<UserTicket> {
+        return withContext(Dispatchers.IO) {
+            return@withContext userTicketDao
+                .getUserTicket(userId)
+        }
+    }
+
+    override suspend fun fetchWallet(userId: Long): List<UserTicket> {
         val response = magicparkApi.getWallet()
 
         val tickets = response.tickets ?: listOf()
 
-        withContext(Dispatchers.IO) {
-            saveTickets(tickets)
-        }
+        withContext(Dispatchers.IO) { userTicketDao.saveUserTickets(tickets) }
 
         return tickets
     }
@@ -35,10 +40,4 @@ class TicketRepository : ITicketRepository {
         magicparkApi.controlTicket(payload)
             .blockingAwait(300L, TimeUnit.SECONDS)
 
-    suspend fun getTicketsFromDatabase(): List<UserTicket> =
-        userTicketDao.getUserTickets()
-            .single()
-
-    private fun saveTickets(tickets: List<UserTicket>) =
-        userTicketDao.saveUserTickets(tickets)
 }

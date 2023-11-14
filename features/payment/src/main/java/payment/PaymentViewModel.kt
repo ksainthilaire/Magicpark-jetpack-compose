@@ -6,9 +6,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.magicpark.domain.enums.PaymentMethod
-import com.magicpark.domain.model.ShopItem
 import com.magicpark.domain.usecases.OrderUseCases
 import com.magicpark.utils.R
+import com.magicpark.utils.ui.Cart
+import com.magicpark.utils.ui.CartState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -60,8 +61,8 @@ class PaymentViewModel(private val savedStateHandle: SavedStateHandle) : ViewMod
 
     companion object {
         private val TAG = PaymentViewModel::class.java.simpleName
-        private const val KEY_PAYMENT_METHOD = "KEY_PAYMENT_METHOD"
-        private const val KEY_VOUCHER_CODE = "KEY_VOUCHER_CODE"
+        private const val KEY_PAYMENT_METHOD = "KEY_PAYMENT_METHOD_ARG"
+        private const val KEY_VOUCHER_CODE = "KEY_VOUCHER_ARG"
 
         private const val PAYMENT_DEFAUL_TIMEOUT = 3600L
     }
@@ -72,14 +73,15 @@ class PaymentViewModel(private val savedStateHandle: SavedStateHandle) : ViewMod
     private val _events: MutableSharedFlow<PaymentEvent> = MutableSharedFlow()
     val events: SharedFlow<PaymentEvent> = _events
 
+
+
     private val resources: Resources by KoinJavaComponent
         .inject(Resources::class.java)
 
 
-    /**
-    private val cart: Cart by KoinJavaComponent
-        .inject(Cart::class.java)**/
 
+    private val cart: Cart by KoinJavaComponent
+        .inject(Cart::class.java)
 
     private val orderUseCases: OrderUseCases by KoinJavaComponent.inject(OrderUseCases::class.java)
 
@@ -89,21 +91,26 @@ class PaymentViewModel(private val savedStateHandle: SavedStateHandle) : ViewMod
     private val voucherCode: String
         get() = savedStateHandle.get<String>(KEY_VOUCHER_CODE) ?: ""
 
-    private val shopItems: List<ShopItem> =
-        emptyList()
-
     init {
         startPayment()
     }
 
     /**
-     * Obtain the payment URL for the order created with [shopItems], and the discount applied with
+     * Obtain the payment URL for the order created with shopItems, and the discount applied with
      * [voucherCode].
      */
     private fun startPayment() = viewModelScope.launch {
         try {
+
+            val cartState = cart.state.value
+
+            if (cartState !is CartState.Cart) {
+                return@launch
+            }
+
+
             val order = orderUseCases.createOrder(
-                shopItems = shopItems,
+                shopItems = cartState.items,
                 paymentMethod = paymentMethod,
                 voucherCode = voucherCode,
             )

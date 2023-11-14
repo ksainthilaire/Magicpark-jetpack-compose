@@ -8,12 +8,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.magicpark.utils.ui.CallbackWithoutParameter
+import com.magicpark.utils.ui.LoadingScreen
 import org.koin.androidx.compose.getViewModel
 import java.util.*
 
@@ -45,7 +46,7 @@ fun PaymentScreen(
     val viewModel: PaymentViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
 
-    val paymentListener = rememberSaveable {
+    val paymentListener = remember {
         object : PaymentWebViewListener {
             override fun setStatus(status: PaymentWebViewState) {
                 when (status) {
@@ -58,37 +59,39 @@ fun PaymentScreen(
         }
     }
 
-    when (val state = state) {
+    when (val paymentState = state) {
+
+        is PaymentState.Loading ->
+            LoadingScreen()
 
         is PaymentState.Payment ->
-        AndroidView(
-            modifier = Modifier.padding(top = 100.dp),
-            factory = {
-                WebView(it).apply {
+            AndroidView(
+                modifier = Modifier.padding(top = 100.dp),
+                factory = {
+                    WebView(it).apply {
 
-                    setInitialScale(1)
+                        setInitialScale(1)
 
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    webViewClient = PaymentWebViewClient(
-                        successUrl = state.successUrl,
-                        errorUrl = state.errorUrl,
-                        cancelUrl = state.cancelUrl,
-                        listener = paymentListener
-                    )
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        webViewClient = PaymentWebViewClient(
+                            successUrl = paymentState.successUrl,
+                            errorUrl = paymentState.errorUrl,
+                            cancelUrl = paymentState.cancelUrl,
+                            listener = paymentListener
+                        )
 
-                    settings.javaScriptEnabled = true
-                    settings.loadWithOverviewMode = true
-                    settings.useWideViewPort = true
-                    settings.setSupportZoom(true)
-                    loadUrl(state.paymentUrl)
+                        settings.javaScriptEnabled = true
+                        settings.loadWithOverviewMode = true
+                        settings.useWideViewPort = true
+                        settings.setSupportZoom(true)
+                        loadUrl(paymentState.paymentUrl)
+                    }
+                }, update = {
+                    it.loadUrl(paymentState.paymentUrl)
                 }
-            }, update = {
-                it.loadUrl(state.paymentUrl)
-            }
-        )
-        else -> {}
+            )
     }
 }

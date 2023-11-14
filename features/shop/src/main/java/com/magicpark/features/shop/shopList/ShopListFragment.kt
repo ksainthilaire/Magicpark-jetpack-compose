@@ -104,14 +104,19 @@ fun ShopListScreen(
 
         state.items.let { shopItems ->
             LazyVerticalGrid(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier.padding(top = 12.dp, bottom = 48.dp),
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(12.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(shopItems) { shopItem ->
-                    ShopItemCard(shopItem = shopItem, goToShopItem)
+                    ShopItemCard(
+                        shopItem = shopItem,
+                        goToShopItem = goToShopItem,
+                        addFavorite = viewModel::addFavorite,
+                        removeFavorite = viewModel::removeFavorite
+                    )
                 }
             }
         }
@@ -122,7 +127,14 @@ fun ShopListScreen(
 private fun ShopItemCard(
     shopItem: ShopItem,
     goToShopItem: CallbackWithParameter<ShopItem>,
+    addFavorite: CallbackWithParameter<ShopItem>,
+    removeFavorite: CallbackWithParameter<ShopItem>,
 ) {
+
+    var isFavorite by remember {
+        mutableStateOf(shopItem.isFavorite ?: false)
+    }
+
     Column(
         Modifier
             .clickable {
@@ -133,9 +145,20 @@ private fun ShopItemCard(
             .padding(10.dp)
             .wrapContentSize()
     ) {
+
+        val drawableRes = if (isFavorite) R.drawable.ic_like
+        else R.drawable.ic_no_like
+
+        val favoriteListener = if (isFavorite) removeFavorite else addFavorite
+
         Image(
-            painter = painterResource(com.magicpark.core.R.drawable.ic_like),
-            modifier = Modifier.size(32.dp),
+            painter = painterResource(drawableRes),
+            modifier = Modifier
+                .clickable {
+                    isFavorite = !isFavorite
+                    favoriteListener(shopItem)
+                }
+                .size(32.dp),
             contentDescription = null,
         )
 

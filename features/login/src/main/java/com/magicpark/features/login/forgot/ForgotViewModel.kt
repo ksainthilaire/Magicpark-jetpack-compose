@@ -59,4 +59,6 @@ class ForgotViewModel : ViewModel() {
             _state.value = ForgotUiState.ForgotFailed(errorMessage)
         }
     }
+
+    fun onForgotMailSent() { _state.value = ForgotUiState.ForgotSuccessful }
 }

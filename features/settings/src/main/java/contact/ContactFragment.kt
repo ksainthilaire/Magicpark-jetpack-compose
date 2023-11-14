@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.core.MagicparkTheme
 import com.magicpark.utils.R
@@ -71,18 +72,19 @@ fun ContactScreen(
             Modifier.padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-
             Text(
                 text = stringResource(id = R.string.support_headline),
-                modifier = Modifier.padding(top = 76.dp),
                 style = TextStyle(
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                 ),
             )
             Text(
                 modifier = Modifier.padding(top = 12.dp),
-                text = stringResource(id = R.string.support_description)
+                text = stringResource(id = R.string.support_description),
+                style = TextStyle(
+                    fontSize = 12.sp,
+                ),
             )
 
             OutlinedTextField(
@@ -99,7 +101,7 @@ fun ContactScreen(
                     containerColor = Color.White,
                     unfocusedBorderColor = Color.Transparent
                 ),
-                placeholder = { Text(text = stringResource(R.string.support_submit)) },
+                placeholder = { Text(text = stringResource(R.string.support_text_placeholder)) },
             )
 
             Button(
@@ -108,7 +110,7 @@ fun ContactScreen(
                     viewModel.sendBugReport(text)
                 },
             ) {
-                Text(text = stringResource(R.string.support_text_placeholder))
+                Text(text = stringResource(R.string.support_submit))
             }
         }
     }

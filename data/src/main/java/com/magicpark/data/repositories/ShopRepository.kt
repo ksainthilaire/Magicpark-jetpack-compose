@@ -21,15 +21,40 @@ class ShopRepository : IShopRepository {
         return response.categories ?: emptyList()
     }
 
-    override suspend fun getShopItems(): Shop = withContext(Dispatchers.IO) {
+    override suspend fun addFavorite(shopItem: ShopItem) {
+        withContext(Dispatchers.IO) {
 
+            println("addFavorite(${shopItem.apply { isFavorite = true }})")
 
-        val savedShopItems = shopDao.getShopItems()
-        val savedShopCategories = shopDao.getShopCategories()
-
-        if (savedShopItems.isNotEmpty().and(savedShopCategories.isNotEmpty())) {
-            return@withContext Pair(first = savedShopItems, second = savedShopCategories)
+            shopDao
+                .saveShopItem(shopItem.apply { isFavorite = true })
         }
+    }
+
+    override suspend fun removeFavorite(shopItem: ShopItem) {
+        withContext(Dispatchers.IO) {
+            println("removeFavorite($shopItem)")
+            shopDao
+                .saveShopItem(shopItem.apply { isFavorite = false })
+        }
+    }
+
+    override suspend fun getShopItemsFromDatabase(): Shop =
+        getShopItems(fetchFromApi = false)
+
+    override suspend fun getShopItemsFromRemote(): Shop =
+        getShopItems(fetchFromApi = true)
+
+    private suspend fun getShopItems(fetchFromApi: Boolean): Shop =
+        withContext(Dispatchers.IO) {
+            if (!fetchFromApi) {
+                val savedShopItems = shopDao.getShopItems()
+                val savedShopCategories = shopDao.getShopCategories()
+
+                if (savedShopItems.isNotEmpty().and(savedShopCategories.isNotEmpty())) {
+                    return@withContext Pair(first = savedShopItems, second = savedShopCategories)
+                }
+            }
 
         val response = api.getShopItems()
         val shopCategories = response.shopCategories ?: emptyList()

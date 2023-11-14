@@ -95,7 +95,7 @@ fun TicketScreen(
                     text = stringResource(com.magicpark.utils.R.string.ticket_title),
                     modifier = Modifier.padding(bottom = 24.dp),
                     style = TextStyle(
-                        fontSize = 30.sp,
+
                         fontWeight = FontWeight.Bold,
                     )
                 )

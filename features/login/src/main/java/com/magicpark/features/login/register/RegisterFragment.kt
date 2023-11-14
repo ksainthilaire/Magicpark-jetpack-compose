@@ -42,6 +42,7 @@ import com.magicpark.utils.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.magicpark.core.MagicparkMaterialTheme
 import com.magicpark.features.login.forgot.ForgotUiState
@@ -85,7 +86,7 @@ class RegisterFragment : Fragment() {
                         RegisterScreen(
                             state = state,
                             onBackPressed = ::onBackPressedListener,
-                            goToPrivacyPolicy = {},// navController.navigate("/privacy-policy") },
+                            goToPrivacyPolicy = { findNavController().navigate(com.magicpark.features.login.R.id.privacyFragment) },
                             register = this@RegisterFragment::register,
                         )
                     }
@@ -119,13 +120,13 @@ class RegisterFragment : Fragment() {
                 mail,
                 password,
                 passwordConfirmation,
-                fullName,
                 country,
+                fullName,
                 phoneNumber,
                 termsAccepted
             )
 
-            register(mail, password, fullName, country, phoneNumber)
+            register(mail = mail, password = password, fullName = fullName, country = country, phoneNumber = phoneNumber)
         } catch (e: Exception) {
             viewModel.handleException(e)
         }
@@ -178,7 +179,7 @@ class RegisterFragment : Fragment() {
                                 "The user has been successfully created on Firebase." +
                                         "mail = $mail"
                             )
-                            viewModel.register(mail, fullName, country, phoneNumber)
+                            viewModel.register(token = token, mail = mail, fullName = fullName, country = country, phoneNumber = phoneNumber)
                         }
                     }
             }
@@ -210,12 +211,12 @@ private fun RegisterScreenPreview() =
 
 
 private typealias RegisterCallback = (
-    fullName: String,
     mail: String,
     password: String,
     passwordConfirmation: String,
-    countryCode: String,
+    fullName: String,
     phoneNumber: String,
+    country: String,
     termsAccepted: Boolean,
 ) -> Unit
 
@@ -537,8 +538,8 @@ fun RegisterScreen(
                                 password,
                                 passwordConfirmation,
                                 fullName,
-                                countryCodePicker.selectedCountryCode,
                                 phoneNumber,
+                                countryCodePicker.selectedCountryCode,
                                 termsAccepted
                             )
                     },

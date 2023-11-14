@@ -1,44 +1,62 @@
-package com.magicpark.ui.webview
+package com.magicpark.features.login.webview
 
 import android.graphics.Bitmap
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
-import com.magicpark.core.MagicparkTheme
-import com.magicpark.core.R
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import com.magicpark.core.MagicparkMaterialTheme
+import com.magicpark.utils.R
 import com.magicpark.utils.ui.LoadingScreen
-
+import dagger.hilt.android.AndroidEntryPoint
 
 private enum class WebViewState {
     Loading,
     Completed,
 }
 
+@AndroidEntryPoint
+class PrivacyPolicyFragment : Fragment() {
+
+    companion object {
+        private val TAG = PrivacyPolicyFragment::class.java.simpleName
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        ComposeView(requireContext())
+            .apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    MagicparkMaterialTheme {
+                        WebViewScreen(
+                            onBackPressed = { activity?.onBackPressedDispatcher?.onBackPressed() },
+                            url = resources.getString(R.string.privacy_policy_url)
+                        )
+                    }
+                }
+            }
+}
+
 @Composable
 fun WebViewScreen(onBackPressed: () -> Unit, url: String) {
-
     var state by remember { mutableStateOf(WebViewState.Loading) }
-
-
 
     Box(
         Modifier
@@ -74,7 +92,7 @@ fun WebViewScreen(onBackPressed: () -> Unit, url: String) {
         }
 
         Image(
-            painter = painterResource(id = R.drawable.background_ticket_close),
+            painter = painterResource(id = com.magicpark.core.R.drawable.background_ticket_close),
             modifier = Modifier
                 .padding(30.dp)
                 .width(30.dp)

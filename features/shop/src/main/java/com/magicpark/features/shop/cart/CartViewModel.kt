@@ -3,8 +3,8 @@ package com.magicpark.features.shop.cart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.magicpark.domain.model.ShopItem
-import com.magicpark.features.shop.Cart
-import com.magicpark.features.shop.CartState
+import com.magicpark.utils.ui.Cart
+import com.magicpark.utils.ui.CartState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn

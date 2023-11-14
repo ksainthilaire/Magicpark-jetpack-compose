@@ -73,7 +73,7 @@ class ForgotFragment : Fragment() {
             FirebaseAuth.getInstance()
                 .sendPasswordResetEmail(mail)
 
-            Log.i(TAG, "The user has been successfully created on Firebase.")
+            viewModel.onForgotMailSent()
         } catch (e: Exception) {
             Log.e(TAG, "An error occurred during password reset", e)
             viewModel.handleForgotException(e)
@@ -104,70 +104,77 @@ fun ForgotScreen(
     state: ForgotUiState,
     onBackPressed: CallbackWithoutParameter,
     onForgot: CallbackWithParameter<String>,
-) = Box(modifier = Modifier.fillMaxSize()) {
-    var mail by remember { mutableStateOf("") }
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        var mail by remember { mutableStateOf("") }
 
-    when (state) {
-        is ForgotUiState.ForgotFailed ->
-            key(state) { Toast(text = state.errorMessage) }
-
-        else -> Unit
-    }
-
-    Column(
-        Modifier
-            .padding(top = 20.dp, bottom = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(R.drawable.illustration_magicpark),
-            modifier = Modifier
-                .width(200.dp)
-                .height(200.dp),
-            contentDescription = null,
-        )
-
-        Text(
-            stringResource(id = R.string.forgot_title),
-            fontSize = 24.sp,
-            modifier = Modifier.padding(bottom = 24.dp),
-            style = TextStyle(textAlign = TextAlign.Center)
-        )
-
-        Text(
-            stringResource(id = R.string.forgot_text),
-            fontSize = 16.sp,
-            modifier = Modifier.padding(horizontal = MagicparkTheme.defaultPadding),
-            style = TextStyle(textAlign = TextAlign.Center)
-        )
-
-        OutlinedTextField(
-            modifier = Modifier.padding(24.dp),
-            value = mail,
-            singleLine = true,
-            isError = state is ForgotUiState.ForgotFailed,
-            onValueChange = { value -> mail = value },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                unfocusedBorderColor = Color.Transparent
-            ),
-            placeholder = { Text(stringResource(id = R.string.login_button_mail)) }
-        )
-
-        Button(
-            enabled = true,
-            onClick = { onForgot(mail) },
-        ) {
-            Text(text = stringResource(R.string.forgot_button_continue))
+        key(state) {
+            when (state) {
+                is ForgotUiState.ForgotFailed -> Toast(text = state.errorMessage)
+                is ForgotUiState.ForgotSuccessful ->
+                    Toast(
+                        text = stringResource(id = R.string.forgot_we_sent),
+                        backgroundColor = Color.Green
+                    )
+                else -> {}
+            }
         }
 
-        Button(
-            onClick = onBackPressed,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = MagicparkTheme.colors.primary
-            )
+        Column(
+            Modifier
+                .padding(top = 20.dp, bottom = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = stringResource(R.string.forgot_button_cancel))
+            Image(
+                painter = painterResource(R.drawable.illustration_magicpark),
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(200.dp),
+                contentDescription = null,
+            )
+
+            Text(
+                stringResource(id = R.string.forgot_title),
+                fontSize = 24.sp,
+                modifier = Modifier.padding(bottom = 24.dp),
+                style = TextStyle(textAlign = TextAlign.Center)
+            )
+
+            Text(
+                stringResource(id = R.string.forgot_text),
+                fontSize = 16.sp,
+                modifier = Modifier.padding(horizontal = MagicparkTheme.defaultPadding),
+                style = TextStyle(textAlign = TextAlign.Center)
+            )
+
+            OutlinedTextField(
+                modifier = Modifier.padding(24.dp),
+                value = mail,
+                singleLine = true,
+                isError = state is ForgotUiState.ForgotFailed,
+                onValueChange = { value -> mail = value },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    unfocusedBorderColor = Color.Transparent
+                ),
+                placeholder = { Text(stringResource(id = R.string.login_button_mail)) }
+            )
+
+            Button(
+                enabled = true,
+                onClick = { onForgot(mail) },
+            ) {
+                Text(text = stringResource(R.string.forgot_button_continue))
+            }
+
+            Button(
+                onClick = onBackPressed,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = MagicparkTheme.colors.primary
+                )
+            ) {
+                Text(text = stringResource(R.string.forgot_button_cancel))
+            }
         }
     }
 }

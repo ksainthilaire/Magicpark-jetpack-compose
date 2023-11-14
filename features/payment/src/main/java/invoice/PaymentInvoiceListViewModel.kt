@@ -1,10 +1,14 @@
 package com.magicpark.features.payment.invoice
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.magicpark.domain.model.Invoice
 import com.magicpark.domain.usecases.OrderUseCases
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import org.koin.java.KoinJavaComponent
 
 
@@ -23,14 +27,16 @@ sealed interface PaymentInvoiceListState {
 
 class PaymentInvoiceListViewModel : ViewModel() {
 
-    companion object {
-        private val TAG = PaymentInvoiceListViewModel::class.java.simpleName
-        private const val KEY_ORDER_ID = "KEY_ORDER_ID"
-    }
-
-    private val _state: MutableStateFlow<PaymentInvoiceListState> = MutableStateFlow(PaymentInvoiceListState.Loading)
-    val state: StateFlow<PaymentInvoiceListState> = _state
-
     private val orderUseCases: OrderUseCases by KoinJavaComponent.inject(OrderUseCases::class.java)
+
+    val state: StateFlow<PaymentInvoiceListState> =
+        flow { emit(orderUseCases.getPaymentInvoices()) }
+            .map { invoices -> invoices.toState() }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, PaymentInvoiceListState.Loading)
+
+    private fun List<Invoice>.toState() : PaymentInvoiceListState =
+        PaymentInvoiceListState.InvoiceList(
+            list = this
+        )
 
 }

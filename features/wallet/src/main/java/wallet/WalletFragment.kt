@@ -1,5 +1,7 @@
 package wallet
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,11 +29,13 @@ import com.magicpark.domain.model.UserTicket
 import com.magicpark.domain.model.isExpired
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.CallbackWithParameter
+import com.magicpark.utils.ui.InternetRequiredDialog
+import com.magicpark.utils.ui.LoadingScreen
 import org.koin.androidx.compose.getViewModel
 import java.util.*
 
 enum class WalletCategory(val stringRes: Int) {
-    IN_USE(R.string.wallet_in_use),
+    //IN_USE(R.string.wallet_in_use),
     TO_USE(R.string.wallet_to_use),
     EXPIRED(R.string.wallet_expired),
 }
@@ -147,20 +151,23 @@ fun Ticket(
                     )
                 }
 
-                Divider(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(Color.Black)
-                        .height(1.dp)
-                )
-
-                Text(
-                    text = "Expire le ${ticket.expiredAt}",
-                    Modifier.padding(top = 12.dp),
-                    style = TextStyle(
-                        color = Color.Gray
+                if (ticket.expiredAt != null) {
+                    Divider(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(Color.Black)
+                            .height(1.dp)
                     )
-                )
+
+
+                    Text(
+                        text = "Expire le ${ticket.expiredAt}",
+                        Modifier.padding(top = 12.dp),
+                        style = TextStyle(
+                            color = Color.Gray
+                        )
+                    )
+                }
             }
         }
     }
@@ -169,60 +176,64 @@ fun Ticket(
 /**
  * @param goToTicket
  */
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun WalletScreen(
+    onBackPressed: (() -> Unit),
     goToTicket: CallbackWithParameter<UserTicket>,
 ) {
 
     val viewModel: WalletViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
 
-
-
     var currentCategory by remember { mutableStateOf(WalletCategory.TO_USE) }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                TabRow(
-                    selectedTabIndex = currentCategory.ordinal,
-                    modifier = Modifier.clip(
-                        RoundedCornerShape(
-                            topStart = 20.dp,
-                            topEnd = 20.dp
-                        )
-                    )
-                ) {
-                    WalletCategory.values()
-                        .map { category ->
-                            Tab(
-                                selected = (category.ordinal == currentCategory.ordinal),
-                                onClick = { currentCategory = category }
-                            ) {
-                                val categoryName = stringResource(id = category.stringRes)
+    when (val state = state) {
 
-                                Text(
-                                    modifier = Modifier.padding(12.dp),
-                                    style = TextStyle(fontSize = 24.sp),
-                                    text = categoryName
+        is WalletState.WalletEmpty -> WalletEmptyScreen()
+
+        is WalletState.Loading -> LoadingScreen()
+
+        is WalletState.Tickets -> {
+
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                    ) {
+                        TabRow(
+                            selectedTabIndex = currentCategory.ordinal,
+                            modifier = Modifier.clip(
+                                RoundedCornerShape(
+                                    topStart = 20.dp,
+                                    topEnd = 20.dp
                                 )
-                            }
+                            )
+                        ) {
+                            WalletCategory.values()
+                                .map { category ->
+                                    Tab(
+                                        selected = (category.ordinal == currentCategory.ordinal),
+                                        onClick = { currentCategory = category }
+                                    ) {
+                                        val categoryName =
+                                            stringResource(id = category.stringRes)
+
+                                        Text(
+                                            modifier = Modifier.padding(12.dp),
+                                            style = TextStyle(fontSize = 24.sp),
+                                            text = categoryName
+                                        )
+                                    }
+                                }
                         }
-                }
-            }
-
-            when (val state = state) {
-
-                is WalletState.Loading -> Unit
-
-                is WalletState.Tickets -> {
+                    }
 
                     val tickets = when (currentCategory) {
-                        WalletCategory.IN_USE -> state.inUse
+                        //WalletCategory.IN_USE -> state.inUse
                         WalletCategory.TO_USE -> state.toUse
                         WalletCategory.EXPIRED -> state.expired
                     }
@@ -231,5 +242,12 @@ fun WalletScreen(
                 }
             }
         }
+
+        is WalletState.InternetRequired -> {
+            Box(Modifier.fillMaxSize()) {
+                InternetRequiredDialog(tryAgain = viewModel::checkWallet, onCancel = onBackPressed)
+            }
+        }
+
     }
 }

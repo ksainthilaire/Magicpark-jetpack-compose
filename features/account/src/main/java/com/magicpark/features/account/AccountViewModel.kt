@@ -1,8 +1,11 @@
 package com.magicpark.features.account
 
 import android.content.res.Resources
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.magicpark.core.connectivity.ConnectivityManager
 import com.magicpark.domain.model.User
 import com.magicpark.domain.usecases.UserUseCases
 import com.magicpark.utils.R
@@ -28,6 +31,11 @@ sealed interface AccountState  {
      * @param message The error message that is displayed
      */
     data class UserUpdateFailed(val message: String) : AccountState
+
+    /**
+     * Internet is required to use this screen
+     */
+    object InternetRequired : AccountState
 }
 
 class AccountViewModel : ViewModel() {
@@ -37,6 +45,10 @@ class AccountViewModel : ViewModel() {
         .inject(Resources::class.java)
 
     private val userUseCases: UserUseCases by KoinJavaComponent.inject(UserUseCases::class.java)
+
+    private val connectivityManager:
+            ConnectivityManager by KoinJavaComponent.inject(ConnectivityManager::class.java)
+
 
     private val _user: MutableStateFlow<User> = MutableStateFlow(User())
     val user: StateFlow<User> = _user
@@ -65,6 +77,7 @@ class AccountViewModel : ViewModel() {
      * @param fullName User full name
      * @param phoneNumber Phone number
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     fun updateUser(
         mail: String,
         password: String,
@@ -73,14 +86,19 @@ class AccountViewModel : ViewModel() {
         phoneNumber: String,
     ) {
 
+        if (!connectivityManager.hasInternet()) {
+            _state.value = AccountState.InternetRequired
+            return
+        }
+
         val stringResource = when {
+
+            fullName.isBlank() || fullName.isEmpty() || fullName.split("\\s+".toRegex()).count() < 2 ->
+                R.string.register_error_fullname
 
             password.isEmpty() ||
             passwordConfirmation.isEmpty() ->
                 R.string.common_empty_fields
-
-            fullName.isEmpty() ->
-                R.string.register_error_fullname
 
             phoneNumber.isEmpty() ->
                 R.string.register_error_wrong_number
@@ -92,7 +110,7 @@ class AccountViewModel : ViewModel() {
         }
 
         if (stringResource == null) {
-            updateUser(mail, fullName, phoneNumber)
+            updateUser(mail, fullName, phoneNumber, password)
             return
         }
 
@@ -110,12 +128,20 @@ class AccountViewModel : ViewModel() {
     private fun updateUser(
         mail: String,
         fullName: String,
-        phoneNumber: String,
+        number: String,
+        password: String,
     ) = viewModelScope.launch {
 
         try {
             userUseCases
-                .updateUser(mail, fullName, phoneNumber, null, null)
+                .updateUser(
+                    mail = mail,
+                    fullName = fullName,
+                    phoneNumber = number,
+                    avatarUrl = null,
+                    country = null,
+                    password = password,
+                )
 
             _state.value = AccountState.UserUpdateSuccessful
         } catch (e: Exception) {

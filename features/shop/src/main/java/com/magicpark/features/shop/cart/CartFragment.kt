@@ -44,46 +44,72 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.magicpark.core.MagicparkTheme
+import com.magicpark.domain.enums.PaymentMethod
 import com.magicpark.domain.model.ShopItem
-import com.magicpark.domain.model.currentPrice
+import com.magicpark.domain.model.displayablePrice
+import com.magicpark.features.payment.payment.PaymentMethodDialog
 import com.magicpark.utils.R
 import com.magicpark.utils.ui.CallbackWithParameter
 import com.magicpark.utils.ui.CallbackWithoutParameter
 import com.magicpark.utils.ui.Counter
 import org.koin.androidx.compose.getViewModel
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
+
+private val format: NumberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
+    .apply {
+        currency = Currency.getInstance("GNF")
+    }
+
 
 @Preview
 @Composable
 fun CartScreen_Preview() =
     CartScreen(
         onBackPressed = {},
-        showPaymentDialog = {}
+        goToPayment = {_, _ -> }
     )
 
 /**
  * Cart screen, contains the list of items the user wants to purchase.
  *
- *  @param showPaymentDialog listener, displays the payment method dialog
+ *  @param goToPayment listener, displays the payment method dialog
  *  @param onBackPressed listener go back
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
-    showPaymentDialog: CallbackWithoutParameter,
+    goToPayment: (voucher: String, method: PaymentMethod) -> Unit,
     onBackPressed: CallbackWithoutParameter,
 ) {
 
-    val viewModel: CartViewModel= getViewModel()
+    val viewModel: CartViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
 
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.lottie_swipe)
     )
+
+    var paymentDialog by remember { mutableStateOf(false) }
     val animation by remember { mutableStateOf(false) }
     var voucher by remember { mutableStateOf("") }
 
+    if (paymentDialog) {
+        PaymentMethodDialog(
+            onClose = { paymentDialog = false },
+            onSelectedPaymentMethod = { paymentMethod ->
+                goToPayment(voucher, paymentMethod)
+            }
+        )
+    }
 
     Box {
+
+        if (state.items.isEmpty()) {
+            return@Box CartEmptyScreen(goToShop = onBackPressed)
+        }
+
         LazyColumn(
             Modifier
                 .fillMaxSize()
@@ -162,7 +188,7 @@ fun CartScreen(
                                             fontWeight = FontWeight.Bold
                                         )
                                     )
-                                    Text("${state.amount} GNF", Modifier.weight(1f))
+                                    Text(text = format.format(state.amount), Modifier.weight(1f))
                                 }
                                 Text(
                                     stringResource(id = R.string.cart_prevent), style = TextStyle(
@@ -173,7 +199,7 @@ fun CartScreen(
                                 Button(
                                     modifier = Modifier.padding(top = 10.dp),
                                     onClick = {
-                                        showPaymentDialog()
+                                        paymentDialog = true
                                     },
                                 ) {
                                     Text(text = stringResource(R.string.cart_buy))
@@ -276,7 +302,7 @@ private fun CartItem(
                         .padding(4.dp)
                 ) {
                     Text(
-                        text = "%s".format(shopItem.promotionalPrice),
+                        text = "%s".format(shopItem.displayablePrice),
                         style = TextStyle(
                             color = Color.White,
                             fontWeight = FontWeight.Bold
@@ -298,7 +324,8 @@ private fun CartItem(
                     )
 
                     Icon(
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier
+                            .size(16.dp)
                             .clickable { removeAllFromCart(shopItem) },
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,

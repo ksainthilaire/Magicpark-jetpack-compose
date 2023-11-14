@@ -13,12 +13,12 @@ interface UserTicketDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveUserTickets(items: List<UserTicket>): List<Long>
 
-    @Query("SELECT * FROM wallet WHERE user_id LIKE :id LIMIT 1")
-    fun getUserTicketById(id: Int): Flow<UserTicket>
+    @Query("SELECT * FROM wallet WHERE id LIKE :id LIMIT 1")
+    fun getUserTicketById(id: Long): UserTicket
 
     @Query("SELECT * FROM wallet")
-    fun getUserTickets(): Flow<List<UserTicket>>
+    fun getUserTickets(): List<UserTicket>
 
-    @Query("SELECT * FROM wallet WHERE id LIKE :id LIMIT 1")
-    fun getUserTicket(id: Int): Flow<List<UserTicket>>
+    @Query("SELECT * FROM wallet WHERE user_id LIKE :id LIMIT 1")
+    fun getUserTicket(id: Long): List<UserTicket>
 }

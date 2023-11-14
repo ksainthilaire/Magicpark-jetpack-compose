@@ -61,7 +61,6 @@ fun ShopItemScreen(
     shopItem: ShopItem,
     onBackPressed: CallbackWithoutParameter,
 ) {
-
     val viewModel: ShopItemViewModel = getViewModel()
 
     val composition by rememberLottieComposition(

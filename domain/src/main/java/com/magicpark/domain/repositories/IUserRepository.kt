@@ -33,6 +33,7 @@ interface IUserRepository {
         phoneNumber: String? = null,
         avatarUrl: String? = null,
         country: String? = null,
+        password: String? = null,
     )
 
     /**

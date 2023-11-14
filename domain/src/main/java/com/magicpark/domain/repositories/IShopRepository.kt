@@ -6,5 +6,12 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IShopRepository {
     suspend fun getShopCategories(): List<ShopCategory>
-    suspend fun getShopItems(): Shop
+
+    suspend fun getShopItemsFromDatabase(): Shop
+
+    suspend fun getShopItemsFromRemote(): Shop
+
+    suspend fun addFavorite(shopItem: ShopItem)
+
+    suspend fun removeFavorite(shopItem: ShopItem)
 }

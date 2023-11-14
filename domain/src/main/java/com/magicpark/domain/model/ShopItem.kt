@@ -50,6 +50,10 @@ data class ShopItem(
     @SerializedName("is_pack")
     var isPack: Boolean? = false,
 
+    @ColumnInfo(name="is_favorite")
+    @SerializedName("is_favorite")
+    var isFavorite: Boolean? = false,
+    
     @ColumnInfo(name="pack_quantity")
     @SerializedName("pack_quantity")
     var packQuantity: Int? = 0,

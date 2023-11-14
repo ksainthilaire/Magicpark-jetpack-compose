@@ -7,7 +7,7 @@ import com.magicpark.domain.model.ShopCategory
 import com.magicpark.domain.model.ShopItem
 import com.magicpark.domain.model.jsonCategories
 import com.magicpark.domain.usecases.ShopUseCases
-import com.magicpark.features.shop.Cart
+import com.magicpark.utils.ui.Cart
 import com.magicpark.utils.R
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -104,4 +104,10 @@ class ShopListViewModel : ViewModel() {
             currentStringSearch.emit(text)
         }
     }
+
+    fun addFavorite(shopItem: ShopItem) =
+        viewModelScope.launch { shopUseCases.addFavorite(shopItem) }
+
+    fun removeFavorite(shopItem: ShopItem) =
+        viewModelScope.launch { shopUseCases.removeFavorite(shopItem) }
 }

@@ -34,8 +34,8 @@ interface MagicparkApi {
     @GET("/api/v1/customer/order/payment/{id}")
     suspend fun getPayment(@Path("id") orderId: String): PaymentResponse
 
-    @GET("/api/v1/customer/order/invoice/{id}")
-    suspend fun getInvoice(@Path("id") orderId: String): InvoiceResponse
+    @GET("/api/v1/customer/order/invoices")
+    suspend fun getInvoices(): InvoiceResponse
 
     @GET("/api/v1/customer/wallet")
     suspend fun getWallet(): WalletResponse

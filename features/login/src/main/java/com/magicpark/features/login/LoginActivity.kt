@@ -2,7 +2,11 @@ package com.magicpark.features.login
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -15,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.java.KoinJavaComponent
+
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -54,8 +59,13 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        onBackPressedDispatcher
-            .addCallback { navController.popBackStack() }
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed()
+            {
+                Log.d("MyActivity", "handleOnBackPressed called")
+             navController.navigateUp()
+            }
+        })
     }
 
     private fun onLoginEvent(event: LoginEvent) : Unit =
@@ -69,7 +79,11 @@ class LoginActivity : AppCompatActivity() {
     private fun onSessionEvent(event: SessionEvent) : Unit =
         when (event) {
             is SessionEvent.Disconnected -> {}
-            is SessionEvent.Connected ->
+            is SessionEvent.Connected -> {
+                setResult(RESULT_OK)
                 finish()
+            }
         }
+
+
 }

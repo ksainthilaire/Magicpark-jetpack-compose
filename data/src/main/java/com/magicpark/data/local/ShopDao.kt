@@ -12,6 +12,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShopDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveShopItem(shopItem: ShopItem): Long
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveShopCategories(items: List<ShopCategory>): List<Long>
 
@@ -23,7 +27,6 @@ interface ShopDao {
 
     @Query("SELECT * FROM shop")
     fun getShopItems(): List<ShopItem>
-
 
     @Query("SELECT * FROM shop WHERE id LIKE :id LIMIT 1")
     fun getShopItem(id: Int): Observable<ShopItem>

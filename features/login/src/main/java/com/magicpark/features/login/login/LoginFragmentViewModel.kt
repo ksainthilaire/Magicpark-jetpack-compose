@@ -70,6 +70,9 @@ class LoginFragmentViewModel : ViewModel() {
             val token = userUseCases.login(firebaseToken)
             session.saveToken(token)
 
+            val user = userUseCases.getUser()
+            session.saveUserData(user)
+
             _state.value = LoginUiState.LoginSuccessful
         } catch (e: Throwable) {
             Log.e(TAG, "An error occurred during user login,", e)

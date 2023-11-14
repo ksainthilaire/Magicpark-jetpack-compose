@@ -1,17 +1,20 @@
 package settings
 
 import android.content.Context
-import android.content.SharedPreferences
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.magicpark.core.Config
+import com.magicpark.core.connectivity.ConnectivityManager
 import com.magicpark.domain.model.User
 import com.magicpark.domain.usecases.UserUseCases
 import com.magicpark.utils.ui.Session
-import contact.ContactViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent
 
 sealed interface SettingsState {
@@ -32,6 +35,11 @@ sealed interface SettingsState {
     object LogoutSucceeded : SettingsState
 
     /**
+     * Account deletion is in progress.
+     */
+    object AccountDeletingProgress : SettingsState
+
+    /**
      * User deletion was successful
      */
     object AccountDeletionSucceeded : SettingsState
@@ -40,6 +48,11 @@ sealed interface SettingsState {
      * User deletion failed
      */
     object AccountDeletionFailed : SettingsState
+
+    /**
+     * Internet is required to use this screen
+     */
+    object InternetRequired : SettingsState
 }
 
 
@@ -55,6 +68,9 @@ class SettingsViewModel : ViewModel() {
         Session::class.java
     )
 
+    private val connectivityManager:
+            ConnectivityManager by KoinJavaComponent.inject(ConnectivityManager::class.java)
+
     private val _user: MutableStateFlow<User> = MutableStateFlow(User())
     val user: StateFlow<User> = _user
 
@@ -69,62 +85,40 @@ class SettingsViewModel : ViewModel() {
      * Fetch user information
      */
     private fun loadUser() = viewModelScope.launch {
-        val user = userUseCases.getUser()
+        val user = session.getUserData()
         _user.value = user
     }
 
     /**
      * Update user information.
-     * @param fullName Full name
-     * @param mail User mail
-     * @param number Phone number
      */
     fun updateUser(
-        fullName: String,
-        mail: String,
-        number: String,
+        avatarUrl: String,
     ) = viewModelScope.launch {
 
         userUseCases
-            .updateUser(
-                mail,
-                fullName,
-                number,
-                null,
-                null
-            )
-    }
-
-    /**
-     * Delete the session token associated with the user that is saved in the share preferences.
-     * @param context see [android.content.Context]
-     */
-    private fun clearToken(context: Context) {
-        val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(
-                Config.KEY_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE
-            )
-
-        sharedPreferences.edit()
-            .apply {
-                remove(ContactViewModel.KEY_API_TOKEN)
-                apply()
-            }
+            .updateUser(avatarUrl = avatarUrl)
     }
 
     /**
      * Logs out the current user.
      * @param context see [android.content.Context]
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     fun logout(context: Context) = viewModelScope.launch {
+
+        if (!connectivityManager.hasInternet()) {
+            _state.value = SettingsState.InternetRequired
+            return@launch
+        }
+
         try {
             session.removeToken()
             userUseCases.logout()
 
-
             _state.value = SettingsState.LogoutSucceeded
         } catch (e: Exception) {
+            Log.e(TAG, "Cannot logout", e)
             _state.value = SettingsState.LogoutFailed
         }
     }
@@ -134,13 +128,25 @@ class SettingsViewModel : ViewModel() {
      * @param context see [android.content.Context]
      */
 
-    fun deleteAccount(context: Context) = viewModelScope.launch {
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun deleteAccount() = viewModelScope.launch {
+
+        if (!connectivityManager.hasInternet()) {
+            _state.value = SettingsState.InternetRequired
+            return@launch
+        }
+
         try {
-            userUseCases.deleteUser()
-            clearToken(context)
+            _state.value = SettingsState.AccountDeletingProgress
+
+            withContext(Dispatchers.IO) {
+                userUseCases.deleteUser()
+            }
+            session.removeToken()
 
             _state.value = SettingsState.AccountDeletionSucceeded
         } catch (e: Exception) {
+            Log.e(TAG, "Cannot delete account", e)
             _state.value = SettingsState.AccountDeletionFailed
         }
     }

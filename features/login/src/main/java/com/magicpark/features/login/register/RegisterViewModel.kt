@@ -1,13 +1,10 @@
 package com.magicpark.features.login.register
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuthException
-import com.magicpark.core.Config.KEY_SHARED_PREFERENCES
 import com.magicpark.domain.usecases.UserUseCases
 import com.magicpark.features.login.utils.getStringRes
 import org.koin.java.KoinJavaComponent
@@ -15,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.magicpark.utils.R
+import com.magicpark.utils.ui.Session
 import java.util.regex.Pattern
 import kotlin.Exception
 
@@ -39,10 +37,12 @@ class RegisterViewModel : ViewModel() {
 
     private companion object {
         const val TAG = "RegisterViewModel"
-        const val KEY_API_TOKEN = "KEY-API-TOKEN"
         const val REGEX_FULLNAME =
             "[A-Z](?=.{1,29}$)[A-Za-z]{1,}([ ][A-Z][A-Za-z]{1,})*"
     }
+
+    private val session: Session by KoinJavaComponent
+        .inject(Session::class.java)
 
     private val userUseCases: UserUseCases by KoinJavaComponent
         .inject(UserUseCases::class.java)
@@ -56,23 +56,6 @@ class RegisterViewModel : ViewModel() {
     val state: StateFlow<RegisterUiState>
         get() = _state
 
-    /**
-     * Saves the token that allows the user to authenticate with the API
-     * as an already registered and logged in user.
-     */
-    private fun saveToken(context: Context, token: String) {
-        val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(
-                KEY_SHARED_PREFERENCES,
-                Context.MODE_PRIVATE
-            )
-
-        sharedPreferences.edit()
-            .apply {
-                putString(KEY_API_TOKEN, token)
-                apply()
-            }
-    }
 
     /**
      * This function is called when the user has already been registered in Firebase.
@@ -83,6 +66,7 @@ class RegisterViewModel : ViewModel() {
      * @param country Country code
      */
     fun register(
+        token: String,
         mail: String,
         fullName: String,
         country: String,
@@ -99,6 +83,13 @@ class RegisterViewModel : ViewModel() {
         )
 
         try {
+
+            val sessionToken = userUseCases.login(token)
+            session.saveToken(sessionToken)
+
+            val user = userUseCases.getUser()
+            session.saveUserData(user)
+
             userUseCases
                 .updateUser(
                     mail = mail,
@@ -106,6 +97,7 @@ class RegisterViewModel : ViewModel() {
                     phoneNumber = phoneNumber,
                     avatarUrl = null,
                     country = country,
+                    password = null,
                 )
 
             _state.value = RegisterUiState.RegisterSuccessful
@@ -156,6 +148,9 @@ class RegisterViewModel : ViewModel() {
 
             fullName.isEmpty() || passwordConfirmation.isEmpty() || mail.isEmpty() ->
                 R.string.common_empty_fields
+
+            fullName.split("\\s+".toRegex()).count() < 2 ->
+                R.string.register_error_fullname
 
             phoneNumber.isEmpty() ->
                 R.string.register_error_wrong_number
